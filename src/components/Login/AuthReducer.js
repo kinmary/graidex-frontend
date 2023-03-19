@@ -1,8 +1,11 @@
 const initialState = {
     isAuth: false,
-    isNewUser: false
+    isNewUser: false,
+    name: "Bob",
+    surname: "Marley"
 }
 
+//TODO: Logout,
 export const AuthReducer = (state, action) => {
     state = state || initialState;
     switch (action.type) {
@@ -18,6 +21,12 @@ export const AuthReducer = (state, action) => {
                 isNewUser: action.isNewUser
             }
             break;
+            case CHANGE_VALUES:
+            state = {
+                ...state,
+                [action.name]: action.value
+            }
+            break;
         default:
             break;
     };
@@ -26,3 +35,4 @@ export const AuthReducer = (state, action) => {
 
 export const SET_AUTHENTICATION = "SET_AUTHENTICATION";
 export const SET_NEW_USER = "SET_NEW_USER";
+export const CHANGE_VALUES = "CHANGE_VALUES";

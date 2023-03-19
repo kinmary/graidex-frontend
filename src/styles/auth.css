@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(to right, #1f50ff, #3dcbff);
+    /* background: linear-gradient(to right, #5f82ff, #86dfff); */
   }
 .container {
     display: flex;
@@ -9,10 +9,10 @@ body {
   
 }
 
-.card {
+.card-auth {
     width: 33%;
     height: 55%;
-    box-shadow: 0 0 500px rgba(0, 1, 84, 0.5);
+    box-shadow: 0 0 10000px rgba(2, 3, 84, 0.5);
 }
 .form {
     margin-top: 10px;
@@ -22,5 +22,5 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px; 
+    height: 10px; 
   }

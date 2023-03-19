@@ -24,7 +24,7 @@ class Login extends Component {
   render() {
     return (
       <div className="container mb-3">
-        <Card body>
+        <Card body className="card-auth">
           <div className="logo-container">
             <Image src={logo} width="100%" height="155px"></Image>
           </div>

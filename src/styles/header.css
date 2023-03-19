@@ -1,0 +1,25 @@
+.profile-image {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+  .profile-image-edit {
+    margin-top: 80px;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    margin-right: 40;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+  
+  .user-profile .profile-image {
+    border-radius: 50%;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
