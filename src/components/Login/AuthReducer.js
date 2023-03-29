@@ -1,5 +1,5 @@
 const initialState = {
-    isAuth: false,
+    isAuth: true,
     isNewUser: false,
     name: "Bob",
     surname: "Marley"

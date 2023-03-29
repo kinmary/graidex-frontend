@@ -1,10 +1,19 @@
 import { createStore, compose, applyMiddleware, combineReducers} from 'redux';
 import thunk from 'redux-thunk';
 import { AuthReducer } from './Login/AuthReducer';
-//import { createBrowserHistory } from "history";
-//import { routerMiddleware, connectRouter } from 'connected-react-router';
+import { createBrowserHistory } from "history";
+import { createReduxHistoryContext } from 'redux-first-history';
+import { MainReducer } from './MainReducer';
+import storage from 'redux-persist/lib/storage';
+import { persistStore, persistReducer } from 'redux-persist'
+import { CreateTestReducer } from './TeacherSide/CreateTest/CreateTestReducer';
 
-//export const history = createBrowserHistory();
+
+const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({ 
+    history: createBrowserHistory(),
+    //other options if needed 
+  });
+
 const enhancers = [];
 const isDevelopment = process.env.NODE_ENV === 'development';
 if(isDevelopment && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION__)
@@ -12,18 +21,32 @@ if(isDevelopment && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXT
     enhancers.push(window.__REDUX_DEVTOOLS_EXTENSION__());
 }
 
+const mainPersistConfig = {
+    key: 'main',
+    storage,
+    whitelist: ['selectedSubjectId']
+  }
+
+
 
 const store = createStore (
     combineReducers({
        auth: AuthReducer,
-       //router: connectRouter(history),
+       main: persistReducer(mainPersistConfig, MainReducer),
+       createTest: CreateTestReducer, //TODO: add persistor
+       router: routerReducer
     }),
 
     compose(
         applyMiddleware(thunk),
+        applyMiddleware(routerMiddleware),
         ...enhancers
     )
 )
+export const history = createReduxHistory(store);
+//export default store;
 
-
-export default store;
+export default () => {
+  let persistor = persistStore(store)
+    return { store, persistor }
+  }

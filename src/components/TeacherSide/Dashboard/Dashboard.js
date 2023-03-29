@@ -1,15 +1,26 @@
-import React, { Component } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import React, { Component, useState } from "react";
+import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
-import Header from "../Header";
 import logoDark from "../../../images/GraidexLogoDarkJPG.jpg";
+import AddSubjectModal from "./Modals/AddSubjectModal";
+import { withRouter } from "../../../utils/withRouter";
+import { SetOpen } from "../../MainAction";
 
 class Dashboard extends Component {
+  OpenModal(){
+    this.props.SetOpen("openSubjectModal", true)
+  }
+
+  HandleCardClick(e, data) {
+    this.props.SetOpen("selectedSubjectId", e.currentTarget.id);
+    this.props.navigate("/"+e.currentTarget.id);
+  }
+  
   render() {
-    //TODO: Move header to layout
     return (
-      <>      
-        <Header />
+      <>
+      {/* //TODO: Add edit card (+delete) (three dots icon with dropdown on every card) */}
+      <AddSubjectModal  />
         <div
           style={{
             marginTop: "80px",
@@ -17,23 +28,32 @@ class Dashboard extends Component {
             paddingRight: "50px",
           }}
         >
-          <h3 style={{ fontWeight: "bold", textAlign: "left" }}>Subjects </h3>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 5 }}>
+            <h3 style={{ fontWeight: "bold", textAlign: "left", margin: "0" }}>
+              Subjects
+            </h3>
+            <div style={{ marginLeft: "auto" }}>
+              {/* //! Or make more dynamic field to add new card with text and 
+              //!     change directly on card (without modal) */}
+              <Button onClick={this.OpenModal.bind(this)}><i className="bi bi-plus-lg" ></i>Add subject</Button>
+            </div>
+          </div>
           {/*//TODO: add filter button */}
-          <Row xs={1} md={3} className="g-4">
-      {Array.from({ length: 9 }).map((_, idx) => (
-        <Col key={idx}>
-          <Card style = {{textAlign: "left"}}>
-          <Card.Img variant="top" src={logoDark} />
-              <Card.Body>
-                <Card.Subtitle className="mb-2 text-muted">
-                  IF3333_EN
-                </Card.Subtitle>
-                <Card.Title>Media and Design</Card.Title>
-              </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
+          <Row xs={1} md={3} className="g-3">
+            {Array.from({ length: 9 }).map((_, idx) => (
+              <Col key={idx}>
+                <Card style={{ textAlign: "left" }} id="IF3333_EN" onClick={this.HandleCardClick.bind(this)} >
+                  <Card.Img variant="top" src={logoDark} />
+                  <Card.Body>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      IF3333_EN
+                    </Card.Subtitle>
+                    <Card.Title>Media and Design</Card.Title>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </div>
       </>
     );
@@ -43,7 +63,8 @@ class Dashboard extends Component {
 function mapStateToProps(state) {
   return {
     auth: state.auth,
+    main: state.main
   };
 }
 
-export default connect(mapStateToProps, {})(Dashboard);
+export default withRouter(connect(mapStateToProps, {SetOpen})(Dashboard));

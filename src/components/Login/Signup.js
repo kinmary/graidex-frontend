@@ -26,6 +26,7 @@ class SignUp extends Component {
   }
   render() {
     return (
+      //TODO: work on responsiveness of login and sign up form
       <div className="container mb-3">
         <Card body className="card-auth">
           <div className="logo-container">

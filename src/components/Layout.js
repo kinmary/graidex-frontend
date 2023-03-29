@@ -5,43 +5,33 @@ import Signup from './Login/Signup';
 import Header from './TeacherSide/Header';
 import Dashboard from './TeacherSide/Dashboard/Dashboard';
 import EditProfile from './TeacherSide/EditProfile/EditProfile';
+import { withRouter } from '../utils/withRouter';
+
 class Layout extends Component {
     //TODO: add reducer with isAuth
-    constructor(props){
-        super(props);
-        this.state = {
-            isAuth: true,
-        }
-    }
+    //TODO:rosponsive login and signup
+    static Content = ({ children }) => 
+    <div >
+      {children}
+    </div>;
 
-    render() {
-        const { isNewUser } = this.props.auth;
-        return (
-            <>
-                { this.state.isAuth ? <EditProfile /> : (isNewUser ? <Signup /> : <Login />)}
-            </>
-        );
-        // if (!this.state.isAuth) {
-        //     return (this.props.auth.isNewUser ? <Signup /> : <Login />);
-        //   } else {
-        //     return (
-        //       <>  
-        //        <Header />
-        //         <Routes>
-        //           <Route  path="/home" element={<Dashboard />} />
-                  
-        //         </Routes >
-        //       </>
-                 
-        //     );
-        //   }
-    }
-
+  render () {
+    return (
+      <div style={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent:"center", }}>
+        <Header />
+        {this.props.children}
+      </div>
+    );
+  }
 }
 function mapStateToProps(state) {
-    return {
-      auth: state.auth,
-    };
-  }
-  export default connect(mapStateToProps, { })(Layout);
-  
+  return {
+    main: state.Main
+  };
+}
+
+ 
+export default withRouter(connect(
+  mapStateToProps,
+  {  }
+)(Layout));

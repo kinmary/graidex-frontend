@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Header from "../Header";
 import blankProf from "../../../images/blank-profile-picture.jpg";
 import { ChangeInputValues } from "../../Login/AuthAction";
+import { withRouter } from "../../../utils/withRouter";
 
 class EditProfile extends Component {
     HandleChange(event, data) {
@@ -13,8 +14,8 @@ class EditProfile extends Component {
   render() {
     return (
       <>
-        {/* //TODO: Move header to layout */}
-        <Header editPage={true} />
+      {/* //TODO: Add breadcrumbs */}
+        {/* //TODO: add delete accont button */}
             <Form className="form" style={{ width: "35%", marginLeft: "100px", position: "relative"}}>
             <Image className = "profile-image-edit mb-4" src ={blankProf}/>
 
@@ -35,7 +36,6 @@ class EditProfile extends Component {
                   placeholder="Name"
                   name = "name"
                   value={this.props.auth.name}
-                  //TODO OnChange
                   onChange = {this.HandleChange.bind(this)}
                   style={{ width: "40%" }}
                   required
@@ -44,18 +44,11 @@ class EditProfile extends Component {
                   placeholder="Surname"
                   name = "surname"
                   value = {this.props.auth.surname}
-                  //TODO: OnChange
                   onChange = {this.HandleChange.bind(this)}
                   style={{ width: "59%" }}
                   required
                 />
               </div>
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label>
-                    Faculty
-                </Form.Label>
-                <Form.Control placeholder="Faculty " />
             </Form.Group>
             <Form.Group className="mb-2">
             <Button variant="primary" type="submit" style={{ width: "49%", marginRight: "2%"}}>
@@ -77,4 +70,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {ChangeInputValues})(EditProfile);
+export default withRouter(connect(mapStateToProps, {ChangeInputValues})(EditProfile));
