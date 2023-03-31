@@ -1,4 +1,6 @@
-# graidex-frontend 
+# Graidex (frontend)
+
+> This is frontend repository. To see backend, follow the link: https://github.com/BarysShauchuk/graidex-backend
 
 This is a student testing system that provides teachers with an effective evaluation tool. The platform will have specific features geared towards effective knowledge testing. This project will be performed in three stages: casual testing system creation, implementation of AI evaluation, and implementation of plagiarism checks.
 
