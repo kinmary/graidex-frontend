@@ -61,7 +61,7 @@ class RightSideBarMenu extends Component {
               Properties
             </SidebarMenu.Brand>
           </SidebarMenu.Header>
-          <SidebarMenu.Body style={{ marginTop: 10, marginRight: 50 }}>
+          <SidebarMenu.Body style={{ marginTop: 10, marginRight: 20 }}>
             <Accordion>
               <Accordion.Item eventKey="0" style={{ border: "none" }}>
                 <Accordion.Header style={{ textAlign: "left" }}>
@@ -184,7 +184,7 @@ class RightSideBarMenu extends Component {
                     textAlign: "left",
                   }}
                 >
-                  Max Points
+                 {selectedQuestion.type === 1 ? "Points/Answer" : "Max Points"} 
                 </Form.Label>
                 <Form.Control
                   type="number"

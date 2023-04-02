@@ -86,6 +86,9 @@ class TestConstructor extends Component {
     let updatedAnswers = selectedQuestion.answerOptions.filter(
       (answer) => answer.id.toString() !== event.target.id.toString()
     );
+    if(updatedAnswers.length === 0){
+      updatedAnswers = [this.state.defaultAnswer];
+    }
     this.props.ChangeAnswers(selectedQuestion.id, updatedAnswers);
   }
 
@@ -174,15 +177,40 @@ class TestConstructor extends Component {
           onChange={this.onInputChange.bind(this)}
           value={selectedQuestion.title}
           style={{
-            marginBottom: 30,
+            marginBottom: 20,
             fontWeight: "bold",
             borderRadius: "0px 0px 5px 5px",
           }}
         />
-
+         {this.state.addFile && (
+          <>
+            <Navbar
+              bg="light"
+              variant="light"
+              style={{
+                borderRadius: "5px 5px 0px 0px",
+                padding: "0px 0px",
+              }}
+            >
+              {/* //TODO: bold italic underline  */}
+              <Navbar.Brand style={{ marginLeft: "auto", marginRight: 10 }}>
+                <i
+                  className="bi bi-x"
+                  onClick={this.closeImage.bind(this)}
+                ></i>
+              </Navbar.Brand>
+            </Navbar>
+            <DropZone
+              onDrop={this.handleImageDrop.bind(this)}
+              id={selectedQuestion.id}
+              files={selectedQuestion.files}
+              previews={selectedQuestion.previews}
+            />
+          </>
+        )}
         {selectedQuestion.type !== 2 && (
           <>
-            <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
+            <DragDropContext onDragEnd={this.onDragEnd.bind(this)} >
               <Row xs={1} md={1} className="g-2">
                 <Droppable droppableId="answerOptions">
                   {(provided) => (
@@ -262,32 +290,7 @@ class TestConstructor extends Component {
             </Button>
           </>
         )}
-        {this.state.addFile && (
-          <>
-            <Navbar
-              bg="light"
-              variant="light"
-              style={{
-                borderRadius: "5px 5px 0px 0px",
-                padding: "0px 0px",
-              }}
-            >
-              {/* //TODO: bold italic underline  */}
-              <Navbar.Brand style={{ marginLeft: "auto", marginRight: 10 }}>
-                <i
-                  className="bi bi-x"
-                  onClick={this.closeImage.bind(this)}
-                ></i>
-              </Navbar.Brand>
-            </Navbar>
-            <DropZone
-              onDrop={this.handleImageDrop.bind(this)}
-              id={selectedQuestion.id}
-              files={selectedQuestion.files}
-              previews={selectedQuestion.previews}
-            />
-          </>
-        )}
+       
         <Form.Control
           as="textarea"
           rows={5}

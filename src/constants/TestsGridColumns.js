@@ -11,5 +11,5 @@ export const TestsGridCol = [
   { field: "date", flex: 1, headerName: "Date" },
   { field: "avgScore", flex: 1, headerName: "Average Score" },
   { field: "Answered", flex: 1, headerName: "Answered" },
-  { field: "", flex: 0.1, headerName: "", cellRenderer: BtnCellRenderer},
+  // { field: "", flex: 0.1, headerName: "", cellRenderer: BtnCellRenderer},
 ];

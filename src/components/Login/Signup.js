@@ -30,9 +30,9 @@ class SignUp extends Component {
       <div className="container mb-3">
         <Card body className="card-auth">
           <div className="logo-container">
-            <Image src={logo} width="100%" height="155px"></Image>
+            <Image src={logo} width="50%" />
           </div>
-          <ButtonGroup>
+          <ButtonGroup className="d-flex" style={{marginTop: 10}}>
             <ToggleButton
               size="sm"
               type="radio"

@@ -24,7 +24,7 @@ class DropZone extends Component {
   render() {
     const { files, previews } = this.props;
     return (
-      <>
+      <div style={{marginBottom: 20}}>
         <Dropzone onDrop={this.handleDrop} multiple>
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps()}>
@@ -85,7 +85,7 @@ class DropZone extends Component {
               )}
             </Navbar.Brand>
           ))}
-      </>
+      </div>
     );
   }
 }

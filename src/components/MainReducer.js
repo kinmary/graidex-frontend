@@ -24,6 +24,12 @@ export const MainReducer = (state, action) => {
                 message: action.message
             };
             break;
+            case SET_LOGOUT:
+            state = {
+                ...initialState,
+            };
+            break;
+            
         default:
             break;
     };
@@ -32,3 +38,4 @@ export const MainReducer = (state, action) => {
 
 export const SET_OPEN = "SET_OPEN";
 export const SET_MESSAGE_OPEN = "SET_MESSAGE_OPEN";
+export const SET_LOGOUT = "SET_LOGOUT";

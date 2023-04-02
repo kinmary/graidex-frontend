@@ -53,22 +53,8 @@ class TestsGrid extends Component {
   render() {
     return (
       <>
-        <MessageModal />
-        <div
-          style={{
-            marginTop: "80px",
-            paddingLeft: "50px",
-            paddingRight: "50px",
-          }}
-        >
-          
-            <h3 style={{ fontWeight: "bold", textAlign: "left", marginBottom: "5" }}>
-              {/* //TODO: add test name */}
-              Test name
-            </h3>
-          {/* //TODO: Add breadcrumbs */}
           {/* //TODO: Add filter and sort buttons, + search in name field */}
-          <div className="ag-theme-alpine">
+          <div className="ag-theme-alpine" style={{marginTop: 10}}>
             <AgGridReact
               onGridReady={this.onGridReady.bind(this)}
               rowSelection={'single'}
@@ -78,7 +64,6 @@ class TestsGrid extends Component {
               domLayout="autoHeight"
             />
           </div>
-        </div>
       </>
     );
   }

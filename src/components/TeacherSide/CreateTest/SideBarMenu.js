@@ -52,6 +52,10 @@ class SideBarMenu extends Component {
       id: nextQuestionId,
       title: "Question " + (nextQuestionId + 1),
     };
+    let updatedQuestions = questions.map((obj, index) => {
+      return { ...obj, selected: false };
+    });
+    this.props.ChangeQuestions(updatedQuestions);
     this.props.AddQuestion(question);
   }
   handleQestionDelete(event) {
@@ -62,19 +66,32 @@ class SideBarMenu extends Component {
     let updatedQuestions = questions.filter(
       (question) => question.id.toString() !== event.target.id.toString()
     );
-
+    
     if (selectedQuestion.id.toString() === event.target.id.toString()) {
       let questionToDel = questions.find(
         (question) => question.id.toString() === event.target.id.toString()
       );
       const indexToDel = questions.indexOf(questionToDel);
-      updatedQuestions = updatedQuestions.map((obj, index) => {
-        if (index === indexToDel - 1) {
-          return { ...obj, selected: true };
-        }
-        return { ...obj, selected: false };
-      });
+      if(indexToDel === 0){
+        updatedQuestions = updatedQuestions.map((obj, index) => {
+          if (index === indexToDel + 1) {
+            return { ...obj, selected: true };
+          }
+          return { ...obj, selected: false };
+        });
+      } else {
+        updatedQuestions = updatedQuestions.map((obj, index) => {
+          if (index === indexToDel - 1) {
+            return { ...obj, selected: true };
+          }
+          return { ...obj, selected: false };
+        });
+      }
     }
+    if(questions.length === 1){
+      updatedQuestions = [this.state.defaultQuestion];
+    }
+   
     this.props.ChangeQuestions(updatedQuestions);
   }
   handleCardClick(event) {

@@ -8,7 +8,7 @@ export const AnswerGridCol = [
     headerName: "Status",
   },
   { field: "studentId", flex: 2, headerName: "Student Id" },
-  { field: "studentName", flex: 2, headerName: "StudentName" },
+  { field: "studentName", flex: 2, headerName: "Student Name" },
   { field: "date", flex: 2, headerName: "Date" },
   { field: "duration", flex: 1, headerName: "Duration" },
   { field: "mark", flex: 1, headerName: "Mark" },

@@ -6,9 +6,9 @@ import Layout from './components/Layout';
 import Login from './components/Login/Login';
 import Signup from './components/Login/Signup';
 import CreateTest from './components/TeacherSide/CreateTest/CreateTest';
-import AnswersGrid from './components/TeacherSide/Dashboard/AnswersGrid';
+import AnswersGrid from './components/TeacherSide/Dashboard/TestTab';
 import Dashboard from './components/TeacherSide/Dashboard/Dashboard';
-import TestsGrid from './components/TeacherSide/Dashboard/TestsGrid';
+import TestsGrid from './components/TeacherSide/Dashboard/SubjectPage';
 import EditProfile from './components/TeacherSide/EditProfile/EditProfile';
 import { withRouter } from './utils/withRouter';
 
