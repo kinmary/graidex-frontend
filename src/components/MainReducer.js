@@ -1,5 +1,6 @@
 const initialState = {
     editPage: false,
+    createTestPage: false,
     openSubjectModal: false,
     selectedSubjectId: "",
     openTestModal: false,
@@ -12,7 +13,7 @@ export const MainReducer = (state, action) => {
     switch (action.type) {
         case SET_OPEN:
             state = {
-                ...initialState,
+                ...state,
                 [action.name]: action.value
             };
             break;

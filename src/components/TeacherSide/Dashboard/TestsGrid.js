@@ -66,6 +66,7 @@ class TestsGrid extends Component {
   }
   OnNewTestClick() {
     this.props.navigate("/"+this.props.main.selectedSubjectId + "/new-test");
+    this.props.SetOpen("createTestPage", true);
   }
 
   onGridReady = (params) => {

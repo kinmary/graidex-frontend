@@ -19,8 +19,5 @@ body {
     text-align: left;
 }
 .logo-container {
-    display: flex;
     justify-content: center;
-    align-items: center;
-    height: 10px; 
   }

@@ -24,16 +24,20 @@ if(isDevelopment && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXT
 const mainPersistConfig = {
     key: 'main',
     storage,
-    whitelist: ['selectedSubjectId']
+    whitelist: ['selectedSubjectId', 'editPage', 'createTestPage']
   }
 
+  const newTestPersistConfig = {
+    key: 'createTest',
+    storage,
+  }
 
 
 const store = createStore (
     combineReducers({
        auth: AuthReducer,
        main: persistReducer(mainPersistConfig, MainReducer),
-       createTest: CreateTestReducer, //TODO: add persistor
+       createTest: persistReducer(newTestPersistConfig, CreateTestReducer),
        router: routerReducer
     }),
 
