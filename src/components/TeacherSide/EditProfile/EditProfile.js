@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, ButtonGroup, Card, Container, Form, Image } from "react-bootstrap";
+import { Breadcrumb, Button, ButtonGroup, Card, Container, Form, Image } from "react-bootstrap";
 import { connect } from "react-redux";
 import Header from "../Header";
 import blankProf from "../../../images/blank-profile-picture.jpg";
@@ -18,7 +18,10 @@ class EditProfile extends Component {
         {/* //TODO: add delete accont button */}
             <Form className="form" style={{ width: "35%", marginLeft: "100px", position: "relative"}}>
             <Image className = "profile-image-edit mb-4" src ={blankProf}/>
-
+            <Breadcrumb>
+        <Breadcrumb.Item onClick={()=> {this.props.navigate("/")}}> Dashboard</Breadcrumb.Item>
+        <Breadcrumb.Item active >Edit profile </Breadcrumb.Item> 
+      </Breadcrumb>
           <h2 style={{ fontWeight: "bold"}} >
             {/* <Image src={blankProf} className="profile-image-edit" /> */}
             {this.props.auth.name} {this.props.auth.surname}

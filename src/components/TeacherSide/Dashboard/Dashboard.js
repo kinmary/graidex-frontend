@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
+import { Breadcrumb, Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import logoDark from "../../../images/GraidexLogoDarkJPG.jpg";
 import AddSubjectModal from "./Modals/AddSubjectModal";
@@ -38,6 +38,9 @@ class Dashboard extends Component {
               <Button onClick={this.OpenModal.bind(this)}><i className="bi bi-plus-lg" ></i>Add subject</Button>
             </div>
           </div>
+          <Breadcrumb>
+        <Breadcrumb.Item active> Dashboard</Breadcrumb.Item>
+      </Breadcrumb>
           {/*//TODO: add filter button */}
           <Row xs={1} md={3} className="g-3">
             {Array.from({ length: 9 }).map((_, idx) => (

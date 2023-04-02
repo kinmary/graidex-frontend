@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
+import { Breadcrumb, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../../utils/withRouter";
 import { SetOpen, SetMessageOpen } from "../../MainAction";
@@ -75,6 +75,7 @@ class TestsGrid extends Component {
   };
 
   render() {
+    const {selectedSubjectId} = this.props.main;
     return (
       <>
         <MessageModal />
@@ -103,6 +104,10 @@ class TestsGrid extends Component {
               </Button>
             </div>
           </div>
+          <Breadcrumb>
+        <Breadcrumb.Item onClick={()=> {this.props.navigate("/")}}> Dashboard</Breadcrumb.Item>
+        <Breadcrumb.Item active> {selectedSubjectId} </Breadcrumb.Item>
+      </Breadcrumb>
           {/* //TODO: Add breadcrumbs (exmpl:  Dashboard > SubjId > Test ) */}
           {/* //TODO: Add text when zero tests in subject */}
           <div className="ag-theme-alpine">
