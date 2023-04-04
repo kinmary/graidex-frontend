@@ -6,10 +6,10 @@ import {  SetOpen, Logout } from "../../../MainAction";
 
 class DeleteConfirmModal extends Component {
   closeModal() {
-    this.props.SetOpen(false, "");
+    this.props.SetOpen("deleteConfirmModal", false);
   }
   onConfirm() {
-    this.props.SetOpen(false, "");
+    this.props.SetOpen("deleteConfirmModal", false);
     this.props.navigate("/");
     this.props.Logout();
 
