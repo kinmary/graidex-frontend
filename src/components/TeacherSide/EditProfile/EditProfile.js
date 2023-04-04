@@ -11,6 +11,10 @@ class EditProfile extends Component {
         //TODO: make changes only onSave button (create axios request to database)
         this.props.ChangeInputValues(event.target.name, event.target.value);
     }
+    onBreadClick() {
+      this.props.navigate("/");
+      this.props.SetOpen("editPage", false);
+    }
   render() {
     return (
       <>
@@ -18,7 +22,7 @@ class EditProfile extends Component {
             <Form className="form" style={{ width: "35%", marginLeft: "100px", position: "relative"}}>
             <Image className = "profile-image-edit mb-4" src ={blankProf}/>
             <Breadcrumb>
-        <Breadcrumb.Item onClick={()=> {this.props.navigate("/")}}> Dashboard</Breadcrumb.Item>
+        <Breadcrumb.Item onClick={this.onBreadClick.bind(this)}> Dashboard</Breadcrumb.Item>
         <Breadcrumb.Item active >Edit profile </Breadcrumb.Item> 
       </Breadcrumb>
           <h2 style={{ fontWeight: "bold"}} >
@@ -70,6 +74,7 @@ class EditProfile extends Component {
 function mapStateToProps(state) {
   return {
     auth: state.auth,
+    main: state.main
   };
 }
 

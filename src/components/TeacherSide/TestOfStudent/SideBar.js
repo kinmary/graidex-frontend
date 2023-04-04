@@ -33,19 +33,13 @@ class SideBar extends Component {
           >
             <Row xs={1} md={3}>
               {questions.map((question, idx) => (
-                <Col key={idx} style={{ padding: 2 }}>
+                <Col key={idx} style={{ padding: 2}}>
                   <Card 
                   onClick={this.handleCardClick.bind(this)}
                   key={idx}
                     className="text-center"
                     id={question.id}
-                    // bg = {
-                    //   question.type === 2
-                    //     ? "secondary"
-                    //     : question.maxPoints === question.points
-                    //     ? "primary"
-                    //     : "danger"
-                    // }
+                   
                     style={{
                       backgroundColor: 
                       question.type === 2
@@ -54,12 +48,8 @@ class SideBar extends Component {
                         ? "#5067ff"
                         : "#ff5272",
                          padding: "5px",
+                         border:  (question.selected) && "1px solid #000a55",                         
                     }}
-
-                    border={
-                      (question.selected) &&
-                       "primary"
-                     }
                     text="light"
                   >
                     <Card.Text>{idx + 1}</Card.Text>
