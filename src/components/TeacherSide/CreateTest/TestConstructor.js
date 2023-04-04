@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Button, Col, Form, InputGroup, Navbar, Row } from "react-bootstrap";
+import { Button, Card, Col, Form, InputGroup, Navbar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../../utils/withRouter";
 import { AddAnswer, InputChange, ChangeAnswers, SetSelectedQ } from "./CreateTestActions";
@@ -138,14 +138,19 @@ class TestConstructor extends Component {
   }
 
   render() {
-    const { questions } = this.props.createTest;
+    let { questions } = this.props.createTest;
     const selectedQuestion = questions.find(
       (question) => question.selected === true
     );
-    const indexOfSelected = questions.indexOf(selectedQuestion);
-    let answerOptions = selectedQuestion.answerOptions;
+    let indexOfSelected = 0;
+    let answerOptions = [];
+    if(selectedQuestion){
+      indexOfSelected = questions.indexOf(selectedQuestion);
+      answerOptions = selectedQuestion.answerOptions;
+    }
     return (
-      <Form>
+       
+        <> {selectedQuestion ? <Form>
         {/* {selectedQuestion.type === 2 && ( */}
         <Navbar
           bg="light"
@@ -324,7 +329,10 @@ class TestConstructor extends Component {
             </Button>
           </Navbar.Brand>}
         </Navbar>
-      </Form>
+      </Form>  : 
+      <Card className="text-center">
+        <Card.Header>Please select question to edit</Card.Header>
+      </Card> } </>
     );
   }
 }

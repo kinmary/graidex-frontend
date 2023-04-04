@@ -98,7 +98,8 @@ class SideBarMenu extends Component {
     this.props.SetSelectedQ(event.currentTarget.id);
   }
   render() {
-    const { questions } = this.props.createTest;
+    let { questions } = this.props.createTest;
+    
     const selectedQuestion = questions.find(
       (question) => question.selected === true
     );
@@ -136,7 +137,7 @@ class SideBarMenu extends Component {
                               <Card
                                 size="sm"
                                 border={
-                                  selectedQuestion.id === question.id &&
+                                 (selectedQuestion && selectedQuestion.id === question.id) &&
                                   "primary"
                                 }
                                 ref={provided.innerRef}

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Breadcrumb, Button, ButtonGroup, Card, Container, Form, Image } from "react-bootstrap";
+import { Breadcrumb, Button, Form, Image } from "react-bootstrap";
 import { connect } from "react-redux";
-import Header from "../Header";
 import blankProf from "../../../images/blank-profile-picture.jpg";
 import { ChangeInputValues } from "../../Login/AuthAction";
 import { withRouter } from "../../../utils/withRouter";
-
+import DeleteConfirmModal from "../Dashboard/Modals/DeleteConfirmModal";
+import { SetOpen } from "../../MainAction";
 class EditProfile extends Component {
     HandleChange(event, data) {
         //TODO: make changes only onSave button (create axios request to database)
@@ -14,8 +14,7 @@ class EditProfile extends Component {
   render() {
     return (
       <>
-      {/* //TODO: Add breadcrumbs */}
-        {/* //TODO: add delete accont button */}
+          <DeleteConfirmModal />
             <Form className="form" style={{ width: "35%", marginLeft: "100px", position: "relative"}}>
             <Image className = "profile-image-edit mb-4" src ={blankProf}/>
             <Breadcrumb>
@@ -25,6 +24,7 @@ class EditProfile extends Component {
           <h2 style={{ fontWeight: "bold"}} >
             {/* <Image src={blankProf} className="profile-image-edit" /> */}
             {this.props.auth.name} {this.props.auth.surname}
+            <Button onClick={() => {this.props.SetOpen("deleteConfirmModal", true)}} variant="danger" size="sm" style ={{marginLeft: 10}}>Delete profile</Button>
           </h2>
             <Form.Group className="mb-2" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
@@ -73,4 +73,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default withRouter(connect(mapStateToProps, {ChangeInputValues})(EditProfile));
+export default withRouter(connect(mapStateToProps, {ChangeInputValues, SetOpen})(EditProfile));

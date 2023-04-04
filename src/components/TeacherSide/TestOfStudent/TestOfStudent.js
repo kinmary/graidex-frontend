@@ -3,10 +3,11 @@ import { Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../../utils/withRouter";
 import { SetOpen } from "../../MainAction";
-import RightSideBarMenu from "./RightSideBarMenu";
-import SideBarMenu from "./SideBarMenu";
-import TestConstructor from "./TestConstructor";
-class CreateTest extends Component {
+import RightSideBar from "./RightSideBar";
+import SideBar from "./SideBar";
+import TestField from "./TestField";
+
+class TestOfStudent extends Component {
  
   render() {
     return (
@@ -19,13 +20,13 @@ class CreateTest extends Component {
     >
       <Row xs = {3}>
       <Col key={1} className = "col-2" >
-      <SideBarMenu />
+      <SideBar />
       </Col>
       <Col key={2} className = "col-8">
-        <TestConstructor />
+        <TestField />
       </Col>
       <Col key={3} className = "col-2">
-        <RightSideBarMenu />
+        <RightSideBar />
       </Col>
       </Row>
       </div>
@@ -40,4 +41,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default withRouter(connect(mapStateToProps, {SetOpen})(CreateTest));
+export default withRouter(connect(mapStateToProps, {})(TestOfStudent));

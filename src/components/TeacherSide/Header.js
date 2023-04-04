@@ -18,16 +18,23 @@ import {
   ChangeTitle,
   ResetCreateTestState,
 } from "./CreateTest/CreateTestActions";
+import { ResetTestOfStudentState } from "./TestOfStudent/TestOfStudentActions";
+import TestOfStudent from "./TestOfStudent/TestOfStudent";
+
 class Header extends Component {
   handleEditProfile() {
     this.props.SetOpen("editPage", true);
     this.props.navigate("/edit-profile");
   }
   handleLogoClick() {
-    this.props.SetOpen("editPage", false);
-    this.props.SetOpen("createTestPage", false);
     this.props.navigate("/");
     this.props.ResetCreateTestState();
+    this.props.ResetTestOfStudentState();
+    this.props.SetOpen("editPage", false);
+    this.props.SetOpen("createTestPage", false);
+    this.props.SetOpen("testOfStudentPage", false);
+    this.props.SetOpen("studentName", "");
+    this.props.SetOpen("selectedTest", null);
   }
   handleChangeTestTitle(event, data) {
     this.props.ChangeTitle(event.target.value);
@@ -38,14 +45,29 @@ class Header extends Component {
     //TODO: add send to backend functionality
     this.props.ResetCreateTestState();
   }
+
+  handleSaveTestOfStudentClick() {
+    this.props.navigate(-1);
+    this.props.SetOpen("testOfStudentPage", false);
+    //TODO: add send to backend functionality
+    this.props.ResetTestOfStudentState();
+  }
+
   handleLogOut() {
     this.props.ResetCreateTestState();
+    this.props.ResetTestOfStudentState();
     this.props.Logout();
   }
   render() {
     // TODO: work on responsiveness of header
-    const { editPage, createTestPage } = this.props.main;
+    const { editPage, createTestPage, testOfStudentPage } = this.props.main;
     const { testTitle } = this.props.createTest;
+    let mark = 0;
+    if(this.props.main.studentName !== ""){
+      mark = this.props.test.studentAnswers.find(
+        (student) => student.studentName === this.props.main.studentName
+      ).mark;
+    }
     return (
       <div>
         <Navbar
@@ -53,7 +75,6 @@ class Header extends Component {
           bg="white"
           style={{ paddingLeft: 20, paddingRight: 20 }}
         >
-          {/* //TODO: reduce size of img logo, height */}
           <Image
             src={logo}
             width="155"
@@ -63,7 +84,7 @@ class Header extends Component {
 
           <Navbar.Brand>
             {!createTestPage ? (
-              <InputGroup>
+             !testOfStudentPage ? <InputGroup>
                 <InputGroup.Text
                   id="basic-addon1"
                   aria-label="Search"
@@ -86,7 +107,10 @@ class Header extends Component {
                     visibility: editPage ? "hidden" : "visible",
                   }}
                 />
-              </InputGroup>
+              </InputGroup> : 
+              <h4 style={{marginBottom: 0, marginLeft: 10, fontWeight: "bold"}}>
+                {this.props.main.studentName}: {this.props.main.studentName !== "" && mark}
+              </h4>
             ) : (
               <InputGroup>
                 <Form.Control
@@ -109,16 +133,16 @@ class Header extends Component {
               marginRight: "0",
             }}
           >
-            {createTestPage && (
+            {(createTestPage || testOfStudentPage) && (
               <Button
                 style={{
                   marginRight: 10,
                   backgroundColor: "#000a55",
                   fontWeight: "bold",
                 }}
-                onClick={this.handleSaveClick.bind(this)}
+                onClick={createTestPage ? this.handleSaveClick.bind(this) : this.handleSaveTestOfStudentClick.bind(this)}
               >
-                <i class="bi bi-check2-circle" style={{ marginRight: 4 }}></i>
+                <i className="bi bi-check2-circle" style={{ marginRight: 4 }}></i>
                 Save
               </Button>
             )}
@@ -157,11 +181,12 @@ function mapStateToProps(state) {
     auth: state.auth,
     main: state.main,
     createTest: state.createTest,
+    test: state.testOfStudent
   };
 }
 
 export default withRouter(
-  connect(mapStateToProps, { SetOpen, ChangeTitle, ResetCreateTestState, Logout })(
+  connect(mapStateToProps, { SetOpen, ChangeTitle, ResetCreateTestState, Logout, ResetTestOfStudentState })(
     Header
   )
 );

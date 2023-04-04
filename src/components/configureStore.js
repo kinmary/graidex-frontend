@@ -7,6 +7,7 @@ import { MainReducer } from './MainReducer';
 import storage from 'redux-persist/lib/storage';
 import { persistStore, persistReducer } from 'redux-persist'
 import { CreateTestReducer } from './TeacherSide/CreateTest/CreateTestReducer';
+import { TestOfStudentReducer } from './TeacherSide/TestOfStudent/TestOfStudentReducer';
 
 
 const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({ 
@@ -24,11 +25,16 @@ if(isDevelopment && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXT
 const mainPersistConfig = {
     key: 'main',
     storage,
-    whitelist: ['selectedSubjectId', 'editPage', 'createTestPage']
+    whitelist: ['selectedSubjectId', 'editPage', 'createTestPage', 'studentName', 'testOfStudentPage', 'selectedTest', 'editTestPage']
   }
 
   const newTestPersistConfig = {
     key: 'createTest',
+    storage,
+  }
+
+  const testPersistConfig = {
+    key: 'testOfStudent',
     storage,
   }
 
@@ -38,6 +44,7 @@ const store = createStore (
        auth: AuthReducer,
        main: persistReducer(mainPersistConfig, MainReducer),
        createTest: persistReducer(newTestPersistConfig, CreateTestReducer),
+       testOfStudent: persistReducer(testPersistConfig, TestOfStudentReducer),
        router: routerReducer
     }),
 

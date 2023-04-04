@@ -26,7 +26,10 @@
     position: fixed;
     bottom: 0;
     padding-top: 80px;
+    right:0;
+    top: 0;
     min-height: 100vh !important;
+    width: inherit;
     border: 1px #dde0e4 solid;
 }
 .left-sidebar {

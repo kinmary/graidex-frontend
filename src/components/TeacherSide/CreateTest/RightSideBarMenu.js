@@ -43,13 +43,17 @@ class RightSideBarMenu extends Component {
   }
 
   render() {
-    const { questions } = this.props.createTest;
+    let { questions } = this.props.createTest;
+    
     const selectedQuestion = questions.find(
       (question) => question.selected === true
     );
-    const typeObj = this.state.types.find(
-      (t) => t.type === selectedQuestion.type
-    );
+    let typeObj = {};
+    if(selectedQuestion){
+      typeObj = this.state.types.find(
+        (t) => t.type === selectedQuestion.type
+      );
+    }
     return (
       <Nav className="sidebar">
         <SidebarMenu>
@@ -62,6 +66,8 @@ class RightSideBarMenu extends Component {
             </SidebarMenu.Brand>
           </SidebarMenu.Header>
           <SidebarMenu.Body style={{ marginTop: 10, marginRight: 20 }}>
+          {selectedQuestion &&
+          <>
             <Accordion>
               <Accordion.Item eventKey="0" style={{ border: "none" }}>
                 <Accordion.Header style={{ textAlign: "left" }}>
@@ -200,8 +206,8 @@ class RightSideBarMenu extends Component {
                   onChange={this.onInputChange.bind(this)}
                 />
               </Card.Body>
-            </Card>
-          </SidebarMenu.Body>
+            </Card> </>}
+          </SidebarMenu.Body> 
         </SidebarMenu>
       </Nav>
     );

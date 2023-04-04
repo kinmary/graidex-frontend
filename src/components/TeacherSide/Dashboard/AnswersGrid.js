@@ -5,9 +5,8 @@ import { withRouter } from "../../../utils/withRouter";
 import { SetOpen, SetMessageOpen } from "../../MainAction";
 import { AgGridReact } from "ag-grid-react";
 import { AnswerGridCol } from "../../../constants/AnswerGridColumns";
-import MessageModal from "./Modals/MessageModal";
 
-class TestsGrid extends Component {
+class AnswersGrid extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,6 +49,16 @@ class TestsGrid extends Component {
     this.columnApi = params.columnApi;
   };
 
+  onRowClicked(){
+    let selectedRows = this.gridApi.getSelectedRows();
+    let studentName = selectedRows[0].studentName;
+    if(studentName){
+      this.props.SetOpen("studentName", studentName);
+      this.props.SetOpen("testOfStudentPage", true);
+      this.props.navigate("/"+this.props.main.selectedSubjectId + "/test"+studentName);
+    }
+  }
+
   render() {
     return (
       <>
@@ -57,9 +66,10 @@ class TestsGrid extends Component {
           <div className="ag-theme-alpine" style={{marginTop: 10}}>
             <AgGridReact
               onGridReady={this.onGridReady.bind(this)}
-              rowSelection={'single'}
+              rowSelection='single'
               columnDefs={AnswerGridCol}
               rowData={this.state.rowData}
+              onRowClicked = {this.onRowClicked.bind(this)}
               style={{ width: "100%", height: "100%" }}
               domLayout="autoHeight"
             />
@@ -77,5 +87,5 @@ function mapStateToProps(state) {
 }
 
 export default withRouter(
-  connect(mapStateToProps, { SetOpen, SetMessageOpen })(TestsGrid)
+  connect(mapStateToProps, { SetOpen, SetMessageOpen })(AnswersGrid)
 );
