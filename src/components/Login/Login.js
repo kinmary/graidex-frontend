@@ -10,17 +10,31 @@ import {
 import "../../styles/auth.css";
 import logo from "../../images/GraidexLogoLightSVG.svg";
 import { connect } from "react-redux";
-import { SetNewUser } from "./AuthAction";
+import { SetNewUser, loginStudent, loginTeacher } from "./AuthAction";
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
-      password: "",
-      user: 0,
+      user: { username: "", password: "" },
+      userType: 0,
     };
   }
+  handleInputChange(event) {
+    this.setState({
+      user: {
+        ...this.state.user,
+        [event.target.name]: event.target.value,
+      },
+    });
+  }
+  async handleFormSubmit(event) {
+    event.preventDefault();
+    this.state.userType === 0
+      ? await this.props.loginTeacher(this.state.user)
+      : await this.props.loginStudent(this.state.user);
+  }
+
   render() {
     return (
       //TODO: work on responsiveness of login and sign up form
@@ -30,15 +44,15 @@ class Login extends Component {
             <Image src={logo} width="50%" />
           </div>
           {/* <h4>Login</h4> */}
-          <ButtonGroup className="d-flex" style={{marginTop: 10}}>
+          <ButtonGroup className="d-flex" style={{ marginTop: 10 }}>
             <ToggleButton
               size="sm"
               type="radio"
               name="Teacher"
               variant="outline-dark"
               value={0}
-              checked={this.state.user === 0 ? true : false}
-              onClick={(e) => this.setState({ user: 0 })}
+              checked={this.state.userType === 0 ? true : false}
+              onClick={(e) => this.setState({ userType: 0 })}
             >
               Teacher
             </ToggleButton>
@@ -48,8 +62,8 @@ class Login extends Component {
               name="Student"
               variant="outline-dark"
               value={1}
-              checked={this.state.user === 1 ? true : false}
-              onClick={(e) => this.setState({ user: 1 })}
+              checked={this.state.userType === 1 ? true : false}
+              onClick={(e) => this.setState({ userType: 1 })}
             >
               Student
             </ToggleButton>
@@ -57,19 +71,41 @@ class Login extends Component {
           <Form className="form">
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" 
-              // TODO: return required
-              // required
-               />
+              <Form.Control
+                type="email"
+                name="email"
+                placeholder="Enter email"
+                value={this.state.user.email}
+                onChange={this.handleInputChange.bind(this)}
+                isInvalid={this.props.auth.errors.email !== ""}
+                onInvalid={(e) => {
+                  e.preventDefault();
+                  this.props.setError("email", e.target.validationMessage);
+                }}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                {this.props.auth.errors.email}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Enter password"
-                // TODO: return required
-                //required
+                name="password"
+                value={this.state.user.password}
+                onChange={this.handleInputChange.bind(this)}
+                isInvalid={this.props.auth.errors.password !== ""}
+                onInvalid={(e) => {
+                  e.preventDefault();
+                  this.props.setError("password", e.target.validationMessage);
+                }}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                {this.props.auth.errors.password}
+              </Form.Control.Feedback>
             </Form.Group>
             <div className="d-flex align-items-center justify-content-between mb-3">
               <Form.Check type="checkbox" label="Remember me" />
@@ -77,7 +113,12 @@ class Login extends Component {
                 Forgot your password?
               </Button>
             </div>
-            <Button variant="primary" type="submit" style={{ width: "100%" }}>
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ width: "100%" }}
+              onClick={this.handleFormSubmit.bind(this)}
+            >
               Login
             </Button>
           </Form>
@@ -98,4 +139,4 @@ function mapStateToProps(state) {
     auth: state.auth,
   };
 }
-export default connect(mapStateToProps, { SetNewUser })(Login);
+export default connect(mapStateToProps, { SetNewUser, loginStudent, loginTeacher })(Login);
