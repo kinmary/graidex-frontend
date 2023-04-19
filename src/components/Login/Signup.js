@@ -38,16 +38,6 @@ class SignUp extends Component {
     };
   }
 
-  HandleSubmit(event) {
-    event.preventDefault();
-    const password = event.target.formBasicPassword.value;
-    const repeatPassword = event.target.formBasicRepeatPassword.value;
-    if (password !== repeatPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-    // continue with form submission
-  }
   handleInputChange(event) {
     this.state.user === 0
       ? this.setState({
@@ -63,12 +53,40 @@ class SignUp extends Component {
           },
         });
   }
-  async handleFormSubmit(event) {
+   handleFormSubmit(event) {
     event.preventDefault();
-    this.state.user === 0
-      ? await this.props.registerTeacher(this.state.teacher)
-      : await this.props.registerStudent(this.state.student);
+    this.removeAllErrors();
+    const isValid = this.validateForm();
+    if (isValid) {
+      this.state.user === 0
+      ?  this.props.registerTeacher(this.state.teacher)
+      :  this.props.registerStudent(this.state.student);
+    } else {
+      alert("Form is invalid. Check all the fields and try again!")
+    }
   }
+  
+  validateForm() {
+    const { email, name, surname, password } = this.state.user === 0 ? this.state.teacher : this.state.student;
+    if (!email || !name || !surname || !password) {
+      return false;
+    }
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+      return false;
+    }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return false;
+    }
+    return true;
+  }
+  removeAllErrors(){
+    this.props.setError("email", "");
+    this.props.setError("password", "");
+    this.props.setError("repeatPassword", "");
+  }
+  
 
   render() {
     return (
@@ -102,7 +120,7 @@ class SignUp extends Component {
               Student
             </ToggleButton>
           </ButtonGroup>
-          <Form className="form">
+          <Form className="form" onSubmit={this.handleFormSubmit.bind(this)}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
@@ -234,7 +252,6 @@ class SignUp extends Component {
               variant="primary"
               type="submit"
               style={{ width: "100%" }}
-              onClick={this.handleFormSubmit.bind(this)}
             >
               Sign up
             </Button>

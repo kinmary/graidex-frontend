@@ -46,10 +46,12 @@ export const registerStudent = (student) => {
       if (response.status === 200) {
         dispatch({ type: "REGISTER_STUDENT_SUCCESS" });
       } else {
-        dispatch({ type: REGISTER_STUDENT_FAIL });
+        //dispatch({ type: REGISTER_STUDENT_FAIL });
+        alert(response.data);
       }
     } catch (error) {
-      dispatch({ type: REGISTER_STUDENT_FAIL });
+      //dispatch({ type: REGISTER_STUDENT_FAIL });
+      alert(error.response.data);
     }
   };
 };
@@ -67,10 +69,13 @@ export const loginStudent = (user) => {
         axios.defaults.headers.common = authHeader();
         dispatch({ type: "LOGIN_STUDENT_SUCCESS" });
       } else {
-        dispatch({ type: LOGIN_STUDENT_FAIL });
+        //dispatch({ type: LOGIN_STUDENT_FAIL });
+        alert(response.data);
       }
     } catch (error) {
-      dispatch({ type: LOGIN_STUDENT_FAIL });
+      //dispatch({ type: LOGIN_STUDENT_FAIL });
+      alert(error.response.data);
+
     }
   };
 };
@@ -84,12 +89,17 @@ export const registerTeacher = (teacher) => {
         teacher
       );
       if (response.status === 200) {
-        dispatch({ type: SET_AUTHENTICATION, isAuth: true, });
+        let user = {email: teacher.email, password: teacher.password}
+        dispatch(loginTeacher(user));
       } else {
-        dispatch({ type: REGISTER_TEACHER_FAIL });
+        //dispatch({ type: REGISTER_TEACHER_FAIL });
+        alert(response.data);
       }
     } catch (error) {
-      dispatch({ type: REGISTER_TEACHER_FAIL });
+      //dispatch({ type: REGISTER_TEACHER_FAIL });
+      alert(error.response.data);
+      //alert(error);
+
     }
   };
 };
@@ -108,10 +118,12 @@ export const loginTeacher = (user) => {
         setAuthorizationHeader(token);
         dispatch({ type: SET_AUTHENTICATION, isAuth: true, });
       } else {
-        dispatch({ type: LOGIN_TEACHER_FAIL });
+        //dispatch({ type: LOGIN_TEACHER_FAIL });
+        alert(response.data);
       }
     } catch (error) {
-      dispatch({ type: LOGIN_TEACHER_FAIL });
+      //dispatch({ type: LOGIN_TEACHER_FAIL });
+      alert(error.response.data);
     }
   };
 };

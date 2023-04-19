@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { withRouter } from "../../../utils/withRouter";
 import { AddAnswer, InputChange, ChangeAnswers, SetSelectedQ } from "./CreateTestActions";
 import DropZone from "./DropZone";
+import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-react'
+import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
 class TestConstructor extends Component {
   constructor(props) {
     super(props);
@@ -150,7 +152,13 @@ class TestConstructor extends Component {
     }
     return (
        
-        <> {selectedQuestion ? <Form>
+        <Grammarly
+        clientId={GRAMMARLY_CLIENT_ID}
+        config={{
+          documentDialect: "british",
+          autocomplete: "on"
+        }}
+      > {selectedQuestion ? <Form>
         {/* {selectedQuestion.type === 2 && ( */}
         <Navbar
           bg="light"
@@ -171,7 +179,7 @@ class TestConstructor extends Component {
           </Navbar.Brand>
         </Navbar>
         {/* )}  */}
-
+        <GrammarlyEditorPlugin >
         <Form.Control
           as="textarea"
           rows={selectedQuestion.type !== 2 ? 2 : 5}
@@ -187,6 +195,7 @@ class TestConstructor extends Component {
             borderRadius: "0px 0px 5px 5px",
           }}
         />
+        </GrammarlyEditorPlugin>
          {this.state.addFile && (
           <>
             <Navbar
@@ -252,6 +261,7 @@ class TestConstructor extends Component {
                                     checked={answer.isRight}
                                     onChange={this.handleCheck.bind(this)}
                                   />
+                                  <GrammarlyEditorPlugin >
                                   <Form.Control
                                     placeholder={
                                       "Answer option " + (answer.id + 1)
@@ -265,6 +275,7 @@ class TestConstructor extends Component {
                                       this
                                     )}
                                   />
+                                  </GrammarlyEditorPlugin>
                                   <i
                                     className="bi bi-x-lg"
                                     color="black"
@@ -295,8 +306,8 @@ class TestConstructor extends Component {
             </Button>
           </>
         )}
-       
-        <Form.Control
+       <GrammarlyEditorPlugin>
+       <Form.Control
           as="textarea"
           rows={5}
           placeholder="Add default comment for the task solution"
@@ -305,6 +316,7 @@ class TestConstructor extends Component {
           onChange={this.onInputChange.bind(this)}
           style={{ marginTop: 40 }}
         />
+       </GrammarlyEditorPlugin>
         <Navbar>
           {indexOfSelected > 0 && <Navbar.Brand>
             {/* //TODO: add on hover text */}
@@ -332,7 +344,7 @@ class TestConstructor extends Component {
       </Form>  : 
       <Card className="text-center">
         <Card.Header>Please select question to edit</Card.Header>
-      </Card> } </>
+      </Card> } </Grammarly>
     );
   }
 }

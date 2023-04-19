@@ -4,6 +4,8 @@ import { withRouter } from "../../../utils/withRouter";
 import SidebarMenu from "react-bootstrap-sidebar-menu";
 import { Accordion, Card, Form, Nav } from "react-bootstrap";
 import { ChangeQuestionAttr } from "./TestOfStudentActions";
+import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
+import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
 
 class RightSideBar extends Component {
   handleCommentChange(event) {
@@ -34,13 +36,14 @@ class RightSideBar extends Component {
             </SidebarMenu.Brand>
           </SidebarMenu.Header>
           <SidebarMenu.Body style={{ marginTop: 10, marginRight: 20, marginLeft: 10 }}>
+            <GrammarlyEditorPlugin clientId={GRAMMARLY_CLIENT_ID}>
             <Form.Control 
             as="textarea"
             rows={10}
             onChange={this.handleCommentChange.bind(this)}
             value={selectedQuestion.comment}
             />
-            
+            </GrammarlyEditorPlugin>
           </SidebarMenu.Body> 
         </SidebarMenu>
       </Nav>
