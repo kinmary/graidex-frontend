@@ -37,11 +37,23 @@ export const setError = (name, val) => {
 
 // Register a student
 export const registerStudent = (student) => {
+  var studentDto = {
+    authInfo:{
+      email: student.email,
+      password: student.password,
+    },
+    studentInfo:{
+      name: student.name,
+      surname: student.surname,
+      customId: student.customId,
+    },
+  };
+
   return async (dispatch) => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/student/create`,
-        student
+        studentDto
       );
       if (response.status === 200) {
         dispatch({ type: "REGISTER_STUDENT_SUCCESS" });
@@ -82,11 +94,22 @@ export const loginStudent = (user) => {
 
 // Register a teacher
 export const registerTeacher = (teacher) => {
+  var teacherDto = {
+    authInfo:{
+      email: teacher.email,
+      password: teacher.password,
+    },
+    teacherInfo:{
+      name: teacher.name,
+      surname: teacher.surname,
+    },
+  };
+
   return async (dispatch) => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/teacher/create`,
-        teacher
+        teacherDto
       );
       if (response.status === 200) {
         let user = {email: teacher.email, password: teacher.password}
