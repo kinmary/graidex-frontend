@@ -40,7 +40,7 @@ export const registerStudent = (student) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/Auth/register-student`,
+        `${API_BASE_URL}/api/student/create`,
         student
       );
       if (response.status === 200) {
@@ -61,7 +61,7 @@ export const loginStudent = (user) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/Auth/login-student`,
+        `${API_BASE_URL}/api/student/login`,
         user
       );
       if (response.status === 200) {
@@ -85,7 +85,7 @@ export const registerTeacher = (teacher) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/Auth/register-teacher`,
+        `${API_BASE_URL}/api/teacher/create`,
         teacher
       );
       if (response.status === 200) {
@@ -109,7 +109,7 @@ export const loginTeacher = (user) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/Auth/login-teacher`,
+        `${API_BASE_URL}/api/teacher/login`,
         user
       );
       if (response.status === 200) {
