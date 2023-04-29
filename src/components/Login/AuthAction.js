@@ -10,7 +10,6 @@ import {
   SET_NEW_USER,
 } from "./AuthReducer";
 import { API_BASE_URL } from "../../constants/config";
-import { authHeader } from "../../utils/AuthHeader";
 
 export const SetNewUser = (isNewUser) => {
   return (dispatch) => {
@@ -56,7 +55,7 @@ export const registerStudent = (student) => {
         studentDto
       );
       if (response.status === 200) {
-        dispatch({ type: "REGISTER_STUDENT_SUCCESS" });
+        dispatch(loginStudent(studentDto.authInfo));
       } else {
         //dispatch({ type: REGISTER_STUDENT_FAIL });
         alert(response.data);
@@ -77,9 +76,10 @@ export const loginStudent = (user) => {
         user
       );
       if (response.status === 200) {
-        sessionStorage.setItem("token", response.data);
-        axios.defaults.headers.common = authHeader();
-        dispatch({ type: "LOGIN_STUDENT_SUCCESS" });
+        const token = response.data;
+        sessionStorage.setItem("token", token);
+        setAuthorizationHeader(token);
+        dispatch({ type: SET_AUTHENTICATION, isAuth: true });
       } else {
         //dispatch({ type: LOGIN_STUDENT_FAIL });
         alert(response.data);
@@ -112,8 +112,7 @@ export const registerTeacher = (teacher) => {
         teacherDto
       );
       if (response.status === 200) {
-        let user = {email: teacher.email, password: teacher.password}
-        dispatch(loginTeacher(user));
+        dispatch(loginTeacher(teacherDto.authInfo));
       } else {
         //dispatch({ type: REGISTER_TEACHER_FAIL });
         alert(response.data);
