@@ -1,8 +1,7 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
-import { SetOpen } from "../../MainAction";
+import { withRouter } from "../../utils/withRouter";
 import RightSideBar from "./RightSideBar";
 import SideBar from "./SideBar";
 import TestField from "./TestField";

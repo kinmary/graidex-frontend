@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Breadcrumb, Button, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
-import { SetOpen, SetMessageOpen } from "../../MainAction";
+import { withRouter } from "../../utils/withRouter";
+import { SetOpen, SetMessageOpen } from "../MainAction";
 import MessageModal from "./Modals/MessageModal";
 import { Tab } from "bootstrap";
 import AnswersGrid from "./AnswersGrid";
 import Settings from "./Settings";
-import { ChangeQuestions, ChangeTitle } from "../CreateTest/CreateTestActions";
-import { testExample } from "../../../constants/TestExample";
+import { ChangeQuestions, ChangeTitle } from "../TeacherSide/CreateTest/CreateTestActions";
+import { testExample } from "../../constants/TestExample";
 
 class TestTab extends Component {
   constructor(props) {

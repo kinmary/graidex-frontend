@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
+import { withRouter } from "../../utils/withRouter";
 import SidebarMenu from "react-bootstrap-sidebar-menu";
-import { Accordion, Card, Form, Nav } from "react-bootstrap";
+import { Form, Nav } from "react-bootstrap";
 import { ChangeQuestionAttr } from "./TestOfStudentActions";
 import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
-import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
+import { GRAMMARLY_CLIENT_ID } from "../../constants/config";
 
 class RightSideBar extends Component {
   handleCommentChange(event) {

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Breadcrumb, Button, Form, Image } from "react-bootstrap";
 import { connect } from "react-redux";
-import blankProf from "../../../images/blank-profile-picture.jpg";
-import { ChangeInputValues } from "../../Login/AuthAction";
-import { withRouter } from "../../../utils/withRouter";
+import blankProf from "../../images/blank-profile-picture.jpg";
+import { ChangeInputValues } from "../Login/AuthAction";
+import { withRouter } from "../../utils/withRouter";
 import DeleteConfirmModal from "../Dashboard/Modals/DeleteConfirmModal";
-import { SetOpen } from "../../MainAction";
+import { SetOpen } from "../MainAction";
 class EditProfile extends Component {
     HandleChange(event, data) {
         //TODO: make changes only onSave button (create axios request to database)

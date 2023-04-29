@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Button, Dropdown, Form, InputGroup } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
-import { SetOpen, SetMessageOpen } from "../../MainAction";
+import { withRouter } from "../../utils/withRouter";
+import { SetOpen, SetMessageOpen } from "../MainAction";
 
 class Settings extends Component {
   constructor(props) {

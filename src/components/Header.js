@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
+  Badge,
   Button,
-  Container,
   Form,
   Image,
   InputGroup,
@@ -9,17 +9,16 @@ import {
   NavDropdown,
 } from "react-bootstrap";
 import { connect } from "react-redux";
-import logo from "../../images/GraidexLogoLightSVG.svg";
-import profilePic from "../../images/blank-profile-picture.jpg";
-import "../../styles/header.css";
-import { withRouter } from "../../utils/withRouter";
-import { SetOpen, Logout } from "../MainAction";
+import logo from "../images/GraidexLogoLightSVG.svg";
+import profilePic from "../images/blank-profile-picture.jpg";
+import "../styles/header.css";
+import { withRouter } from "../utils/withRouter";
+import { SetOpen, Logout } from "./MainAction";
 import {
   ChangeTitle,
   ResetCreateTestState,
-} from "./CreateTest/CreateTestActions";
-import { ResetTestOfStudentState } from "./TestOfStudent/TestOfStudentActions";
-import TestOfStudent from "./TestOfStudent/TestOfStudent";
+} from "./TeacherSide/CreateTest/CreateTestActions";
+import { ResetTestOfStudentState } from "./ReviewTest/TestOfStudentActions";
 
 class Header extends Component {
   handleEditProfile() {
@@ -63,7 +62,7 @@ class Header extends Component {
     const { editPage, createTestPage, testOfStudentPage } = this.props.main;
     const { testTitle } = this.props.createTest;
     let mark = 0;
-    if(this.props.main.studentName !== ""){
+    if (this.props.main.studentName !== "") {
       mark = this.props.test.studentAnswers.find(
         (student) => student.studentName === this.props.main.studentName
       ).mark;
@@ -84,33 +83,43 @@ class Header extends Component {
 
           <Navbar.Brand>
             {!createTestPage ? (
-             !testOfStudentPage ? <InputGroup>
-                <InputGroup.Text
-                  id="basic-addon1"
-                  aria-label="Search"
-                  style={{ visibility: editPage ? "hidden" : "visible" }}
-                >
-                  <i
-                    className="bi bi-search"
+              !testOfStudentPage ? (
+                <InputGroup>
+                  <InputGroup.Text
+                    id="basic-addon1"
+                    aria-label="Search"
+                    style={{ visibility: editPage ? "hidden" : "visible" }}
+                  >
+                    <i
+                      className="bi bi-search"
+                      style={{
+                        fontSize: "1rem",
+                        cursor: "pointer",
+                        visibility: editPage ? "hidden" : "visible",
+                      }}
+                    ></i>
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
                     style={{
-                      fontSize: "1rem",
-                      cursor: "pointer",
                       visibility: editPage ? "hidden" : "visible",
                     }}
-                  ></i>
-                </InputGroup.Text>
-                <Form.Control
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
+                  />
+                </InputGroup>
+              ) : (
+                <h4
                   style={{
-                    visibility: editPage ? "hidden" : "visible",
+                    marginBottom: 0,
+                    marginLeft: 10,
+                    fontWeight: "bold",
                   }}
-                />
-              </InputGroup> : 
-              <h4 style={{marginBottom: 0, marginLeft: 10, fontWeight: "bold"}}>
-                {this.props.main.studentName}: {this.props.main.studentName !== "" && mark}
-              </h4>
+                >
+                  {this.props.main.studentName}:{" "}
+                  {this.props.main.studentName !== "" && mark}
+                </h4>
+              )
             ) : (
               <InputGroup>
                 <Form.Control
@@ -140,14 +149,26 @@ class Header extends Component {
                   backgroundColor: "#000a55",
                   fontWeight: "bold",
                 }}
-                onClick={createTestPage ? this.handleSaveClick.bind(this) : this.handleSaveTestOfStudentClick.bind(this)}
+                onClick={
+                  createTestPage
+                    ? this.handleSaveClick.bind(this)
+                    : this.handleSaveTestOfStudentClick.bind(this)
+                }
               >
-                <i className="bi bi-check2-circle" style={{ marginRight: 4 }}></i>
+                <i
+                  className="bi bi-check2-circle"
+                  style={{ marginRight: 4 }}
+                ></i>
                 Save
               </Button>
             )}
-            <span>
+            <span style={{marginTop: 5}}>
               {this.props.auth.name} {this.props.auth.surname}
+              <div style={{ display: "block", marginTop: -5 }}>
+                <Badge pill bg="info" style={{fontSize: 10}}>
+                  {this.props.main.userRole === 0 ? "Teacher" : "Student"}
+                </Badge>
+              </div>
             </span>
             <NavDropdown
               align="end"
@@ -162,7 +183,7 @@ class Header extends Component {
                 Edit profile
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item onClick = {this.handleLogOut.bind(this)}>
+              <NavDropdown.Item onClick={this.handleLogOut.bind(this)}>
                 <i
                   className="bi bi-box-arrow-right"
                   style={{ marginRight: 5 }}
@@ -181,12 +202,16 @@ function mapStateToProps(state) {
     auth: state.auth,
     main: state.main,
     createTest: state.createTest,
-    test: state.testOfStudent
+    test: state.testOfStudent,
   };
 }
 
 export default withRouter(
-  connect(mapStateToProps, { SetOpen, ChangeTitle, ResetCreateTestState, Logout, ResetTestOfStudentState })(
-    Header
-  )
+  connect(mapStateToProps, {
+    SetOpen,
+    ChangeTitle,
+    ResetCreateTestState,
+    Logout,
+    ResetTestOfStudentState,
+  })(Header)
 );

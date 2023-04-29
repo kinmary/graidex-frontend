@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Breadcrumb, Button } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
-import { SetOpen, SetMessageOpen } from "../../MainAction";
+import { withRouter } from "../../utils/withRouter";
+import { SetOpen, SetMessageOpen } from "../MainAction";
 import { AgGridReact } from "ag-grid-react";
-import { TestsGridCol } from "../../../constants/TestsGridColumns";
+import { TestsGridCol } from "../../constants/TestsGridColumns";
 import MessageModal from "./Modals/MessageModal";
 
 class SubjectPage extends Component {

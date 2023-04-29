@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import Login from './Login/Login';
 import { connect } from 'react-redux';
-import Signup from './Login/Signup';
-import Header from './TeacherSide/Header';
-import Dashboard from './TeacherSide/Dashboard/Dashboard';
-import EditProfile from './TeacherSide/EditProfile/EditProfile';
+import Header from './Header';
 import { withRouter } from '../utils/withRouter';
 
 class Layout extends Component {

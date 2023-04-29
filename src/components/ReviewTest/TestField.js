@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Card, Form, InputGroup, Navbar } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
+import { withRouter } from "../../utils/withRouter";
 import { ChangeQuestionAttr, SetSelectedQ } from "./TestOfStudentActions";
 
 class TestField extends Component {

@@ -6,12 +6,12 @@ import Layout from "./components/Layout";
 import Login from "./components/Login/Login";
 import Signup from "./components/Login/Signup";
 import CreateTest from "./components/TeacherSide/CreateTest/CreateTest";
-import Dashboard from "./components/TeacherSide/Dashboard/Dashboard";
-import EditProfile from "./components/TeacherSide/EditProfile/EditProfile";
+import Dashboard from "./components/Dashboard/Dashboard";
+import EditProfile from "./components/EditProfile/EditProfile";
 import { withRouter } from "./utils/withRouter";
-import TestOfStudent from "./components/TeacherSide/TestOfStudent/TestOfStudent";
-import SubjectPage from "./components/TeacherSide/Dashboard/SubjectPage";
-import TestTab from "./components/TeacherSide/Dashboard/TestTab";
+import TestOfStudent from "./components/ReviewTest/TestOfStudent";
+import SubjectPage from "./components/Dashboard/SubjectPage";
+import TestTab from "./components/Dashboard/TestTab";
 
 function App(props) {
   useEffect(() => {

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
-import { SetOpen, SetMessageOpen } from "../../MainAction";
+import { withRouter } from "../../utils/withRouter";
+import { SetOpen, SetMessageOpen } from "../MainAction";
 import { AgGridReact } from "ag-grid-react";
-import { AnswerGridCol } from "../../../constants/AnswerGridColumns";
+import { AnswerGridCol } from "../../constants/AnswerGridColumns";
 
 class AnswersGrid extends Component {
   constructor(props) {

@@ -11,13 +11,14 @@ import "../../styles/auth.css";
 import logo from "../../images/GraidexLogoLightSVG.svg";
 import { connect } from "react-redux";
 import { SetNewUser, loginStudent, loginTeacher } from "./AuthAction";
+import { ChangeUserRole } from "../MainAction";
+
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       user: { email: "", password: "" },
-      userType: 0,
     };
   }
   handleInputChange(event) {
@@ -30,7 +31,7 @@ class Login extends Component {
   }
   async handleFormSubmit(event) {
     event.preventDefault();
-    this.state.userType === 0
+    this.props.main.userRole === 0
       ? await this.props.loginTeacher(this.state.user)
       : await this.props.loginStudent(this.state.user);
   }
@@ -51,8 +52,8 @@ class Login extends Component {
               name="Teacher"
               variant="outline-dark"
               value={0}
-              checked={this.state.userType === 0 ? true : false}
-              onClick={(e) => this.setState({ userType: 0 })}
+              checked={this.props.main.userRole === 0 ? true : false}
+              onClick={(e) => this.props.ChangeUserRole(0)}
             >
               Teacher
             </ToggleButton>
@@ -62,8 +63,8 @@ class Login extends Component {
               name="Student"
               variant="outline-dark"
               value={1}
-              checked={this.state.userType === 1 ? true : false}
-              onClick={(e) => this.setState({ userType: 1 })}
+              checked={this.props.main.userRole === 1 ? true : false}
+              onClick={(e) => this.props.ChangeUserRole(1)}
             >
               Student
             </ToggleButton>
@@ -137,6 +138,7 @@ class Login extends Component {
 function mapStateToProps(state) {
   return {
     auth: state.auth,
+    main: state.main
   };
 }
-export default connect(mapStateToProps, { SetNewUser, loginStudent, loginTeacher })(Login);
+export default connect(mapStateToProps, { SetNewUser, loginStudent, loginTeacher, ChangeUserRole })(Login);

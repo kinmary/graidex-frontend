@@ -1,10 +1,10 @@
-import React, { Component, useState } from "react";
-import { Breadcrumb, Button, Card, Col, Navbar, Row } from "react-bootstrap";
+import React, { Component,  } from "react";
+import { Breadcrumb, Button, Card, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
-import logoDark from "../../../images/GraidexLogoDarkJPG.jpg";
+import logoDark from "../../images/GraidexLogoDarkJPG.jpg";
 import AddSubjectModal from "./Modals/AddSubjectModal";
-import { withRouter } from "../../../utils/withRouter";
-import { SetOpen } from "../../MainAction";
+import { withRouter } from "../../utils/withRouter";
+import { SetOpen } from "../MainAction";
 
 class Dashboard extends Component {
   OpenModal(){

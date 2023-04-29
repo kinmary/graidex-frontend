@@ -40,6 +40,7 @@ const initialState = {
     },
   ],
   selectedTest: null,
+  userRole:0,
 };
 
 export const MainReducer = (state, action) => {
@@ -63,7 +64,12 @@ export const MainReducer = (state, action) => {
         ...initialState,
       };
       break;
-
+      case CHANGE_USER_ROLE:
+        state= {
+          ...state,
+          userRole: action.userRole
+        }
+        break;
     default:
       break;
   }
@@ -73,3 +79,4 @@ export const MainReducer = (state, action) => {
 export const SET_OPEN = "SET_OPEN";
 export const SET_MESSAGE_OPEN = "SET_MESSAGE_OPEN";
 export const SET_LOGOUT = "SET_LOGOUT";
+export const CHANGE_USER_ROLE = "CHANGE_USER_ROLE";

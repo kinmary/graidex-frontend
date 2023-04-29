@@ -1,5 +1,5 @@
 import { SET_AUTHENTICATION } from "./Login/AuthReducer";
-import { SET_LOGOUT, SET_MESSAGE_OPEN, SET_OPEN } from "./MainReducer";
+import { CHANGE_USER_ROLE, SET_LOGOUT, SET_MESSAGE_OPEN, SET_OPEN } from "./MainReducer";
 
 export const SetOpen = (name, value) => {
     return (dispatch) => {
@@ -17,5 +17,10 @@ export const Logout = () => {
   return (dispatch) => {
     dispatch({type: SET_LOGOUT});
     dispatch({type: SET_AUTHENTICATION, isAuth: false})
+  }
+}
+export const ChangeUserRole = (userRole) => {
+  return (dispatch) => {
+    dispatch({type: CHANGE_USER_ROLE, userRole: userRole});
   }
 }

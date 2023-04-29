@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
-import { SetOpen } from "../../../MainAction";
+import { SetOpen } from "../../MainAction";
 class AddSubjectModal extends Component {
   closeModal() {
     this.props.SetOpen("openSubjectModal", false);

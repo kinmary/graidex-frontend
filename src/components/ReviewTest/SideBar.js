@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "../../../utils/withRouter";
+import { withRouter } from "../../utils/withRouter";
 import SidebarMenu from "react-bootstrap-sidebar-menu";
 import { Card, Col, Nav, Row } from "react-bootstrap";
 import { SetSelectedQ } from "./TestOfStudentActions";

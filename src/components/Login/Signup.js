@@ -16,6 +16,8 @@ import {
   registerTeacher,
   registerStudent,
 } from "./AuthAction";
+import { ChangeUserRole } from "../MainAction";
+
 
 class SignUp extends Component {
   constructor(props) {
@@ -39,7 +41,7 @@ class SignUp extends Component {
   }
 
   handleInputChange(event) {
-    this.state.user === 0
+    this.props.main.userRole === 0
       ? this.setState({
           teacher: {
             ...this.state.teacher,
@@ -58,7 +60,7 @@ class SignUp extends Component {
     this.removeAllErrors();
     const isValid = this.validateForm();
     if (isValid) {
-      this.state.user === 0
+      this.props.main.userRole === 0
       ?  this.props.registerTeacher(this.state.teacher)
       :  this.props.registerStudent(this.state.student);
     } else {
@@ -67,7 +69,7 @@ class SignUp extends Component {
   }
   
   validateForm() {
-    const { email, name, surname, password } = this.state.user === 0 ? this.state.teacher : this.state.student;
+    const { email, name, surname, password } = this.props.main.userRole === 0 ? this.state.teacher : this.state.student;
     if (!email || !name || !surname || !password) {
       return false;
     }
@@ -103,8 +105,8 @@ class SignUp extends Component {
               name="Teacher"
               variant="outline-dark"
               value={0}
-              checked={this.state.user === 0 ? true : false}
-              onClick={(e) => this.setState({ user: 0 })}
+              checked={this.props.main.userRole === 0 ? true : false}
+              onClick={(e) => this.props.ChangeUserRole(0)}
             >
               Teacher
             </ToggleButton>
@@ -114,8 +116,8 @@ class SignUp extends Component {
               name="Student"
               variant="outline-dark"
               value={1}
-              checked={this.state.user === 1 ? true : false}
-              onClick={(e) => this.setState({ user: 1 })}
+              checked={this.props.main.userRole === 1 ? true : false}
+              onClick={(e) => this.props.ChangeUserRole( 1 )}
             >
               Student
             </ToggleButton>
@@ -128,7 +130,7 @@ class SignUp extends Component {
                 name="email"
                 placeholder="Email"
                 value={
-                  this.state.user === 0
+                  this.props.main.userRole === 0
                     ? this.state.teacher.email
                     : this.state.student.email
                 }
@@ -146,7 +148,7 @@ class SignUp extends Component {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>
-                {this.state.user === 0
+                {this.props.main.userRole === 0
                   ? "Teacher's Full Name"
                   : "Student's Full Name"}
               </Form.Label>
@@ -155,7 +157,7 @@ class SignUp extends Component {
                   placeholder="Name"
                   name="name"
                   value={
-                    this.state.user === 0
+                    this.props.main.userRole === 0
                       ? this.state.teacher.name
                       : this.state.student.name
                   }
@@ -167,7 +169,7 @@ class SignUp extends Component {
                   placeholder="Surname"
                   name="surname"
                   value={
-                    this.state.user === 0
+                    this.props.main.userRole === 0
                       ? this.state.teacher.surname
                       : this.state.student.surname
                   }
@@ -177,13 +179,13 @@ class SignUp extends Component {
                 />
               </div>
             </Form.Group>
-            {this.state.user === 1 && (
+            {this.props.main.userRole === 1 && (
               <Form.Group className="mb-3" controlId="formBasicStudentId">
                 <Form.Label>Student Id</Form.Label>
                 <Form.Control
                   placeholder="Student Id"
                   name="customId"
-                  value={this.state.user === 1 && this.state.student.customId}
+                  value={this.props.main.userRole === 1 && this.state.student.customId}
                   onChange={this.handleInputChange.bind(this)}
                 />
               </Form.Group>
@@ -195,7 +197,7 @@ class SignUp extends Component {
                 placeholder="Password"
                 name="password"
                 value={
-                  this.state.user === 0
+                  this.props.main.userRole === 0
                     ? this.state.teacher.password
                     : this.state.student.password
                 }
@@ -231,7 +233,7 @@ class SignUp extends Component {
                 onBlur={(e) => {
                   if (
                     e.target.value !==
-                    (this.state.user === 0
+                    (this.props.main.userRole === 0
                       ? this.state.teacher.password
                       : this.state.student.password)
                   ) {
@@ -271,6 +273,7 @@ class SignUp extends Component {
 function mapStateToProps(state) {
   return {
     auth: state.auth,
+    main: state.main
   };
 }
 export default connect(mapStateToProps, {
@@ -278,4 +281,5 @@ export default connect(mapStateToProps, {
   setError,
   registerTeacher,
   registerStudent,
+  ChangeUserRole
 })(SignUp);
