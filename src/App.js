@@ -12,6 +12,7 @@ import { withRouter } from "./utils/withRouter";
 import TestOfStudent from "./components/ReviewTest/TestOfStudent";
 import SubjectPage from "./components/Dashboard/SubjectPage";
 import TestTab from "./components/Dashboard/TestTab";
+import TakeTest from "./components/StudentSide/TakeTest/TakeTest";
 
 function App(props) {
   useEffect(() => {
@@ -49,7 +50,12 @@ function App(props) {
           />
            <Route
             exact
-            path={"/" + props.main.selectedSubjectId + "/test/edit-test"}
+            path={"/" + props.main.selectedSubjectId + "/test/take-test"} //TODO: edit route
+            element={<TakeTest />}
+          />
+           <Route
+            exact
+            path={"/" + props.main.selectedSubjectId + "/test/edit-test"} //TODO: edit route
             element={<CreateTest />}
           />
           <Route path="*" element={<Dashboard />} />

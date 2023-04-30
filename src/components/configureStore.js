@@ -8,6 +8,7 @@ import storage from 'redux-persist/lib/storage';
 import { persistStore, persistReducer } from 'redux-persist'
 import { CreateTestReducer } from './TeacherSide/CreateTest/CreateTestReducer';
 import { TestOfStudentReducer } from './ReviewTest/TestOfStudentReducer';
+import { TakeTestReducer } from './StudentSide/TakeTest/TakeTestReducer';
 
 
 const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({ 
@@ -38,6 +39,11 @@ const mainPersistConfig = {
     storage,
   }
 
+  const takeTestPersistConfig = {
+    key: 'takeTest',
+    storage,
+  }
+
 
 const store = createStore (
     combineReducers({
@@ -45,6 +51,7 @@ const store = createStore (
        main: persistReducer(mainPersistConfig, MainReducer),
        createTest: persistReducer(newTestPersistConfig, CreateTestReducer),
        testOfStudent: persistReducer(testPersistConfig, TestOfStudentReducer),
+       takeTest: persistReducer(takeTestPersistConfig, TakeTestReducer),
        router: routerReducer
     }),
 

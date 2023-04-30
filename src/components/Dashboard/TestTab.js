@@ -3,7 +3,7 @@ import { Breadcrumb, Button, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
 import { SetOpen, SetMessageOpen } from "../MainAction";
-import MessageModal from "./Modals/MessageModal";
+import MessageModal from "../Modals/MessageModal";
 import { Tab } from "bootstrap";
 import AnswersGrid from "./AnswersGrid";
 import Settings from "./Settings";

@@ -8,6 +8,8 @@ const initialState = {
   messageModal: false,
   deleteConfirmModal: false,
   editTestPage: false,
+  startConfirmModal: false,
+  sendTestModal: false,
   message: "",
   studentName: "",
   tests: [

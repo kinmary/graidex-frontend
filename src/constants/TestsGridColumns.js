@@ -13,3 +13,12 @@ export const TestsGridCol = [
   { field: "Answered", flex: 1, headerName: "Answered" },
   // { field: "", flex: 0.1, headerName: "", cellRenderer: BtnCellRenderer},
 ];
+
+export const StudentTestGridCol = [{
+  field: "status",
+  flex: 1,
+  headerName: "Status",
+},
+{ field: "examName", flex: 3, headerName: "Examination name" },
+{ field: "date", flex: 1, headerName: "Date" },
+{ field: "avgScore", flex: 1, headerName: "Grade" },]

@@ -19,6 +19,7 @@ class RightSideBar extends Component {
   }
   
   render() {
+    const {userRole} = this.props.main;
     const questions = this.props.test.studentAnswers.find(
       (student) => student.studentName === this.props.main.studentName
     ).questions;
@@ -42,6 +43,8 @@ class RightSideBar extends Component {
             rows={10}
             onChange={this.handleCommentChange.bind(this)}
             value={selectedQuestion.comment}
+            //TODO: check if readOnly is fine or make like card with text
+            readOnly = {userRole === 1}
             />
             </GrammarlyEditorPlugin>
           </SidebarMenu.Body> 

@@ -40,6 +40,7 @@ class TestField extends Component {
   }
 
   render() {
+    const {userRole} = this.props.main;
     const questions = this.props.test.studentAnswers.find(
       (student) => student.studentName === this.props.main.studentName
     ).questions;
@@ -66,6 +67,7 @@ class TestField extends Component {
               value={selectedQuestion.points}
               min={0}
               onChange={this.ChangePoints.bind(this)}
+              readOnly = {userRole === 1}
             />
             <InputGroup.Text>/{selectedQuestion.maxPoints}</InputGroup.Text>
           </InputGroup>

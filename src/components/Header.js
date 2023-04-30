@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   Badge,
+  Breadcrumb,
   Button,
   Form,
   Image,
@@ -81,9 +82,9 @@ class Header extends Component {
             onClick={this.handleLogoClick.bind(this)}
           />
 
-          <Navbar.Brand>
-            {!createTestPage ? (
-              !testOfStudentPage ? (
+          { this.props.main.userRole === 0 ? <Navbar.Brand>
+            { !createTestPage ? (
+               !testOfStudentPage  ? (
                 <InputGroup>
                   <InputGroup.Text
                     id="basic-addon1"
@@ -133,7 +134,20 @@ class Header extends Component {
                 />
               </InputGroup>
             )}
-          </Navbar.Brand>
+          </Navbar.Brand> : 
+         testOfStudentPage && <Navbar.Brand>
+            <h4
+                  style={{
+                    marginBottom: 0,
+                    marginLeft: 10,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Test Name: 9.55
+                  {/* //TODO: add avg score etc. */}
+                </h4>
+                {/* //TODO: add breadcrumbs for student <Breadcrumb></Breadcrumb> */}
+                </Navbar.Brand> }
           <div
             className="user-profile"
             style={{
@@ -142,7 +156,7 @@ class Header extends Component {
               marginRight: "0",
             }}
           >
-            {(createTestPage || testOfStudentPage) && (
+            {this.props.main.userRole === 0 && (createTestPage || testOfStudentPage) && (
               <Button
                 style={{
                   marginRight: 10,
@@ -165,7 +179,7 @@ class Header extends Component {
             <span style={{marginTop: 5}}>
               {this.props.auth.name} {this.props.auth.surname}
               <div style={{ display: "block", marginTop: -5 }}>
-                <Badge pill bg="info" style={{fontSize: 10}}>
+                <Badge pill bg={this.props.main.userRole === 0 ? "primary" : "info"} style={{fontSize: 10}}>
                   {this.props.main.userRole === 0 ? "Teacher" : "Student"}
                 </Badge>
               </div>

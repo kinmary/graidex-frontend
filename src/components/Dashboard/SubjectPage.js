@@ -4,8 +4,9 @@ import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
 import { SetOpen, SetMessageOpen } from "../MainAction";
 import { AgGridReact } from "ag-grid-react";
-import { TestsGridCol } from "../../constants/TestsGridColumns";
-import MessageModal from "./Modals/MessageModal";
+import { StudentTestGridCol, TestsGridCol } from "../../constants/TestsGridColumns";
+import MessageModal from "../Modals/MessageModal";
+import StartTestConfirmModal from "../Modals/StartTestConfirmModal";
 
 class SubjectPage extends Component {
   constructor(props) {
@@ -14,13 +15,31 @@ class SubjectPage extends Component {
       //! Status: 0 - planned, status: 2 - closed, status: 1 - in progress (?)
     };
   }
-  OpenModal() {
-    this.props.SetOpen("openSubjectModal", true);
-  }
+
   onRowDoubleClick() {
     let selectedRows = this.gridApi.getSelectedRows();
     this.props.SetOpen("selectedTest", selectedRows[0]);
     this.props.navigate("/" + this.props.main.selectedSubjectId + "/test");
+  }
+  onRowClickByStudent() {
+    let selectedRows = this.gridApi.getSelectedRows();
+    //this.props.SetOpen("selectedTest", selectedRows[0]);
+    //this.props.navigate("/" + this.props.main.selectedSubjectId + "/test");
+    let status = selectedRows[0].status;
+    let studentName = "Mariia Kindratyshyn"; //TODO: take name from settings
+    if(status === 2 && studentName){
+      this.props.SetOpen("studentName", studentName);
+      this.props.SetOpen("testOfStudentPage", true);
+      this.props.navigate("/"+this.props.main.selectedSubjectId + "/test"+studentName);
+    }
+    if(status === 0){
+      //TODO: make as modal
+      this.props.SetMessageOpen(true, "You cannot access this test");
+    }
+    if(status === 1){
+      this.props.SetOpen("startConfirmModal", true);
+      //TODO: check the procedure when the exam is in progress
+    }
   }
   OnNewTestClick() {
     this.props.navigate(`/${this.props.main.selectedSubjectId}/new-test`);
@@ -38,6 +57,7 @@ class SubjectPage extends Component {
     return (
       <>
         <MessageModal />
+        <StartTestConfirmModal />
         <div
           style={{
             marginTop: "80px",
@@ -57,9 +77,10 @@ class SubjectPage extends Component {
               Subject name
             </h3>
             <div style={{ marginLeft: "auto" }}>
-              <Button onClick={this.OnNewTestClick.bind(this)}>
+              {this.props.main.userRole === 0 ?  <Button onClick={this.OnNewTestClick.bind(this)}>
                 <i className="bi bi-plus-lg"></i> Create new test
-              </Button>
+              </Button> : <h4 style={{ fontWeight: "bold", textAlign: "right", margin: "0" }} >9.55/10</h4> }
+             
             </div>
           </div>
           <Breadcrumb>
@@ -78,9 +99,9 @@ class SubjectPage extends Component {
             <AgGridReact
               onGridReady={this.onGridReady.bind(this)}
               rowSelection={"single"}
-              columnDefs={TestsGridCol}
+              columnDefs={this.props.main.userRole === 0 ? TestsGridCol : StudentTestGridCol}
               rowData={tests}
-              onRowClicked={this.onRowDoubleClick.bind(this)}
+              onRowClicked={this.props.main.userRole === 0 ? this.onRowDoubleClick.bind(this) : this.onRowClickByStudent.bind(this)}
               style={{ width: "100%", height: "100%" }}
               domLayout="autoHeight"
             />

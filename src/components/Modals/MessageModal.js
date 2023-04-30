@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button,  Modal } from "react-bootstrap";
 import { connect } from "react-redux";
-import { SetMessageOpen } from "../../MainAction";
+import { SetMessageOpen } from "../MainAction";
 
 class MessageModal extends Component {
   closeModal() {
