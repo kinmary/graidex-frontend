@@ -1,12 +1,17 @@
 import React, { Component } from "react";
-import { Breadcrumb, Button } from "react-bootstrap";
+import { Breadcrumb, Button, Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
 import { SetOpen, SetMessageOpen } from "../MainAction";
 import { AgGridReact } from "ag-grid-react";
-import { StudentTestGridCol, TestsGridCol } from "../../constants/TestsGridColumns";
+import {
+  StudentTestGridCol,
+  TestsGridCol,
+} from "../../constants/TestsGridColumns";
 import MessageModal from "../Modals/MessageModal";
 import StartTestConfirmModal from "../Modals/StartTestConfirmModal";
+import SubjectSettings from "./SubjectSettings";
+import ChangeImageModal from "../Modals/ChangeImageModal";
 
 class SubjectPage extends Component {
   constructor(props) {
@@ -27,16 +32,18 @@ class SubjectPage extends Component {
     //this.props.navigate("/" + this.props.main.selectedSubjectId + "/test");
     let status = selectedRows[0].status;
     let studentName = "Mariia Kindratyshyn"; //TODO: take name from settings
-    if(status === 2 && studentName){
+    if (status === 2 && studentName) {
       this.props.SetOpen("studentName", studentName);
       this.props.SetOpen("testOfStudentPage", true);
-      this.props.navigate("/"+this.props.main.selectedSubjectId + "/test"+studentName);
+      this.props.navigate(
+        "/" + this.props.main.selectedSubjectId + "/test" + studentName
+      );
     }
-    if(status === 0){
+    if (status === 0) {
       //TODO: make as modal
       this.props.SetMessageOpen(true, "You cannot access this test");
     }
-    if(status === 1){
+    if (status === 1) {
       this.props.SetOpen("startConfirmModal", true);
       //TODO: check the procedure when the exam is in progress
     }
@@ -44,7 +51,6 @@ class SubjectPage extends Component {
   OnNewTestClick() {
     this.props.navigate(`/${this.props.main.selectedSubjectId}/new-test`);
     this.props.SetOpen("createTestPage", true);
-
   }
 
   onGridReady = (params) => {
@@ -56,6 +62,7 @@ class SubjectPage extends Component {
     const { selectedSubjectId, tests } = this.props.main;
     return (
       <>
+        <ChangeImageModal />
         <MessageModal />
         <StartTestConfirmModal />
         <div
@@ -74,13 +81,24 @@ class SubjectPage extends Component {
           >
             <h3 style={{ fontWeight: "bold", textAlign: "left", margin: "0" }}>
               {/* //TODO: add subject name */}
-              Subject name
+              Media and Design
             </h3>
             <div style={{ marginLeft: "auto" }}>
-              {this.props.main.userRole === 0 ?  <Button onClick={this.OnNewTestClick.bind(this)}>
-                <i className="bi bi-plus-lg"></i> Create new test
-              </Button> : <h4 style={{ fontWeight: "bold", textAlign: "right", margin: "0" }} >9.55/10</h4> }
-             
+              {this.props.main.userRole === 0 ? (
+                <Button onClick={this.OnNewTestClick.bind(this)}>
+                  <i className="bi bi-plus-lg"></i> Create new test
+                </Button>
+              ) : (
+                <h4
+                  style={{
+                    fontWeight: "bold",
+                    textAlign: "right",
+                    margin: "0",
+                  }}
+                >
+                  9.55/10
+                </h4>
+              )}
             </div>
           </div>
           <Breadcrumb>
@@ -94,18 +112,43 @@ class SubjectPage extends Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item active> {selectedSubjectId} </Breadcrumb.Item>
           </Breadcrumb>
-          {/* //TODO: Add text when zero tests in subject */}
-          <div className="ag-theme-alpine">
-            <AgGridReact
-              onGridReady={this.onGridReady.bind(this)}
-              rowSelection={"single"}
-              columnDefs={this.props.main.userRole === 0 ? TestsGridCol : StudentTestGridCol}
-              rowData={tests}
-              onRowClicked={this.props.main.userRole === 0 ? this.onRowDoubleClick.bind(this) : this.onRowClickByStudent.bind(this)}
-              style={{ width: "100%", height: "100%" }}
-              domLayout="autoHeight"
-            />
-          </div>
+          {this.props.main.userRole === 0 ? (
+            <Tabs
+              fill
+              defaultActiveKey={"tests"}
+              style={{ marginLeft: "auto", marginRight: 0 }}
+            >
+              <Tab eventKey="settings" title="Settings">
+                <SubjectSettings />
+              </Tab>
+              <Tab eventKey="tests" title="Tests">
+                {/* //TODO: Add text when zero tests in subject */}
+                <div className="ag-theme-alpine">
+                  <AgGridReact
+                    onGridReady={this.onGridReady.bind(this)}
+                    rowSelection={"single"}
+                    columnDefs={TestsGridCol}
+                    rowData={tests}
+                    onRowClicked={this.onRowDoubleClick.bind(this)}
+                    style={{ width: "100%", height: "100%" }}
+                    domLayout="autoHeight"
+                  />
+                </div>
+              </Tab>
+            </Tabs>
+          ) : (
+            <div className="ag-theme-alpine">
+              <AgGridReact
+                onGridReady={this.onGridReady.bind(this)}
+                rowSelection={"single"}
+                columnDefs={StudentTestGridCol}
+                rowData={tests}
+                onRowClicked={this.onRowClickByStudent.bind(this)}
+                style={{ width: "100%", height: "100%" }}
+                domLayout="autoHeight"
+              />
+            </div>
+          )}
         </div>
       </>
     );

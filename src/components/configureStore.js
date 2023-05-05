@@ -44,10 +44,17 @@ const mainPersistConfig = {
     storage,
   }
 
+  const authPersistConfig = {
+    key: 'auth',
+    storage,
+
+  }
+
+
 
 const store = createStore (
     combineReducers({
-       auth: AuthReducer,
+       auth: persistReducer(authPersistConfig, AuthReducer),
        main: persistReducer(mainPersistConfig, MainReducer),
        createTest: persistReducer(newTestPersistConfig, CreateTestReducer),
        testOfStudent: persistReducer(testPersistConfig, TestOfStudentReducer),

@@ -13,12 +13,6 @@ export const SetOpen = (name, value) => {
     };
   }
 
-export const Logout = () => {
-  return (dispatch) => {
-    dispatch({type: SET_LOGOUT});
-    dispatch({type: SET_AUTHENTICATION, isAuth: false})
-  }
-}
 export const ChangeUserRole = (userRole) => {
   return (dispatch) => {
     dispatch({type: CHANGE_USER_ROLE, userRole: userRole});

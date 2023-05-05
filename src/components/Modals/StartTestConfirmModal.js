@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button,  Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
-import {  SetOpen, Logout } from "../MainAction";
+import {  SetOpen } from "../MainAction";
 
 class StartTestConfirmModal extends Component {
   closeModal() {
@@ -44,4 +44,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default withRouter(connect(mapStateToProps, {SetOpen, Logout})(StartTestConfirmModal));
+export default withRouter(connect(mapStateToProps, {SetOpen})(StartTestConfirmModal));

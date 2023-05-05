@@ -42,8 +42,8 @@ class RightSideBarMenu extends Component {
 
   render() {
     const { userRole } = this.props.main;
-    const { questions } = this.props.takeTest;
-    const selectedQuestion = questions.find((question) => question.selected);
+   // const { questions } = this.props.takeTest;
+    //const selectedQuestion = questions.find((question) => question.selected);
     const timeRemainingFormatted = this.formatTime(this.state.timeRemaining);
     return (
       <Nav className="sidebar">
@@ -72,7 +72,7 @@ class RightSideBarMenu extends Component {
            </div>
           </SidebarMenu.Body>
           <SidebarMenu.Header>
-            <SidebarMenu.Brand
+            {/* <SidebarMenu.Brand
               as="h4"
               style={{
                 fontWeight: "bold",
@@ -83,13 +83,13 @@ class RightSideBarMenu extends Component {
               }}
             >
               Comment{" "}
-            </SidebarMenu.Brand>
+            </SidebarMenu.Brand> */}
           </SidebarMenu.Header>
-          <SidebarMenu.Body style={{ marginTop: 10, marginRight: 20, marginLeft: 10 }}>
+          <SidebarMenu.Body style={{ marginTop: 10, marginRight: 20, marginLeft: 10, visibility: "hidden" }}>
           <Form.Control
               as="textarea"
               rows={5}
-              value={selectedQuestion.comment}
+              //value={selectedQuestion.comment}
               // TODO: check if readOnly is fine or make like card with text
               readOnly={userRole === 1}
             />

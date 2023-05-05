@@ -1,9 +1,12 @@
 const initialState = {
     isAuth: false,
     isNewUser: false,
-    name: "Bob",
-    surname: "Marley",
-    errors: { email : "", password: "", repeatPassword: ""}
+    email: "",
+    name: "",
+    surname: "",
+    studentId: "",
+    errors: { email : "", password: "", repeatPassword: ""},
+    deleteConfirm: false
 }
 
 //TODO: Logout,
@@ -14,8 +17,10 @@ export const AuthReducer = (state, action) => {
             state = {
                 ...state,
                 isAuth: action.isAuth,
-                //name: action.name,
-                //surname: action.surname,
+                email: action.email,
+                name: action.name,
+                surname: action.surname,
+                studentId: action.studentId,
             };
             break;
         case SET_NEW_USER:

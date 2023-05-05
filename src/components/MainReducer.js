@@ -10,6 +10,8 @@ const initialState = {
   editTestPage: false,
   startConfirmModal: false,
   sendTestModal: false,
+  changePassModal: false,
+  changeImgModal: false,
   message: "",
   studentName: "",
   tests: [
@@ -62,9 +64,7 @@ export const MainReducer = (state, action) => {
       };
       break;
     case SET_LOGOUT:
-      state = {
-        ...initialState,
-      };
+      state = initialState
       break;
       case CHANGE_USER_ROLE:
         state= {

@@ -1,24 +1,50 @@
 import React, { Component } from "react";
-import { Breadcrumb, Button, Form, Image } from "react-bootstrap";
+import { Button, Form, Image } from "react-bootstrap";
 import { connect } from "react-redux";
 import blankProf from "../../images/blank-profile-picture.jpg";
 import { ChangeInputValues } from "../Login/AuthAction";
 import { withRouter } from "../../utils/withRouter";
 import DeleteConfirmModal from "../Modals/DeleteConfirmModal";
 import { SetOpen } from "../MainAction";
+import { updateStudentProfile } from "./StudentProfileAction";
+import { updateTeacherProfile } from "./TeacherProfileAction";
+import ChangePasswordModal from "../Modals/ChangePasswordModal";
+
 class EditProfile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: this.props.auth.name,
+      email: this.props.auth.email,
+      surname: this.props.auth.surname,
+      studentId: this.props.auth.studentId,
+    };
+  }
   HandleChange(event, data) {
     //TODO: make changes only onSave button (create axios request to database)
-    this.props.ChangeInputValues(event.target.name, event.target.value);
+    this.setState({ [event.target.name]: event.target.value });
+    //this.props.ChangeInputValues(event.target.name, event.target.value);
   }
   onCancelClick() {
     this.props.navigate(-1);
     this.props.SetOpen("editPage", false);
   }
+
+  onSaveClick(event) {
+    event.preventDefault();
+    this.props.main.userRole === 0
+      ? this.props.updateTeacherProfile(this.state.name, this.state.surname)
+      : this.props.updateStudentProfile(
+          this.state.name,
+          this.state.surname,
+          this.state.studentId
+        );
+  }
   render() {
     const { userRole } = this.props.main;
     return (
       <>
+      <ChangePasswordModal />
         <DeleteConfirmModal />
         <Form
           className="form"
@@ -44,7 +70,7 @@ class EditProfile extends Component {
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
-              value="bob.marley@gmail.com"
+              value={this.props.auth.email}
               required
               disabled
             />
@@ -60,27 +86,45 @@ class EditProfile extends Component {
               <Form.Control
                 placeholder="Name"
                 name="name"
-                value={this.props.auth.name}
+                minLength="1"
+                maxLength="50"
+                value={this.state.name}
                 onChange={this.HandleChange.bind(this)}
                 style={{ width: "40%" }}
-                required
+                min={1}
               />
               <Form.Control
                 placeholder="Surname"
                 name="surname"
-                value={this.props.auth.surname}
+                minLength="1"
+                maxLength="50"
+                value={this.state.surname}
                 onChange={this.HandleChange.bind(this)}
                 style={{ width: "59%" }}
-                required
+                min={1}
               />
             </div>
           </Form.Group>
+          {userRole === 1 && (
+            <Form.Group className="mb-2">
+              <Form.Label>Student Id</Form.Label>
+              <Form.Control
+                value={this.state.studentId}
+                placeholder="Student Id"
+                name="studentId"
+                onChange={this.HandleChange.bind(this)}
+              />
+            </Form.Group>
+          )}
           <Form.Group className="mb-2">
             <Button
               variant="link"
               style={{ marginRight: "auto", marginLeft: -12 }}
+              onClick={() => {
+                this.props.SetOpen("changePassModal", true);
+              }}
             >
-              Change password here
+              Change password
             </Button>
           </Form.Group>
           <Form.Group className="mb-2">
@@ -88,10 +132,15 @@ class EditProfile extends Component {
               variant="primary"
               type="submit"
               style={{ width: "49%", marginRight: "2%" }}
+              onClick={this.onSaveClick.bind(this)}
             >
               Save
             </Button>
-            <Button variant="secondary" style={{ width: "49%" }} onClick={this.onCancelClick.bind(this)}>
+            <Button
+              variant="secondary"
+              style={{ width: "49%" }}
+              onClick={this.onCancelClick.bind(this)}
+            >
               Cancel
             </Button>
           </Form.Group>
@@ -109,5 +158,10 @@ function mapStateToProps(state) {
 }
 
 export default withRouter(
-  connect(mapStateToProps, { ChangeInputValues, SetOpen })(EditProfile)
+  connect(mapStateToProps, {
+    ChangeInputValues,
+    SetOpen,
+    updateStudentProfile,
+    updateTeacherProfile,
+  })(EditProfile)
 );

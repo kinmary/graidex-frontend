@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Badge,
-  Breadcrumb,
   Button,
   Form,
   Image,
@@ -14,12 +13,13 @@ import logo from "../images/GraidexLogoLightSVG.svg";
 import profilePic from "../images/blank-profile-picture.jpg";
 import "../styles/header.css";
 import { withRouter } from "../utils/withRouter";
-import { SetOpen, Logout } from "./MainAction";
+import { SetOpen } from "./MainAction";
 import {
   ChangeTitle,
   ResetCreateTestState,
 } from "./TeacherSide/CreateTest/CreateTestActions";
 import { ResetTestOfStudentState } from "./ReviewTest/TestOfStudentActions";
+import { Logout } from "./Login/AuthAction";
 
 class Header extends Component {
   handleEditProfile() {
@@ -57,6 +57,8 @@ class Header extends Component {
     this.props.ResetCreateTestState();
     this.props.ResetTestOfStudentState();
     this.props.Logout();
+    this.props.navigate("/");
+
   }
   render() {
     // TODO: work on responsiveness of header

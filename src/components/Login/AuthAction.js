@@ -6,6 +6,7 @@ import {
   SET_NEW_USER,
 } from "./AuthReducer";
 import { API_BASE_URL } from "../../constants/config";
+import { SET_LOGOUT } from "../MainReducer";
 
 export const SetNewUser = (isNewUser) => {
   return (dispatch) => {
@@ -19,31 +20,25 @@ export const ChangeInputValues = (name, value) => {
   };
 };
 
-
 export const setError = (name, val) => {
-  return  (dispatch) => {
-      dispatch({
-        type: SET_ERRORS,
-        name: name,
-        value:  val,
-      });
+  return (dispatch) => {
+    dispatch({
+      type: SET_ERRORS,
+      name: name,
+      value: val,
+    });
   };
 };
 
 // Register a student
 export const registerStudent = (student) => {
   var studentDto = {
-    authInfo:{
-      email: student.email,
-      password: student.password,
-    },
-    studentInfo:{
-      name: student.name,
-      surname: student.surname,
-      customId: student.customId,
-    },
+    email: student.email,
+    password: student.password,
+    name: student.name,
+    surname: student.surname,
+    customId: student.customId,
   };
-
   return async (dispatch) => {
     try {
       const response = await axios.post(
@@ -51,14 +46,15 @@ export const registerStudent = (student) => {
         studentDto
       );
       if (response.status === 200) {
-        dispatch(loginStudent(studentDto.authInfo));
-      } else {
-        //dispatch({ type: REGISTER_STUDENT_FAIL });
-        alert(response.data);
-      }
+        dispatch(loginStudent(studentDto));
+      } 
     } catch (error) {
-      //dispatch({ type: REGISTER_STUDENT_FAIL });
-      alert(error.response.data);
+      if (error.response.status === 409) { //Conflict
+        alert(error.response.data);
+      }
+      if(error.response.status === 400){ //Bad Request
+        error.response.data.map(obj => alert(obj.attemptedValue + ": " + obj.errorMessage)) ;
+      }
     }
   };
 };
@@ -75,15 +71,30 @@ export const loginStudent = (user) => {
         const token = response.data;
         sessionStorage.setItem("token", token);
         setAuthorizationHeader(token);
-        dispatch({ type: SET_AUTHENTICATION, isAuth: true });
-      } else {
-        //dispatch({ type: LOGIN_STUDENT_FAIL });
-        alert(response.data);
-      }
+        dispatch(getStudent(user.email));
+      } 
     } catch (error) {
-      //dispatch({ type: LOGIN_STUDENT_FAIL });
       alert(error.response.data);
+    }
+  };
+};
 
+export const getStudent = (email) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/student/me`);
+      if (response.status === 200) {
+        dispatch({
+          type: SET_AUTHENTICATION,
+          isAuth: true,
+          name: response.data.name,
+          surname: response.data.surname,
+          studentId: response.data.customId,
+          email: email,
+        });
+      } 
+    } catch (error) {
+      alert(error.response.data);
     }
   };
 };
@@ -91,16 +102,11 @@ export const loginStudent = (user) => {
 // Register a teacher
 export const registerTeacher = (teacher) => {
   var teacherDto = {
-    authInfo:{
-      email: teacher.email,
-      password: teacher.password,
-    },
-    teacherInfo:{
-      name: teacher.name,
-      surname: teacher.surname,
-    },
+    email: teacher.email,
+    password: teacher.password,
+    name: teacher.name,
+    surname: teacher.surname,
   };
-
   return async (dispatch) => {
     try {
       const response = await axios.post(
@@ -108,16 +114,16 @@ export const registerTeacher = (teacher) => {
         teacherDto
       );
       if (response.status === 200) {
-        dispatch(loginTeacher(teacherDto.authInfo));
-      } else {
-        //dispatch({ type: REGISTER_TEACHER_FAIL });
-        alert(response.data);
+        dispatch(loginTeacher(teacherDto));
       }
     } catch (error) {
-      //dispatch({ type: REGISTER_TEACHER_FAIL });
-      alert(error.response.data);
-      //alert(error);
-
+        if (error.response.status === 409) {
+        alert(error.response.data);
+      }
+      if(error.response.status === 400){
+        error.response.data.map(obj => alert(obj.attemptedValue + ": " + obj.errorMessage)) ;
+      }
+     
     }
   };
 };
@@ -134,11 +140,8 @@ export const loginTeacher = (user) => {
         const token = response.data;
         sessionStorage.setItem("token", token);
         setAuthorizationHeader(token);
-        dispatch({ type: SET_AUTHENTICATION, isAuth: true, });
-      } else {
-        //dispatch({ type: LOGIN_TEACHER_FAIL });
-        alert(response.data);
-      }
+        dispatch(getTeacher(user.email));
+      } 
     } catch (error) {
       //dispatch({ type: LOGIN_TEACHER_FAIL });
       alert(error.response.data);
@@ -146,22 +149,33 @@ export const loginTeacher = (user) => {
   };
 };
 
+export const getTeacher = (email) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/teacher/me`);
+      if (response.status === 200) {
+        dispatch({
+          type: SET_AUTHENTICATION,
+          isAuth: true,
+          name: response.data.name,
+          surname: response.data.surname,
+          email: email,
+        });
+      } 
+    } catch (error) {
+      alert(error.response.data);
+    }
+  };
+};
+
+export const Logout = () => {
+  return (dispatch) => {
+    sessionStorage.clear();
+    dispatch({type: SET_LOGOUT});
+    dispatch({type: SET_AUTHENTICATION, isAuth: false})
+  }
+}
 export function setAuthorizationHeader(token) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
-// export const loginWithToken = (token) => {
-//   return async (dispatch) => {
-//     try {
-//       setAuthorizationHeader(token);
-//       const response = await axios.get(`${API_BASE_URL}/api/user`);
-//       if (response.status === 200) {
-//         dispatch({ type: SET_AUTHENTICATION, isAuth: true });
-//       } else {
-//         dispatch({ type: LOGIN_TEACHER_FAIL });
-//       }
-//     } catch (error) {
-//       dispatch({ type: LOGIN_TEACHER_FAIL });
-//     }
-//   };
-// };

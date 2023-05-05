@@ -156,6 +156,8 @@ class SignUp extends Component {
                 <Form.Control
                   placeholder="Name"
                   name="name"
+                  minLength="1"
+                  maxLength="50"
                   value={
                     this.props.main.userRole === 0
                       ? this.state.teacher.name
@@ -168,6 +170,8 @@ class SignUp extends Component {
                 <Form.Control
                   placeholder="Surname"
                   name="surname"
+                  minLength="1"
+                  maxLength="50"
                   value={
                     this.props.main.userRole === 0
                       ? this.state.teacher.surname
@@ -204,6 +208,7 @@ class SignUp extends Component {
                 onChange={this.handleInputChange.bind(this)}
                 required
                 minLength="8"
+                maxLength="16"
                 autoComplete="new-password"
                 pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                 //(?=.*[a-z]): Requires at least one lowercase letter.

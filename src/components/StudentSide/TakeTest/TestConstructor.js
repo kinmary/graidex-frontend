@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Button, Card, Col, Form, InputGroup, Navbar, Row } from "react-bootstrap";
+import { Button, Card,  Form,  Navbar } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../../utils/withRouter";
 import { Grammarly, GrammarlyEditorPlugin } from '@grammarly/editor-sdk-react'
@@ -8,11 +7,7 @@ import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
 import { ChangeAnswers, InputChange, ResetTakeTestState, SetSelectedQ } from "./TakeTestActions";
 import { SetOpen } from "../../MainAction";
 class TestConstructor extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+
   onInputChange(event, data) {
     const { questions } = this.props.takeTest;
     const id = questions.find((question) => question.selected === true).id;
@@ -119,6 +114,7 @@ class TestConstructor extends Component {
                 alignItems: "center",
                 marginBottom: 2,
               }}
+              
             >
               <Form.Check
               key={idx+"c"}
@@ -126,7 +122,7 @@ class TestConstructor extends Component {
                 style={{ marginRight: 10, color: "red" }}
                 name={answer.id}
                 checked={answer.selected}
-                onClick={this.handleCheck.bind(this)}
+                onChange={this.handleCheck.bind(this)}
               />
               <Card
               key={idx+"t"}

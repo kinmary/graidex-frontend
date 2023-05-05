@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Button,  Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
-import {  SetOpen, Logout } from "../MainAction";
+import {  SetOpen } from "../MainAction";
 import { ResetTakeTestState } from "../StudentSide/TakeTest/TakeTestActions";
-
+import { Logout } from "../Login/AuthAction";
 class StartTestConfirmModal extends Component {
   closeModal() {
     this.props.SetOpen("sendTestModal", false);

@@ -64,7 +64,6 @@ class TestTab extends Component {
             <Tab eventKey="answers" disabled={selectedTest.status !== 2} title="Answers" >
               <AnswersGrid />
             </Tab>
-            
           </Tabs>
         </div>
       </>
