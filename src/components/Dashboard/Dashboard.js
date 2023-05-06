@@ -1,12 +1,16 @@
 import React, { Component } from "react";
-import { Breadcrumb, Button, Card, Col, Row } from "react-bootstrap";
+import { Alert, Breadcrumb, Button, Card, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import logoDark from "../../images/GraidexLogoDarkJPG.jpg";
 import AddSubjectModal from "../Modals/AddSubjectModal";
 import { withRouter } from "../../utils/withRouter";
 import { SetOpen } from "../MainAction";
+import { getAllSubjects } from "./SubjectActions";
 
 class Dashboard extends Component {
+  // componentDidMount(){
+  //   this.props.getAllSubjects();
+  // }
   OpenModal() {
     this.props.SetOpen("openSubjectModal", true);
   }
@@ -16,6 +20,7 @@ class Dashboard extends Component {
   }
 
   render() {
+    let { allSubjects } = this.props.main;
     return (
       <>
         {/* //TODO: Add edit card (+delete) (three dots icon with dropdown on every card) */}
@@ -51,25 +56,47 @@ class Dashboard extends Component {
             <Breadcrumb.Item active> Dashboard</Breadcrumb.Item>
           </Breadcrumb>
           {/*//TODO: add filter button */}
-          <Row xs={1} md={3} className="g-3">
-            {Array.from({ length: 9 }).map((_, idx) => (
-              <Col key={idx}>
-                <Card
-                  style={{ textAlign: "left" }}
-                  id="IF3333_EN"
-                  onClick={this.HandleCardClick.bind(this)}
-                >
-                  <Card.Img variant="top" src={logoDark} />
-                  <Card.Body>
-                    <Card.Subtitle className="mb-2 text-muted">
-                      IF3333_EN
-                    </Card.Subtitle>
-                    <Card.Title>Media and Design</Card.Title>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
+          {allSubjects.length > 0 ? (
+            <Row xs={1} md={3} className="g-3">
+              {allSubjects.map((subject, idx) => (
+                <Col key={idx}>
+                  <Card
+                    style={{ textAlign: "left" }}
+                    id={subject.id}
+                    onClick={this.HandleCardClick.bind(this)}
+                  >
+                    <Card.Img variant="top" src={subject.imageUrl || logoDark} />
+                    <Card.Body>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        {subject.customId}
+                      </Card.Subtitle>
+                      <Card.Title>{subject.title}</Card.Title>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <Alert variant="primary" style={{ textAlign: "center" }}>
+              {this.props.main.userRole === 0 ? (
+                <>
+                  <h6>
+                    {" "}
+                    You don't have any subjects yet. Create the first one here!{" "}
+                  </h6>
+                  <Button onClick={this.OpenModal.bind(this)}>
+                    <i className="bi bi-plus-lg"></i>Add subject
+                  </Button>
+                </>
+              ) : (
+                <h6>
+                  {" "}
+                  You don't have any subjects yet. Add subject by clicking
+                  invitation link from your teacher!{" "}
+                </h6>
+              )}
+            </Alert>
+          )}
         </div>
       </>
     );
@@ -83,4 +110,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default withRouter(connect(mapStateToProps, { SetOpen })(Dashboard));
+export default withRouter(
+  connect(mapStateToProps, { SetOpen, getAllSubjects })(Dashboard)
+);

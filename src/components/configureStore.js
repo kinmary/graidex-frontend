@@ -26,7 +26,7 @@ if(isDevelopment && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXT
 const mainPersistConfig = {
     key: 'main',
     storage,
-    whitelist: ['selectedSubjectId', 'editPage', 'createTestPage', 'studentName', 'testOfStudentPage', 'selectedTest', 'editTestPage', 'userRole']
+    whitelist: ['selectedSubjectId', 'editPage', 'createTestPage', 'studentName', 'testOfStudentPage', 'selectedTest', 'editTestPage', 'userRole', 'allSubjects']
   }
 
   const newTestPersistConfig = {

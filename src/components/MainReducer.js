@@ -4,6 +4,7 @@ const initialState = {
   testOfStudentPage: false,
   openSubjectModal: false,
   selectedSubjectId: "",
+  allSubjects: [],
   openTestModal: false,
   messageModal: false,
   deleteConfirmModal: false,
@@ -12,6 +13,7 @@ const initialState = {
   sendTestModal: false,
   changePassModal: false,
   changeImgModal: false,
+  deleteSubjectModal: false,
   message: "",
   studentName: "",
   tests: [
@@ -63,6 +65,12 @@ export const MainReducer = (state, action) => {
         message: action.message,
       };
       break;
+      case GET_ALL_SUBJECTS:
+      state = {
+        ...state,
+        allSubjects: action.allSubjects,
+      };
+      break;
     case SET_LOGOUT:
       state = initialState
       break;
@@ -82,3 +90,4 @@ export const SET_OPEN = "SET_OPEN";
 export const SET_MESSAGE_OPEN = "SET_MESSAGE_OPEN";
 export const SET_LOGOUT = "SET_LOGOUT";
 export const CHANGE_USER_ROLE = "CHANGE_USER_ROLE";
+export const GET_ALL_SUBJECTS = "GET_ALL_SUBJECTS";

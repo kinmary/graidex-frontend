@@ -7,6 +7,7 @@ import {
 } from "./AuthReducer";
 import { API_BASE_URL } from "../../constants/config";
 import { SET_LOGOUT } from "../MainReducer";
+import { getAllSubjects } from "../Dashboard/SubjectActions";
 
 export const SetNewUser = (isNewUser) => {
   return (dispatch) => {
@@ -47,6 +48,7 @@ export const registerStudent = (student) => {
       );
       if (response.status === 200) {
         dispatch(loginStudent(studentDto));
+
       } 
     } catch (error) {
       if (error.response.status === 409) { //Conflict
@@ -92,6 +94,7 @@ export const getStudent = (email) => {
           studentId: response.data.customId,
           email: email,
         });
+        dispatch(getAllSubjects());
       } 
     } catch (error) {
       alert(error.response.data);
@@ -161,6 +164,7 @@ export const getTeacher = (email) => {
           surname: response.data.surname,
           email: email,
         });
+        dispatch(getAllSubjects());
       } 
     } catch (error) {
       alert(error.response.data);

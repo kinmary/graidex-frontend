@@ -12,6 +12,7 @@ import MessageModal from "../Modals/MessageModal";
 import StartTestConfirmModal from "../Modals/StartTestConfirmModal";
 import SubjectSettings from "./SubjectSettings";
 import ChangeImageModal from "../Modals/ChangeImageModal";
+import DeleteSubjectModal from "../Modals/DeleteSubjectModal";
 
 class SubjectPage extends Component {
   constructor(props) {
@@ -60,8 +61,10 @@ class SubjectPage extends Component {
 
   render() {
     const { selectedSubjectId, tests } = this.props.main;
+    const selectedSubject = this.props.main.allSubjects.find(obj => obj.id.toString() === selectedSubjectId.toString());
     return (
       <>
+      <DeleteSubjectModal />
         <ChangeImageModal />
         <MessageModal />
         <StartTestConfirmModal />
@@ -81,7 +84,7 @@ class SubjectPage extends Component {
           >
             <h3 style={{ fontWeight: "bold", textAlign: "left", margin: "0" }}>
               {/* //TODO: add subject name */}
-              Media and Design
+              {selectedSubject.title}
             </h3>
             <div style={{ marginLeft: "auto" }}>
               {this.props.main.userRole === 0 ? (
@@ -110,7 +113,7 @@ class SubjectPage extends Component {
               {" "}
               Dashboard
             </Breadcrumb.Item>
-            <Breadcrumb.Item active> {selectedSubjectId} </Breadcrumb.Item>
+            <Breadcrumb.Item active> {selectedSubject.title} </Breadcrumb.Item>
           </Breadcrumb>
           {this.props.main.userRole === 0 ? (
             <Tabs
