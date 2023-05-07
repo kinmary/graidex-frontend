@@ -47,7 +47,7 @@ class Dashboard extends Component {
               //!     change directly on card (without modal) */}
               {this.props.main.userRole === 0 && (
                 <Button onClick={this.OpenModal.bind(this)}>
-                  <i className="bi bi-plus-lg"></i>Add subject
+                  <i className="bi bi-plus-lg"></i> Add subject
                 </Button>
               )}
             </div>

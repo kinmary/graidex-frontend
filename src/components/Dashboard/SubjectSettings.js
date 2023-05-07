@@ -52,6 +52,9 @@ class SubjectSettings extends Component {
   }
 
   render() {
+    const { selectedSubjectId, tests } = this.props.main;
+    const selectedSubject = this.props.main.allSubjects.find(obj => obj.id.toString() === selectedSubjectId.toString());
+
     return (
       <Container
         style={{
@@ -125,7 +128,7 @@ class SubjectSettings extends Component {
         </Col>
         <Col>
           <Card id="IF3333_EN" style={{ marginLeft: -40 }}>
-            <Card.Img variant="top" src={this.state.imageUrl} />
+            <Card.Img variant="top" src={selectedSubject.imageUrl ?? logoDark} />
             <Card.Body>
               <Button
                 onClick={this.handleChangeImageClick.bind(this)}

@@ -11,7 +11,7 @@ class AddSubjectModal extends Component {
     this.state = {
       title: "",
       subjectId: "",
-      imageUrl: logoDark
+      imageUrl: null,
     } 
   }
   closeModal() {
