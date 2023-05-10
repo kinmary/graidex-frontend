@@ -5,6 +5,7 @@ const initialState = {
   openSubjectModal: false,
   selectedSubjectId: "",
   allSubjects: [],
+  studentsList: [],
   openTestModal: false,
   messageModal: false,
   deleteConfirmModal: false,
@@ -14,8 +15,10 @@ const initialState = {
   changePassModal: false,
   changeImgModal: false,
   deleteSubjectModal: false,
+  manageStudentsModal: false,
   message: "",
   studentName: "",
+  addStudentModal: false,
   tests: [
     {
       id: 0,

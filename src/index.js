@@ -11,10 +11,14 @@ import { BrowserRouter } from "react-router-dom";
 import 'ag-grid-community/styles/ag-grid.css'; 
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { PersistGate } from 'redux-persist/integration/react'
+import axios from "axios";
 
 export const {store, persistor } = configStore();
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
+const token = sessionStorage.getItem("token");
+if (token) {
+  setAuthorizationHeader(token);
+}
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
@@ -25,6 +29,9 @@ root.render(
   </Provider>
 );
 
+function setAuthorizationHeader(token) {
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

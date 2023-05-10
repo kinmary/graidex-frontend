@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
 import { SetOpen, SetMessageOpen } from "../MainAction";
 import logoDark from "../../images/GraidexLogoDarkJPG.jpg";
-import { updateSubject } from "./SubjectActions";
+import { getStudentsList, updateSubject } from "./SubjectActions";
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents, } from 'react-leaflet'
 //import "../../styles/subjectpage.css"
 import L from 'leaflet';
@@ -47,13 +47,6 @@ class SubjectSettings extends Component {
     this.props.SetOpen("deleteSubjectModal", true);
   };
 
-  handleShareLink() {
-    //TODO: Code to share link
-  };
-
-  handleManageParticipants(){
-    //TODO: Code to manage participants
-  };
   handleChangeImageClick() {
     this.props.SetOpen("changeImgModal", true);
   };
@@ -69,6 +62,12 @@ class SubjectSettings extends Component {
       longitude: markerPosition.lng
     }))
   }
+
+  async handleManageStudents(){
+    await this.props.getStudentsList(this.state.id);
+    this.props.SetOpen("manageStudentsModal", true);
+  }
+
 
   render() {
     const { selectedSubjectId, tests } = this.props.main;
@@ -135,19 +134,19 @@ class SubjectSettings extends Component {
             <Form.Group style={{ marginTop: 20 }}>
               <Form.Label>Manage Participants </Form.Label>
               <InputGroup style={{ width: "40%" }}>
-                <Button>Manage Participants</Button>
+                <Button onClick={this.handleManageStudents.bind(this)} >Manage Student List</Button>
               </InputGroup>
             </Form.Group>
             <Form.Group style={{ marginTop: 20 }}>
               <InputGroup style={{ width: "40%" }}>
                 <Button variant="success" onClick = {this.handleUpdateSubject.bind(this)}>Save changes</Button>
-              </InputGroup>
+              </InputGroup> 
             </Form.Group>
           </Form>
         </Col>
         <Col>
-          <Card id="IF3333_EN" style={{ marginLeft: -40 }}>
-            <Card.Img variant="top" src={selectedSubject.imageUrl ?? logoDark} />
+          <Card id="IF3333_EN" style={{ marginLeft: -40, height: 350 }}>
+            <Card.Img variant="top" src={selectedSubject.imageUrl ?? logoDark} style={{height:"80%", objectFit: "cover"}}/>
             <Card.Body>
               <Button
                 onClick={this.handleChangeImageClick.bind(this)}
@@ -231,5 +230,6 @@ function DraggableMarker() {
 }
 
 export default withRouter(
-  connect(mapStateToProps, { SetOpen, SetMessageOpen, updateSubject })(SubjectSettings)
+  connect(mapStateToProps, { SetOpen, SetMessageOpen, updateSubject, getStudentsList })(SubjectSettings)
 );
+

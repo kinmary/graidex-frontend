@@ -1,4 +1,4 @@
-import React, { Component, useState, useMemo, useRef, useCallback, useEffect } from "react";
+import React, { Component,  } from "react";
 import { Breadcrumb, Button, Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
@@ -13,6 +13,8 @@ import StartTestConfirmModal from "../Modals/StartTestConfirmModal";
 import SubjectSettings from "./SubjectSettings";
 import ChangeImageModal from "../Modals/ChangeImageModal";
 import DeleteSubjectModal from "../Modals/DeleteSubjectModal";
+import ManageStudentsModal from "../Modals/ManageStudentsModal";
+import AddStudentModal from "../Modals/AddStudentModal";
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents, } from 'react-leaflet'
 import "../../styles/subjectpage.css"
 import L, { latLng } from 'leaflet';
@@ -78,11 +80,14 @@ class SubjectPage extends Component {
         <ChangeImageModal />
         <MessageModal />
         <StartTestConfirmModal />
+        <AddStudentModal />
+        <ManageStudentsModal />
         <div
           style={{
             marginTop: "80px",
             paddingLeft: "50px",
             paddingRight: "50px",
+            height:"150vh"
           }}
         >
           <div

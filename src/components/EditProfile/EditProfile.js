@@ -43,8 +43,8 @@ class EditProfile extends Component {
   render() {
     const { userRole } = this.props.main;
     return (
-      <>
-      <ChangePasswordModal />
+      <div style = {{ height: "100vh" }}>
+        <ChangePasswordModal />
         <DeleteConfirmModal />
         <Form
           className="form"
@@ -145,7 +145,7 @@ class EditProfile extends Component {
             </Button>
           </Form.Group>
         </Form>
-      </>
+      </div>
     );
   }
 }

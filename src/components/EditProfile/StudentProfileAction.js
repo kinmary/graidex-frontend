@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "../../constants/config";
 import { Logout, getStudent } from "../Login/AuthAction";
-import { SetOpen } from "../MainAction";
+import { CheckAuthorization, SetOpen } from "../MainAction";
 export const updateStudentProfile = (name, surname, studentId) => {
   return async (dispatch, getState) => {
     try {
@@ -19,6 +19,7 @@ export const updateStudentProfile = (name, surname, studentId) => {
         dispatch(getStudent(email));
       }
     } catch (error) {
+      dispatch(CheckAuthorization(error.response.status));
       if (error.response.status === 404) {
         alert(error.response.data);
       }
@@ -42,6 +43,7 @@ export const deleteStudentProfile = (password) => {
         return true;
       }
     } catch (error) {
+      dispatch(CheckAuthorization(error.response.status));
       alert(error.response.data);
     }
     return false;

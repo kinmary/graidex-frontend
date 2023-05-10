@@ -30,6 +30,7 @@ class Dashboard extends Component {
             marginTop: "80px",
             paddingLeft: "50px",
             paddingRight: "50px",
+            height:"100vh"
           }}
         >
           <div
@@ -61,11 +62,11 @@ class Dashboard extends Component {
               {allSubjects.map((subject, idx) => (
                 <Col key={idx}>
                   <Card
-                    style={{ textAlign: "left" }}
+                    style={{ textAlign: "left", width: "100%", height:350 }}
                     id={subject.id}
                     onClick={this.HandleCardClick.bind(this)}
                   >
-                    <Card.Img variant="top" src={subject.imageUrl || logoDark} />
+                    <Card.Img variant="top" src={subject.imageUrl || logoDark} style={{height:"70%", objectFit: "cover"}}  />
                     <Card.Body>
                       <Card.Subtitle className="mb-2 text-muted">
                         {subject.customId}
@@ -81,7 +82,6 @@ class Dashboard extends Component {
               {this.props.main.userRole === 0 ? (
                 <>
                   <h6>
-                    {" "}
                     You don't have any subjects yet. Create the first one here!{" "}
                   </h6>
                   <Button onClick={this.OpenModal.bind(this)}>
@@ -90,9 +90,8 @@ class Dashboard extends Component {
                 </>
               ) : (
                 <h6>
-                  {" "}
                   You don't have any subjects yet. Add subject by clicking
-                  invitation link from your teacher!{" "}
+                  invitation link from your teacher!
                 </h6>
               )}
             </Alert>

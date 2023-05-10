@@ -13,11 +13,9 @@ import {
   Image,
   Badge
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { createClient } from 'pexels';
 import { PEXEL_CLIENT_ID } from "../../constants/config";
 import { updateSubject } from "../Dashboard/SubjectActions";
-
 
 class ChangeImageModal extends Component {
   constructor(props) {
@@ -162,11 +160,13 @@ class ChangeImageModal extends Component {
                 <Container fluid>
                   <Row xs={1} md={2} className="g-4 my-1">
                     {this.state.images.map((imageUrl, idx) => (
-                      <Col key={idx}>
+                      <Col key={idx} >
                         <Card 
                           className="border-light" 
+                          style={{height: 250}}
                           onClick={ () => { this.setState({ selectedImg: imageUrl }) } }>
                           <Card.Img src={imageUrl ?? "/static/media/GraidexLogoDarkJPG.1a3333888e257918b9ef.jpg"}
+                          style={{height:"100%", objectFit: 'cover'}}
                             alt="Card image" className={
                               imageUrl === this.state.selectedImg 
                               ? "border border-primary border-5 rounded-3"

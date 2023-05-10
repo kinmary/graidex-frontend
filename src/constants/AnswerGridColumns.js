@@ -12,5 +12,5 @@ export const AnswerGridCol = [
   { field: "date", flex: 2, headerName: "Date" },
   { field: "duration", flex: 1, headerName: "Duration" },
   { field: "mark", flex: 1, headerName: "Mark" },
-  { field: "", flex: 0.1, headerName: "", cellRenderer: BtnCellRenderer},
+  //{ field: "", flex: 0.1, headerName: "", cellRenderer: BtnCellRenderer},
 ];

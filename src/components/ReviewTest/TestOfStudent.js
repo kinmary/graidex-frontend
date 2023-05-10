@@ -15,6 +15,7 @@ class TestOfStudent extends Component {
         marginTop: "80px",
         paddingLeft: "50px",
         paddingRight: "50px",
+        height: "100vh"
       }}
     >
       <Row xs = {3}>
