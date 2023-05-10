@@ -13,6 +13,8 @@ import StartTestConfirmModal from "../Modals/StartTestConfirmModal";
 import SubjectSettings from "./SubjectSettings";
 import ChangeImageModal from "../Modals/ChangeImageModal";
 import DeleteSubjectModal from "../Modals/DeleteSubjectModal";
+import ManageStudentsModal from "../Modals/ManageStudentsModal";
+import AddStudentModal from "../Modals/AddStudentModal";
 
 class SubjectPage extends Component {
   constructor(props) {
@@ -68,11 +70,14 @@ class SubjectPage extends Component {
         <ChangeImageModal />
         <MessageModal />
         <StartTestConfirmModal />
+        <AddStudentModal />
+        <ManageStudentsModal />
         <div
           style={{
             marginTop: "80px",
             paddingLeft: "50px",
             paddingRight: "50px",
+            height:"100vh"
           }}
         >
           <div

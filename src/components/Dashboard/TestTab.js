@@ -42,6 +42,7 @@ class TestTab extends Component {
             marginTop: "80px",
             paddingLeft: "50px",
             paddingRight: "50px",
+            height: "100vh"
           }}
         >
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 5 }}>
