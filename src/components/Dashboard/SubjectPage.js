@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { Breadcrumb, Button, Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "../../utils/withRouter";
@@ -13,6 +13,15 @@ import StartTestConfirmModal from "../Modals/StartTestConfirmModal";
 import SubjectSettings from "./SubjectSettings";
 import ChangeImageModal from "../Modals/ChangeImageModal";
 import DeleteSubjectModal from "../Modals/DeleteSubjectModal";
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents, } from 'react-leaflet'
+import "../../styles/subjectpage.css"
+import L, { latLng } from 'leaflet';
+import 'leaflet-control-geocoder';
+import LocationMap from "../LocationMap";
+
+
+const center = {lat: 54.9, lng: 23.9}
+var subjectLocation = {lat: 54.9, lng: 23.9};
 
 class SubjectPage extends Component {
   constructor(props) {
@@ -62,6 +71,7 @@ class SubjectPage extends Component {
   render() {
     const { selectedSubjectId, tests } = this.props.main;
     const selectedSubject = this.props.main.allSubjects.find(obj => obj.id.toString() === selectedSubjectId.toString());
+
     return (
       <>
       <DeleteSubjectModal />
@@ -150,6 +160,7 @@ class SubjectPage extends Component {
                 style={{ width: "100%", height: "100%" }}
                 domLayout="autoHeight"
               />
+              <LocationMap defaultPosition={{lat: selectedSubject.latitude || 0, lng: selectedSubject.longitude || 0}} />
             </div>
           )}
         </div>
@@ -157,7 +168,6 @@ class SubjectPage extends Component {
     );
   }
 }
-
 function mapStateToProps(state) {
   return {
     auth: state.auth,

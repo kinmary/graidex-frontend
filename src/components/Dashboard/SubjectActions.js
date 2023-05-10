@@ -48,13 +48,15 @@ export const createNewSubject = (subjectId, title, imageUrl) => {
   };
 };
 
-export const updateSubject = (id, subjectId, title, imageUrl) => {
+export const updateSubject = (id, subjectId, title, imageUrl, latitude, longitude) => {
   return async (dispatch) => {
     try {
       let updateSubjectDto = {
         title: title,
         customId: subjectId,
         ImageUrl: imageUrl,
+        Latitude: latitude,
+        Longitude: longitude,
       };
       const response = await axios.put(
         `${API_BASE_URL}/api/Subject/update/` + id,

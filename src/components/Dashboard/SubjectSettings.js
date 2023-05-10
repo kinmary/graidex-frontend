@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useRef, useMemo } from "react";
 import {
   Button,
   Card,
@@ -12,6 +12,15 @@ import { withRouter } from "../../utils/withRouter";
 import { SetOpen, SetMessageOpen } from "../MainAction";
 import logoDark from "../../images/GraidexLogoDarkJPG.jpg";
 import { updateSubject } from "./SubjectActions";
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents, } from 'react-leaflet'
+//import "../../styles/subjectpage.css"
+import L from 'leaflet';
+import 'leaflet-control-geocoder';
+import { useEffect } from "react";
+import LocationMap from "../LocationMap";
+
+const center = {lat: 54.9, lng: 23.9}
+var subjectLocation = {lat: 54.9, lng: 23.9};
 
 class SubjectSettings extends Component {
   constructor(props) {
@@ -25,6 +34,8 @@ class SubjectSettings extends Component {
       subjectId: selectedSubject.customId,
       subjectName: selectedSubject.title,
       imageUrl: selectedSubject.imageUrl || logoDark,
+      latitude: selectedSubject.latitude,
+      longitude: selectedSubject.longitude,
     };
   }
 
@@ -47,8 +58,16 @@ class SubjectSettings extends Component {
     this.props.SetOpen("changeImgModal", true);
   };
   handleUpdateSubject() {
-    let {id, subjectId, subjectName, imageUrl } = this.state;
-    this.props.updateSubject(id, subjectId, subjectName, imageUrl);
+    let {id, subjectId, subjectName, imageUrl, latitude, longitude} = this.state;
+    this.props.updateSubject(id, subjectId, subjectName, imageUrl, latitude, longitude);
+  }
+
+  handleChangeMarkerPosition(markerPosition) {
+    this.setState((prevState) => ({
+      ...prevState,
+      latitude: markerPosition.lat,
+      longitude: markerPosition.lng
+    }))
   }
 
   render() {
@@ -138,6 +157,20 @@ class SubjectSettings extends Component {
               </Button>
             </Card.Body>
           </Card>
+          <Card style={{height: "500px", marginLeft: -40}}>
+            <Card.Header style={{ fontWeight: "bold", textAlign: "center" }}>{"Location"}</Card.Header>
+          <div>
+        {/* <MapContainer center={center} zoom={12} scrollWheelZoom={true}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <GeocoderControl />
+          <DraggableMarker/>
+        </MapContainer> */}
+        <LocationMap defaultPosition={{lat: this.state.latitude || 0, lng: this.state.longitude || 0}} positionChanged={this.handleChangeMarkerPosition.bind(this)} />
+        </div>
+          </Card>
         </Col>
       </Container>
     );
@@ -149,6 +182,52 @@ function mapStateToProps(state) {
     auth: state.auth,
     main: state.main,
   };
+}
+
+function GeocoderControl() {
+  const map = useMap();
+  useEffect(() => {
+    L.Control.geocoder({
+      geocoder: L.Control.Geocoder.nominatim(),
+      defaultMarkGeocode: false
+    })
+    .on('markgeocode', function(e) {
+      var position = e.geocode.center;
+      map.flyTo(position);
+    })
+    .addTo(map);
+  }, [])
+  return null;
+}
+
+function DraggableMarker() {
+  const [position, setPosition] = useState(center)
+  const markerRef = useRef(null)
+  const eventHandlers = useMemo(
+    () => ({
+      dragend() {
+        const marker = markerRef.current
+        if (marker != null) {
+          subjectLocation = marker.getLatLng()
+          setPosition(subjectLocation)
+        }
+      },
+    }),
+    [],
+  )
+
+  return (
+    <Marker
+      draggable={true}
+      eventHandlers={eventHandlers}
+      position={position}
+      ref={markerRef}>
+        <Popup>
+          {subjectLocation.lat.toFixed(4)};
+          {subjectLocation.lng.toFixed(4)}
+        </Popup>
+    </Marker>
+  )
 }
 
 export default withRouter(
