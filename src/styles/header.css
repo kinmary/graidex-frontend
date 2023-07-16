@@ -1,10 +1,10 @@
 .profile-image {
-    width: 45px;
-    height: 45px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
   }
   .profile-image-edit {
-    margin-top: 80px;
+    margin-top: 50px;
     width: 145px;
     height: 145px;
     border-radius: 50%;
@@ -34,7 +34,7 @@
 }
 .left-sidebar {
   position: fixed;
-  padding-top: 80px;
+  padding-top: 40px;
   bottom: 0;
   left: 0;
   overflow-y: scroll;
@@ -67,3 +67,11 @@
   border-radius: 100%;
  
 }
+.ps-submenu-expand-icon {
+  display: flex;
+  align-items: center;
+}
+.css-1jp6z4y {
+  margin-top: 50px !important;
+}
+
