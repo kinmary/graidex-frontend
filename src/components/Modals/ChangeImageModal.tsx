@@ -87,7 +87,7 @@ const ChangeImageModal = () => {
 
   
 
-  const handleSearch = async (event: any, data: any) => {
+  const handleSearch = async (event: any) => {
     if (event.key && event.key !== "Enter"){
       return;
     }
@@ -141,18 +141,23 @@ const ChangeImageModal = () => {
           <Modal.Header closeButton>Choose new image</Modal.Header>
           <Modal.Body>
             <InputGroup>
+              <InputGroup.Text id="pexel-logo">
+                <a href="https://www.pexels.com" target="_blank">
+                  <img src="https://images.pexels.com/lib/api/pexels.png" style={{height: "1.5rem"}} />
+                </a>
+              </InputGroup.Text>
               <Form.Control
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
                 onChange={(event) => {setState({...state, search: event.target.value})}}
                 value={state.search}
-                onKeyDown={() => handleSearch}
+                onKeyDown={handleSearch}
                 />
               <InputGroup.Text
                 id="image-search"
                 aria-label="Search"
-                onClick = {() => handleSearch}
+                onClick = {handleSearch}
                 >
                   <i
                     className="bi bi-search"
