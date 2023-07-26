@@ -63,7 +63,7 @@ const SubjectSettings = () => {
       <ChangeImageModal />
       <MessageModal />
       <AddStudentModal />
-      <ManageStudentsModal />
+      <ManageStudentsModal selectedSubjectId={params.selectedSubjectId!}/>
       <div style={{ marginTop: "10px" }}>
         <div
           style={{

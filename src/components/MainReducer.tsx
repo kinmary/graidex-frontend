@@ -1,4 +1,6 @@
+import { IOutgoingSubjectRequest } from "../interfaces/OutgoingSubjectRequests";
 import { ISubject } from "../interfaces/Subject";
+import { IIncomingSubjectRequest } from "../interfaces/SubjectRequests";
 import ITestGrid from "../interfaces/TestGrid";
 
 interface MainState {
@@ -8,6 +10,8 @@ interface MainState {
   openSubjectModal: boolean;
   selectedSubjectId: string;
   allSubjects: ISubject[];
+  subjectRequests: IIncomingSubjectRequest[] | undefined; 
+  pendingSubjRequests: IOutgoingSubjectRequest[] | undefined;
   studentsList: any[];
   openTestModal: boolean;
   messageModal: boolean;
@@ -33,6 +37,8 @@ const initialState: MainState = {
   openSubjectModal: false,
   selectedSubjectId: "",
   allSubjects: Array<ISubject>(),
+  subjectRequests: Array<IIncomingSubjectRequest>(),
+  pendingSubjRequests: Array<IOutgoingSubjectRequest>(),
   studentsList: [],
   openTestModal: false,
   messageModal: false,
@@ -81,12 +87,16 @@ interface MainAction {
     | typeof SET_OPEN
     | typeof SET_MESSAGE_OPEN
     | typeof SET_LOGOUT
-    | typeof GET_ALL_SUBJECTS;
+    | typeof GET_ALL_SUBJECTS
+    | typeof GET_SUBJECT_REQUESTS
+    | typeof GET_PENDING_SUBJECT_REQUESTS;
   name?: string;
   value?: any;
   mode?: boolean;
   message?: string;
   allSubjects?: ISubject[];
+  subjectRequests?: IIncomingSubjectRequest[];
+  pendingSubjectRequests?: IOutgoingSubjectRequest[];
 }
 
 export const MainReducer = (state: MainState = initialState, action: MainAction) => {
@@ -110,6 +120,18 @@ export const MainReducer = (state: MainState = initialState, action: MainAction)
         allSubjects: action.allSubjects!,
       };
       break;
+    case GET_SUBJECT_REQUESTS: 
+      state = {
+        ...state,
+        subjectRequests: action.subjectRequests
+      }
+      break;
+    case GET_PENDING_SUBJECT_REQUESTS: 
+      state = {
+        ...state,
+        pendingSubjRequests: action.pendingSubjectRequests
+      }
+      break;
     case SET_LOGOUT:
       state = initialState;
       break;
@@ -123,3 +145,5 @@ export const SET_OPEN = "SET_OPEN";
 export const SET_MESSAGE_OPEN = "SET_MESSAGE_OPEN";
 export const SET_LOGOUT = "SET_LOGOUT";
 export const GET_ALL_SUBJECTS = "GET_ALL_SUBJECTS";
+export const GET_SUBJECT_REQUESTS = "GET_SUBJECT_REQUESTS";
+export const GET_PENDING_SUBJECT_REQUESTS = "GET_PENDING_SUBJECT_REQUESTS";

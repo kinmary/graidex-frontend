@@ -16,10 +16,10 @@ import { CheckAuthentication } from "./components/Auth/AuthAction";
 import Layout from "./components/Layout";
 import SubjectSettings from "./components/Dashboard/SubjectSettings";
 import Settings from "./components/Dashboard/Settings";
+import SubjectRequests from "./components/Dashboard/SubjectRequests";
 
 function App() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const auth = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {   
@@ -39,6 +39,7 @@ function App() {
           <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="edit-profile" element={<EditProfile />} />
+          {auth.userRole === 1 && <Route path="subject-requests" element={<SubjectRequests />} />}
           <Route path=":selectedSubjectId" element={<SubjectPage />} />
           {auth.userRole === 0 &&<Route path=":selectedSubjectId/settings" element={<SubjectSettings />} />}
           {/* //TODO: change paths to test id or name  */}

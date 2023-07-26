@@ -1,20 +1,15 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Nav, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../app/hooks";
 import { RootState } from "../app/store";
 import {
   Menu,
   MenuItem,
-  MenuItemStylesParams,
-  ProSidebarProvider,
   Sidebar,
   SubMenu,
-  menuClasses,
   sidebarClasses,
 } from "react-pro-sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SetOpen } from "./MainAction";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,16 +17,14 @@ interface LayoutProps {
 
 const MainSidebar = ({ children }: LayoutProps) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
   const auth = useSelector((state: RootState) => state.auth);
-
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed);
   };
-
+  const mainMenuItemStyle = { paddingRight: "15px" };
   return (
     <Row>
       <Col style={{ paddingLeft: 0 }} xs={collapsed ? 1 : 2}>
@@ -75,90 +68,74 @@ const MainSidebar = ({ children }: LayoutProps) => {
               },
             }}
           >
-            <SubMenu
-              style={{ fontWeight: "bold", marginTop: "9px" }}
-              label={
-                <span>
-                  <i className="bi bi-book"></i> Subjects
-                </span>
+            <MenuItem
+              style={{ ...mainMenuItemStyle, marginTop: "9px" }}
+              icon={
+                location.pathname === `/` ? (
+                  <i className="bi bi-house-fill"></i>
+                ) : (
+                  <i className="bi bi-house"></i>
+                )
               }
+              onClick={() => navigate("/")}
+            >
+              Dashboard
+            </MenuItem>
+            {auth.userRole === 1 &&  <MenuItem
+              style={mainMenuItemStyle}
+              icon={
+                location.pathname === "/subject-requests" ? (
+                  main.subjectRequests && main.subjectRequests.length > 0 ? <i className="bi bi-envelope-exclamation-fill"></i>  : <i className="bi bi-envelope-fill"></i> 
+                ) : (
+                  main.subjectRequests && main.subjectRequests.length > 0 ? <i className="bi bi-envelope-exclamation"></i>  :<i className="bi bi-envelope"></i>
+                )
+              }
+              onClick={() => navigate("/subject-requests")}
+            >
+               Requests
+            </MenuItem>}
+           
+            <SubMenu
+              style={mainMenuItemStyle}
+              icon={<i className="bi bi-book"></i>}
+              defaultOpen={true}
+              label={<span>Subjects</span>}
             >
               {main.allSubjects &&
                 main.allSubjects.map((subject: any, idx: number) => {
-                  return auth.userRole === 0 ? (
-                    <SubMenu
-                      key={idx}
-                      defaultOpen={location.pathname.startsWith(
-                        `/${subject.id}`
-                      )}
-                      label={
-                        <span style={{ fontWeight: "bold" }}>
-                          {subject.title}
-                        </span>
-                      }
-                    >
-                      {/* <SubMenu
-                        label="Tests"
-                        onClick={() => navigate(subject.id)}
-                      >
-                        //TODO: take tests from backend of each subject
-                        {main.tests &&
-                          main.tests.map((test: any, idx: number) => {
-                            return (
-                              <MenuItem key={idx}>{test.examName}</MenuItem>
-                            );
-                          })}
-                      </SubMenu> */}
-                      <MenuItem
-                        onClick={() => {
-                          navigate("/" + subject.id);
-                        }}
-                        active={location.pathname === `/${subject.id}`}
-                      >
-                        Tests
-                      </MenuItem>
-                      {/* <MenuItem>Students</MenuItem> */}
-                      <MenuItem
-                        onClick={() => {
-                          navigate("/" + subject.id + "/settings");
-                        }}
-                        active={location.pathname === `/${subject.id}/settings`}
-                      >
-                        <i className="bi bi-gear"></i> Settings
-                      </MenuItem>{" "}
-                    </SubMenu>
-                  ) : (
+                  return (
                     <MenuItem
+                      key={idx}
+                      active={location.pathname === `/${subject.id}`}
                       onClick={() => {
                         navigate("/" + subject.id);
                       }}
-                      active={location.pathname === `/${subject.id}`}
                     >
                       {subject.title}
                     </MenuItem>
                   );
                 })}
             </SubMenu>
-            <MenuItem disabled>
-              <i className="bi bi-info-circle" style={{ marginRight: 2 }}></i>
+            <MenuItem
+              style={mainMenuItemStyle}
+              icon={<i className="bi bi-info-circle"></i>}
+              disabled
+            >
               About
             </MenuItem>
-            <MenuItem disabled>
-              <i className="bi bi-shield-check" style={{ marginRight: 2 }}></i>
+            <MenuItem
+              style={mainMenuItemStyle}
+              icon={<i className="bi bi-shield-check"></i>}
+              disabled
+            >
               Privacy &amp; Policy
             </MenuItem>
+
             <MenuItem
-              active={location.pathname.startsWith("/edit-profile")}
-              onClick={() => navigate("/edit-profile")}
+              style={mainMenuItemStyle}
+              icon={<i className="bi bi-question-circle"></i>}
+              disabled
             >
-              <i className="bi bi-person" style={{ marginRight: 2 }}></i>
-              Account Settings
-            </MenuItem>
-            <MenuItem disabled>
-              <i
-                className="bi bi-question-circle"
-                style={{ marginRight: 2 }}
-              ></i>
               Help
             </MenuItem>
           </Menu>

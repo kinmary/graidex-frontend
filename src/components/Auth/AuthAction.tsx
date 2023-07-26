@@ -7,13 +7,11 @@ import {
   SET_ERRORS,
   SET_NEW_USER,
 } from "./AuthReducer";
-import { AppDispatch } from "../../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import { API_BASE_URL } from "../../constants/config";
 import { getAllSubjects } from "../Dashboard/SubjectActions";
-import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
-//import { SET_LOGOUT } from "../MainReducer";
-//import { getAllSubjects } from "../Dashboard/SubjectActions";
+import { getSubjectRequests } from "../Dashboard/SubjectRequestActions";
 
 export const SetNewUser = (isNewUser: boolean) => {
   return (dispatch: AppDispatch) => {
@@ -56,12 +54,6 @@ export const registerStudent = (student: any) => {
         dispatch(loginStudent(studentDto));
       }
     } catch (error: any) {
-      //   if (error.response.status === 409) { //Conflict
-      //     alert(error.response.data);
-      //   }
-      //   if(error.response.status === 400){ //Bad Request
-      //     error.response.data.map(obj => alert(obj.attemptedValue + ": " + obj.errorMessage)) ;
-      //   }
     }
   };
 };
@@ -81,7 +73,6 @@ export const loginStudent = (user: any) => {
         dispatch(getStudent(user.email));
       }
     } catch (error: any) {
-      //alert(error.response.data);
     }
   };
 };
@@ -100,9 +91,9 @@ export const getStudent = (email: string) => {
           email: email,
         });
         dispatch(getAllSubjects());
+        dispatch(getSubjectRequests());
       }
     } catch (error: any) {
-      //alert(error.response.data);
     }
   };
 };
@@ -125,12 +116,6 @@ export const registerTeacher = (teacher: any) => {
         dispatch(loginTeacher(teacherDto));
       }
     } catch (error: any) {
-      //     if (error.response.status === 409) {
-      //     alert(error.response.data);
-      //   }
-      //   if(error.response.status === 400){
-      //     error.response.data.map(obj => alert(obj.attemptedValue + ": " + obj.errorMessage)) ;
-      //   }
     }
   };
 };
@@ -171,16 +156,13 @@ export const getTeacher = (email: string) => {
         dispatch(getAllSubjects());
       }
     } catch (error: any) {
-      //alert(error.response.data);
     }
   };
 };
 
 export const Logout = () => {
   return (dispatch: AppDispatch) => {
-    //localStorage.clear();
     localStorage.removeItem("token");
-    //dispatch({type: SET_LOGOUT});
     dispatch({ type: SET_AUTHENTICATION, isAuth: false });
   };
 };
@@ -196,7 +178,7 @@ export const ChangeUserRole = (userRole: number) => {
 };
 
 export const CheckAuthentication = () => {
-  return (dispatch: AppDispatch) => {
+  return (dispatch: AppDispatch, getState: ()=> RootState) => {
     const authToken = localStorage.token;
     if (authToken) {
       const decodedToken: any = jwtDecode(authToken);
@@ -206,6 +188,10 @@ export const CheckAuthentication = () => {
         dispatch({ type: SET_AUTHENTICATION_TOKEN, isAuth: true,  });
         setAuthorizationHeader(authToken);
         dispatch(getAllSubjects());
+        let userRole = getState().auth.userRole;
+        if(userRole === 1){
+          dispatch(getSubjectRequests());
+        }
       }
     }
   };

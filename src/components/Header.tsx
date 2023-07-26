@@ -15,7 +15,6 @@ import { Logout } from "./Auth/AuthAction";
 const Header = () => {
   const dispatch = useAppDispatch();
   const auth = useSelector((state: RootState) => state.auth);
-  const main = useSelector((state: RootState) => state.main);
   const navigate = useNavigate();
   const handleEditProfile = () => {
     dispatch(SetOpen("editPage", true));

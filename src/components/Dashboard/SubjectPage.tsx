@@ -71,7 +71,6 @@ const SubjectPage = () => {
         <MessageModal />
         <StartTestConfirmModal />
         <AddStudentModal />
-        <ManageStudentsModal />
         <div
       style={{marginTop: "10px"}}
       >

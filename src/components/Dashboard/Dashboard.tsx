@@ -1,14 +1,11 @@
-import React, { Component } from "react";
 import { Alert, Breadcrumb, Button, Card, Col, Row } from "react-bootstrap";
-import { connect } from "react-redux";
 import logoDark from "../../images/GraidexLogoDarkJPG.jpg";
 import AddSubjectModal from "../Modals/AddSubjectModal";
 import { SetOpen } from "../MainAction";
-import { getAllSubjects } from "./SubjectActions";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -87,7 +84,7 @@ const Dashboard = () => {
             {auth.userRole === 0 ? (
               <>
                 <h6>
-                  You don't have any subjects yet. Create the first one here!{" "}
+                  You don't have any subjects yet. Create the first one here!
                 </h6>
                 <Button onClick={OpenModal}>
                   <i className="bi bi-plus-lg"></i>Add subject

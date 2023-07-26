@@ -1,15 +1,28 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { deleteStudent } from "../components/Dashboard/SubjectActions";
-
-const  BtnCellRenderer = () => {
+import { useAppDispatch } from "../app/hooks";
+import { deleteSubjectRequest } from "../components/Dashboard/SubjectRequestActions";
+interface Props {
+  subjectId: string,
+  studentEmail?: string,
+  pendingRequest: boolean,
+  subjectRequestId?: string,
+}
+const  BtnCellRenderer = ({subjectRequestId = "", subjectId, studentEmail = "", pendingRequest = false}: Props) => {
+  const dispatch = useAppDispatch();
   const btnClickedHandler = () => {
     //TODO: add modal to confirm delete
-    //onst { data, deleteStudent } = this.props;
-
-    // if (window.confirm(`Are you sure you want to delete ${data.email}?`)) {
-    //   deleteStudent(this.props.main.selectedSubjectId, data.email);
-    // }
+if(pendingRequest){
+  if (window.confirm(`Are you sure you want to delete subject request of ${studentEmail}?`)) {
+    dispatch(deleteSubjectRequest(subjectId, subjectRequestId));
+  }
+}else {
+  if (window.confirm(`Are you sure you want to delete ${studentEmail}?`)) {
+    dispatch(deleteStudent(subjectId, studentEmail));
+  }
+}
+    
    }
 
     return <i className="bi bi-trash-fill" onClick={btnClickedHandler}></i>;

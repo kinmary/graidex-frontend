@@ -1,12 +1,10 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { connect } from "react-redux";
 import { SetOpen } from "../MainAction";
-import { addStudent, createNewSubject } from "../Dashboard/SubjectActions";
-import logoDark from "../../images/GraidexLogoDarkJPG.jpg";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { addStudent } from "../Dashboard/SubjectRequestActions";
 
 const AddStudentModal = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +13,7 @@ const AddStudentModal = () => {
 
   const closeModal = () => {
     setEmail( "" );
-    SetOpen("addStudentModal", false);
+    dispatch(SetOpen("addStudentModal", false));
   }
   const AddStudent = () => {
     dispatch(addStudent(main.selectedSubjectId, email));
@@ -25,8 +23,6 @@ const AddStudentModal = () => {
   const handleInputChange = (event:React.ChangeEvent<HTMLInputElement> ) =>{
     setEmail(event.target.value)
   }
-
-
 
     const {addStudentModal} = main;
     return (
