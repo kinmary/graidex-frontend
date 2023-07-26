@@ -1,4 +1,4 @@
-import { Badge, Image, Navbar, NavDropdown } from "react-bootstrap";
+import { Badge, Col, Row, Image, Navbar, NavDropdown } from "react-bootstrap";
 import logo from "../images/GraidexLogoLightSVG.svg";
 import profilePic from "../images/blank-profile-picture.jpg";
 import "../styles/header.css";
@@ -44,11 +44,11 @@ const Header = () => {
       fixed="top"
       bg="white"
       style={{
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 20,
+        paddingRight: 12,
         display: "flex",
         alignItems: "center",
-        border: "1px #dde0e4 solid",
+        borderBottom: "1px #dde0e4 solid",
       }}
     >
       <Image
@@ -66,10 +66,20 @@ const Header = () => {
           {auth.userRole === 0 ? "Teacher" : "Student"}
         </Badge>
       </div>
+
+      <div
+      className="d-flex align-items-center fs-5"
+      style={{
+        marginLeft: "auto",
+        marginRight: "10px",
+      }}>
+        <i className="bi bi-bell text-muted"></i>
+      </div>
+
       <div
         className="user-profile"
         style={{
-          marginLeft: "auto",
+          marginLeft: "0",
           marginRight: "0",
         }}
       >
@@ -78,20 +88,43 @@ const Header = () => {
           id="basic-nav-dropdown"
           title={
             <>
-              <span style={{ fontSize: "14px" }}>
-                {auth.name} {auth.surname}
-              </span>
               <Image className="profile-image" src={profilePic} />
             </>
           }
         >
+          
+          <NavDropdown.ItemText className="flex-nowrap">
+            <Row className="flex-nowrap">
+              <Col className="pe-0">
+                <Image className="rounded-circle" src={profilePic} style={{height: "3rem"}} />
+              </Col>
+              <Col>
+                  <span className="h6 text-nowrap">
+                    {auth.name} {auth.surname}
+                  </span>
+                  <br />
+                  <span className="text-muted text-nowrap">
+                    {auth.email}
+                  </span>
+              </Col>
+            </Row>
+          </NavDropdown.ItemText>
+          <NavDropdown.Divider />
           <NavDropdown.Item onClick={handleEditProfile}>
-            <i className="bi bi-person" style={{ marginRight: 5 }}></i>
-            Profile
+            <i className="bi bi-gear me-2" style={{ marginRight: 5 }}></i>
+            Settings
+          </NavDropdown.Item>
+          <NavDropdown.Item disabled>
+            <i className="bi bi-translate me-2" style={{ marginRight: 5 }}></i>
+            Language
+          </NavDropdown.Item>
+          <NavDropdown.Item disabled>
+            <i className="bi bi-brightness-high me-2"></i>
+            Theme: Light
           </NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item onClick={handleLogOut}>
-            <i className="bi bi-box-arrow-right" style={{ marginRight: 5 }}></i>
+            <i className="bi bi-box-arrow-right me-2" style={{ marginRight: 5 }}></i>
             Logout
           </NavDropdown.Item>
         </NavDropdown>
