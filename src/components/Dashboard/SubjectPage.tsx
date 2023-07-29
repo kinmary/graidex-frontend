@@ -1,5 +1,5 @@
 import React, { Component, useRef, useState } from "react";
-import { Breadcrumb, Button, Tab, Tabs } from "react-bootstrap";
+import { Breadcrumb, Button, Tab, Tabs, Card, Row, Col, Dropdown } from "react-bootstrap";
 import { connect } from "react-redux";
 import { SetOpen, SetMessageOpen } from "../MainAction";
 import { AgGridReact } from "ag-grid-react";
@@ -31,8 +31,8 @@ const SubjectPage = () => {
   const [studentColDefs, setStudentColDefs] = useState<ColDef[]>(StudentTestGridCol);
 
   const onRowDoubleClick = () => {
-    const selectedRows = gridRef.current!.api.getSelectedRows();
-    dispatch(SetOpen("selectedTest", selectedRows[0]));
+    // const selectedRows = gridRef.current!.api.getSelectedRows();
+    dispatch(SetOpen("selectedTest", 0));
     navigate("test");
   }
 
@@ -89,9 +89,16 @@ const SubjectPage = () => {
             
             <div style={{ marginLeft: "auto" }}>
               {auth.userRole === 0 ? (
-                <Button size="sm" onClick={OnNewTestClick}>
-                  <i className="bi bi-plus-lg"></i> Create new test
-                </Button>
+                <Dropdown>
+                <Dropdown.Toggle variant="light" id="dropdown-basic">
+                  Constructor
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item href="#/action-1">Preview</Dropdown.Item>
+                  <Dropdown.Item href="#/action-2" disabled>Constructor</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
               ) : (
                 //TODO: check if this avg score needed?
                 <h5
@@ -118,43 +125,70 @@ const SubjectPage = () => {
             </Breadcrumb.Item>
             <Breadcrumb.Item active> {selectedSubject.title} </Breadcrumb.Item>
           </Breadcrumb>
-          {auth.userRole === 0 ? (
-            // <Tabs
-            //   fill
-            //   defaultActiveKey={"tests"}
-            //   style={{ marginLeft: "auto", marginRight: 0 }}
-            // >
-            //   <Tab eventKey="settings" title="Settings">
-            //     <SubjectSettings />
-            //   </Tab>
-            //   <Tab eventKey="tests" title="Tests">
-            //TODO: add text when no tests are in subject yet
-                <div className="ag-theme-alpine">
-                  <AgGridReact<ITestGrid>
-                    ref = {gridRef}
-                    rowSelection="single"
-                    columnDefs={columnDefs}
-                    rowData={tests}
-                    onRowClicked={onRowDoubleClick}
-                    //TODO: find better solution for height
-                    domLayout="autoHeight"
-                  />
-                </div>
-            //   </Tab>
-            // </Tabs>
-          ) : (
-            <div className="ag-theme-alpine">
-              <AgGridReact<ITestGrid>
-                ref={gridRef}
-                rowSelection={"single"}
-                columnDefs={studentColDefs}
-                rowData={tests}
-                onRowClicked={onRowClickByStudent}
-                //TODO: find better solution for height
-                domLayout="autoHeight"
-              />
+          <h6>
+            Planned tests
+          </h6>
+
+          {tests.map((test: any, idx: number) => (
+          <div className="d-flex justify-content-between">
+              <Card className="mb-2" style={{flexGrow: 4}} onClick={onRowDoubleClick}>
+                <Card.Body>
+                  <Card.Title className="d-flex justify-content-between mb-0 h6">
+                    <div>
+                      {test.examName}
+                    </div>
+                    <div className="text-secondary">
+                      {test.date}, {idx % 2 === 0 ? "10:00" : "12:00"} - {idx % 2 === 0 ? "14:00" : "13:00"}
+                    </div>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+              <div className="d-flex justify-content-center mt-1" style={{width: "100px"}}>
+                <Dropdown>
+                  <Dropdown.Toggle variant="light" id="dropdown-basic">
+                    {idx % 2 === 0 ? "Hidden" : "Shown"}
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="#/action-1">Shown</Dropdown.Item>
+                    <Dropdown.Item href="#/action-2">Hidden</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
             </div>
-          )}
+          </div>
+          ))}
+
+          <h6 className="mt-3 text-danger">
+            Drafts
+          </h6>
+          {tests.map((test: any, idx: number) => (
+          <div className="d-flex justify-content-between">
+              <Card className="mb-2" style={{flexGrow: 4}}>
+                <Card.Body>
+                  <Card.Title className="d-flex justify-content-between mb-0 h6">
+                    <div>
+                      {test.examName}
+                    </div>
+                    <div className="text-danger">
+                      Last update: {test.date} at {idx % 2 === 0 ? "19:00" : "22:00"}
+                    </div>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+              <div className="d-flex justify-content-center mt-1" style={{width: "100px"}}>
+              <Dropdown>
+                  <Dropdown.Toggle disabled variant="light" id="dropdown-basic">
+                    Hidden
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="#/action-1">Shown</Dropdown.Item>
+                    <Dropdown.Item href="#/action-2">Hidden</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+          </div>
+          ))}
         </div>
       </>
     );
