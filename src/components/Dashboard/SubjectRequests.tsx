@@ -67,9 +67,20 @@ const SubjectRequests = () => {
                       {subject.subjectInfo.customId}
                     </Card.Subtitle>
                     <Card.Title>{subject.subjectInfo.title}</Card.Title>
-                    <Button id={subject.id} variant="danger" style={{width: "49%",}} onClick={HandleRejectClick}>Reject</Button>
+                    <Button 
+                      id={subject.id} 
+                      variant="outline-danger" 
+                      style={{width: "49%"}} 
+                      onClick={HandleRejectClick}>
+                        <i className="bi bi-x-lg"></i> Reject
+                    </Button>
 
-                    <Button id={subject.id} style={{width: "49%",  float: "right"}} onClick={HandleAcceptClick}>Accept</Button>
+                    <Button 
+                      id={subject.id} 
+                      style={{width: "49%", float: "right"}} 
+                      onClick={HandleAcceptClick}>
+                        <i className="bi bi-check-lg"></i> Accept
+                    </Button>
                   </Card.Body>
                 </Card>
               </Col>

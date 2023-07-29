@@ -17,14 +17,24 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
   const main = useSelector((state: RootState) => state.main);
 
   const PendingStudentRequests = [
-    { field: "id", flex: 1, headerName: "Request Id" },
     { field: "studentEmail", flex: 2, headerName: "Email" },
     {
       field: "date",
       flex: 2,
       headerName: "Date",
       valueFormatter: (params: any) => {
-        return params.value.split("T")[0] + " " + params.value.split("T")[1];
+        const date = 
+        new Date(params.value)
+        .toLocaleString("en-US", {
+          year: "numeric",
+          day: "2-digit",
+          month: "long",
+          hour: '2-digit',
+          minute: '2-digit', 
+          hour12: false
+        });
+        
+        return date;
       },
     },
     {
