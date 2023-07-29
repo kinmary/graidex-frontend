@@ -75,3 +75,6 @@
   margin-top: 50px !important;
 }
 
+.dropdown-no-after a::after{
+  content: none !important;
+}

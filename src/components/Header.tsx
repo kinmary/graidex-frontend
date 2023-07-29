@@ -44,7 +44,7 @@ const Header = () => {
       fixed="top"
       bg="white"
       style={{
-        paddingLeft: 20,
+        paddingLeft: 12,
         paddingRight: 12,
         display: "flex",
         alignItems: "center",
@@ -84,6 +84,7 @@ const Header = () => {
         }}
       >
         <NavDropdown
+          className="dropdown-no-after"
           align="end"
           id="basic-nav-dropdown"
           title={
