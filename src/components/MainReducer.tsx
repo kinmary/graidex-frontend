@@ -23,6 +23,7 @@ interface MainState {
   changeImgModal: boolean;
   deleteSubjectModal: boolean;
   manageStudentsModal: boolean;
+  addQuestionModal: boolean;
   message: string;
   studentName: string;
   addStudentModal: boolean;
@@ -48,6 +49,7 @@ const initialState: MainState = {
   sendTestModal: false,
   changePassModal: false,
   changeImgModal: false,
+  addQuestionModal: false,
   deleteSubjectModal: false,
   manageStudentsModal: false,
   message: "",

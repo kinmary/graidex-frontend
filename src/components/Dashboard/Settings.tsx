@@ -53,6 +53,8 @@ const Settings = () => {
     setTargetGroup(targetGroup.filter((s, sidx) => idx !== sidx));
   }
 
+  const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
+
   
 
   return (
@@ -90,12 +92,11 @@ const Settings = () => {
         <Breadcrumb.Item
           onClick={() => navigate("/" + params.selectedSubjectId)}
         >
-          Mathemathics
-          {/*params.selectedSubjectId*/}
+          {selectedSubject.title}
         </Breadcrumb.Item>
         <Breadcrumb.Item onClick={() => navigate(-1)}>
           {/*selectedTest && selectedTest.examName*/}
-          Final Exam
+          ???
         </Breadcrumb.Item>
         <Breadcrumb.Item active>Settings</Breadcrumb.Item>
       </Breadcrumb>

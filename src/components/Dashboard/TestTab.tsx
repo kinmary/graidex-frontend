@@ -26,6 +26,9 @@ const TestTab = () => {
   };
 
   const { selectedSubjectId, selectedTest } = main;
+  const selectedSubject = main.allSubjects.find(
+    (obj: any) => obj.id.toString() === selectedSubjectId!.toString());  
+
   return (
     <>
       <MessageModal />
@@ -52,16 +55,13 @@ const TestTab = () => {
         </div>
         <Breadcrumb style={{fontSize: 14}}>
           <Breadcrumb.Item onClick={() => navigate("/")}>
-            {" "}
             Dashboard
           </Breadcrumb.Item>
           <Breadcrumb.Item onClick={() => navigate(-1)}>
-            {" "}
-            {selectedSubjectId}{" "}
+            {selectedSubject.title}
           </Breadcrumb.Item>
           <Breadcrumb.Item active>
-            {" "}
-            {selectedTest && selectedTest.examName}{" "}
+            {selectedTest && selectedTest.examName}
           </Breadcrumb.Item>
         </Breadcrumb>
         {/* <Tabs
