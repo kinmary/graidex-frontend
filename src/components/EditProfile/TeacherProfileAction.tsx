@@ -48,3 +48,25 @@ export const deleteTeacherProfile = (password: string) => {
     return false;
   };
 };
+
+export const changeTeacherPassword = (newPassword: string, oldPassword: string) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+  try {
+    const changePasswordDto = {
+      newPassword: newPassword,
+      currentPassword: oldPassword,
+    };
+    const response = await axios.put(
+      `${API_BASE_URL}/api/teacher/change-password`,
+      changePasswordDto
+    );
+    if (response.status === 200) {
+      return true;
+ }
+  } catch (error: any) {
+    dispatch(CheckAuthorization(error.response.status));
+    alert(error.response.data);
+  }
+  return false;
+};
+};

@@ -2,8 +2,8 @@ import React, { Component, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { SetOpen } from "../MainAction";
-import { deleteStudentProfile } from "../EditProfile/StudentProfileAction";
-import { deleteTeacherProfile } from "../EditProfile/TeacherProfileAction";
+import { changeStudentPassword, deleteStudentProfile } from "../EditProfile/StudentProfileAction";
+import { changeTeacherPassword, deleteTeacherProfile } from "../EditProfile/TeacherProfileAction";
 import { Logout, setError } from "../Auth/AuthAction";
 import { useAppDispatch } from "../../app/hooks";
 import { RootState } from "../../app/store";
@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 const ChangePasswordModal = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const auth = useSelector((state: RootState) => state.auth);
   const main = useSelector((state: RootState) => state.main);
   const [state, setState] = useState({oldPassword: "", newPassword: ""});
@@ -24,19 +23,21 @@ const ChangePasswordModal = () => {
     event.preventDefault();
     let result =
       auth.userRole === 0
-        ? await dispatch(deleteTeacherProfile(state.oldPassword))
-        : await dispatch(deleteStudentProfile(state.oldPassword));
+        ? await dispatch(changeTeacherPassword(state.newPassword, state.oldPassword))
+        : await dispatch(changeStudentPassword(state.newPassword, state.oldPassword));
 
     if (result) {
       dispatch(SetOpen("editPage", false));
       dispatch(SetOpen("changePassModal", false));
-      navigate("/");
+      alert("Password changed successfully!")
       dispatch(Logout());
+    } else {
+      alert("Error occurred..")
     }
   }
 
-  const handleInputChange = (event:any, data: any) =>{
-    setState({...state, [event.target.name]: event.target.value });
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
+    setState({...state!, [event.target.name]: event.target.value });
   }
 
     const { changePassModal } = main;
@@ -48,7 +49,7 @@ const ChangePasswordModal = () => {
           centered
           size="sm"
         >
-          <Modal.Header closeButton>Delete Account</Modal.Header>
+          <Modal.Header closeButton>Change password</Modal.Header>
           <Modal.Body>
             <Form.Group className="mb-3">
               <Form.Label>Enter your current password</Form.Label>
@@ -60,7 +61,7 @@ const ChangePasswordModal = () => {
                 value={
                     state.oldPassword.length > 0 ? state.oldPassword : ""
                 }
-                onChange={() =>handleInputChange}
+                onChange={handleInputChange}
                 required
               />
             </Form.Group>
@@ -74,7 +75,7 @@ const ChangePasswordModal = () => {
                 value={
                     state.newPassword.length > 0 ? state.newPassword : ""
                 }
-                onChange={() =>handleInputChange}
+                onChange={handleInputChange}
                 required
               />
             </Form.Group>

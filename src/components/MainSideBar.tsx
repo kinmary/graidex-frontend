@@ -10,6 +10,8 @@ import {
   sidebarClasses,
 } from "react-pro-sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getSubjectContent } from "./Dashboard/SubjectActions";
+import { useAppDispatch } from "../app/hooks";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,9 +21,13 @@ const MainSidebar = ({ children }: LayoutProps) => {
   const navigate = useNavigate();
   const main = useSelector((state: RootState) => state.main);
   const auth = useSelector((state: RootState) => state.auth);
-  const [collapsed, setCollapsed] = useState(false);
+  const dispatch = useAppDispatch();
+  const storedValue = localStorage.getItem("mainsidebarState");
+  const initialState = storedValue ? JSON.parse(storedValue) : false;
+  const [collapsed, setCollapsed] = useState(initialState);
   const location = useLocation();
   const handleToggleCollapse = () => {
+    localStorage.setItem("mainsidebarState", JSON.stringify(!collapsed));
     setCollapsed(!collapsed);
   };
   const mainMenuItemStyle = { paddingRight: "15px" };
@@ -100,6 +106,7 @@ const MainSidebar = ({ children }: LayoutProps) => {
                         key={idx}
                         active={location.pathname === `/${subject.id}`}
                         onClick={() => {
+                          auth.userRole === 0 ? dispatch(getSubjectContent(false, subject.id)) : dispatch(getSubjectContent(true, subject.id));
                           navigate("/" + subject.id);
                         }}
                       >

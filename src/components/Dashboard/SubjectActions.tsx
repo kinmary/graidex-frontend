@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "../../constants/config";
-import { GET_ALL_SUBJECTS, SET_OPEN } from "../MainReducer";
+import { GET_ALL_SUBJECTS, GET_SUBJECT_CONTENT, GET_VISIBLE_SUBJECT_CONTENT, SET_OPEN } from "../MainReducer";
 import { CheckAuthorization, SetOpen } from "../MainAction";
 import { AppDispatch } from "../../app/store";
 
@@ -144,4 +144,27 @@ export const deleteStudent = (id: string, studentEmail: string) => {
     }
   };
 };
-
+//TODO: check subject id is string or num and change everywhere
+export const getSubjectContent = (visibleOnly: boolean, subjectId: number | string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const url = visibleOnly ? `${API_BASE_URL}/api/Subject/visible-subject-content/` + subjectId 
+                          : `${API_BASE_URL}/api/Subject/subject-content/` + subjectId;
+      const response = await axios.get(url);
+      if (response.status === 200) {
+        visibleOnly ? dispatch({
+          type: GET_VISIBLE_SUBJECT_CONTENT,
+          tests: response.data,
+        }) :
+        dispatch({
+          type: GET_SUBJECT_CONTENT,
+          tests: response.data,
+        });
+        
+      }
+    } catch (error: any) {
+      dispatch(CheckAuthorization(error.response.status));
+      alert(error.message);
+    }
+  };
+};

@@ -142,8 +142,8 @@ const ChangeImageModal = () => {
           <Modal.Body>
             <InputGroup>
               <InputGroup.Text id="pexel-logo">
-                <a href="https://www.pexels.com" target="_blank">
-                  <img src="https://images.pexels.com/lib/api/pexels.png" style={{height: "1.5rem"}} />
+                <a href="https://www.pexels.com" target="_blank" rel="noreferrer">
+                  <img src="https://images.pexels.com/lib/api/pexels.png" alt="" style={{height: "1.5rem"}} />
                 </a>
               </InputGroup.Text>
               <Form.Control

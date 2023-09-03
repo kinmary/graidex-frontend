@@ -1,7 +1,7 @@
 import { IOutgoingSubjectRequest } from "../interfaces/OutgoingSubjectRequests";
 import { ISubject } from "../interfaces/Subject";
 import { IIncomingSubjectRequest } from "../interfaces/SubjectRequests";
-import ITestGrid from "../interfaces/TestGrid";
+import ISubjectContent from "../interfaces/SubjectContent";
 
 interface MainState {
   editPage: boolean;
@@ -27,8 +27,8 @@ interface MainState {
   message: string;
   studentName: string;
   addStudentModal: boolean;
-  tests: ITestGrid[];
-  selectedTest: ITestGrid | undefined;
+  tests: ISubjectContent[] | undefined;
+  selectedTest: ISubjectContent | undefined;
 }
 
 const initialState: MainState = {
@@ -56,32 +56,7 @@ const initialState: MainState = {
   studentName: "",
   addStudentModal: false,
   selectedTest: undefined,
-  tests: [
-    {
-      status: 0,
-      examName: "Planned Exam",
-      lastTimeEdit: "2021-02-02",
-      date: "2023-04-05",
-      avgScore: 0,
-      answered: "0/10",
-    },
-    {
-      status: 2,
-      examName: "Closed Exam",
-      lastTimeEdit: "2021-02-02",
-      date: "2023-04-05",
-      avgScore: 9.55,
-      answered: "3/3",
-    },
-    {
-      status: 1,
-      examName: "In Progress Exam",
-      lastTimeEdit: "2021-02-02",
-      date: "2023-04-05",
-      avgScore: 0,
-      answered: "3/10",
-    },
-  ],
+  tests: Array<ISubjectContent>(),
 };
 
 interface MainAction {
@@ -91,13 +66,16 @@ interface MainAction {
     | typeof SET_LOGOUT
     | typeof GET_ALL_SUBJECTS
     | typeof GET_SUBJECT_REQUESTS
-    | typeof GET_PENDING_SUBJECT_REQUESTS;
+    | typeof GET_PENDING_SUBJECT_REQUESTS
+    | typeof GET_SUBJECT_CONTENT
+    | typeof GET_VISIBLE_SUBJECT_CONTENT;
   name?: string;
   value?: any;
   mode?: boolean;
   message?: string;
   allSubjects?: ISubject[];
   subjectRequests?: IIncomingSubjectRequest[];
+  tests?: ISubjectContent[];
   pendingSubjectRequests?: IOutgoingSubjectRequest[];
 }
 
@@ -128,6 +106,18 @@ export const MainReducer = (state: MainState = initialState, action: MainAction)
         subjectRequests: action.subjectRequests
       }
       break;
+      case GET_SUBJECT_CONTENT: 
+      state = {
+        ...state,
+        tests: action.tests
+      }
+      break;
+      case GET_VISIBLE_SUBJECT_CONTENT:
+        state = {
+          ...state,
+          tests: action.tests
+        }
+        break;
     case GET_PENDING_SUBJECT_REQUESTS: 
       state = {
         ...state,
@@ -149,3 +139,5 @@ export const SET_LOGOUT = "SET_LOGOUT";
 export const GET_ALL_SUBJECTS = "GET_ALL_SUBJECTS";
 export const GET_SUBJECT_REQUESTS = "GET_SUBJECT_REQUESTS";
 export const GET_PENDING_SUBJECT_REQUESTS = "GET_PENDING_SUBJECT_REQUESTS";
+export const GET_SUBJECT_CONTENT = "GET_SUBJECT_CONTENT";
+export const GET_VISIBLE_SUBJECT_CONTENT = "GET_VISIBLE_SUBJECT_CONTENT";

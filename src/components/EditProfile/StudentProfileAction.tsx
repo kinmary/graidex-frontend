@@ -51,3 +51,25 @@ export const deleteStudentProfile = (password: string) => {
     return false;
   };
 };
+
+export const changeStudentPassword = (newPassword: string, oldPassword: string) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+  try {
+    const changePasswordDto = {
+      newPassword: newPassword,
+      currentPassword: oldPassword,
+    };
+    const response = await axios.put(
+      `${API_BASE_URL}/api/student/change-password`,
+      changePasswordDto
+    );
+    if (response.status === 200) {
+      return true;
+ }
+  } catch (error: any) {
+    dispatch(CheckAuthorization(error.response.status));
+    alert(error.response.data);
+  }
+  return false;
+};
+};

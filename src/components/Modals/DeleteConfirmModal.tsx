@@ -33,7 +33,7 @@ const DeleteConfirmModal = () => {
     }
   }
 
-  const handleInputChange = (event: any, data: any) =>{
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
     setPassword(event.target.value );
   }
 
@@ -59,7 +59,7 @@ const DeleteConfirmModal = () => {
                 value={
                   password.length > 0 ? password : ""
                 }
-                onChange={() =>handleInputChange}
+                onChange={handleInputChange}
                 required
                 autoComplete="off"
               />

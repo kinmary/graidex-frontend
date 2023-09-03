@@ -163,6 +163,8 @@ export const getTeacher = (email: string) => {
 export const Logout = () => {
   return (dispatch: AppDispatch) => {
     localStorage.removeItem("token");
+    localStorage.removeItem("mainSidebarState");
+    localStorage.clear();
     dispatch({ type: SET_AUTHENTICATION, isAuth: false });
   };
 };
