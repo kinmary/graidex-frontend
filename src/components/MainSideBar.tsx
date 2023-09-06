@@ -31,6 +31,9 @@ const MainSidebar = ({ children }: LayoutProps) => {
     setCollapsed(!collapsed);
   };
   const mainMenuItemStyle = { paddingRight: "15px" };
+
+  const subjectRegEx = /^\/[0-9]+/;
+
   return (
     <Row>
       <Col style={{
@@ -39,9 +42,10 @@ const MainSidebar = ({ children }: LayoutProps) => {
          top: "46.67px", 
          height: "fit-content",
          zIndex: 1040,
+         width: collapsed ? "80px" : "240px",
+         flex: "0 0 auto",
         }} 
-         
-        xs={collapsed ? 1 : 2}>
+        >
 
         <Sidebar
           width={"100%"}
@@ -67,12 +71,22 @@ const MainSidebar = ({ children }: LayoutProps) => {
                       height: "35px",
                       backgroundColor: "#e1e1e1",
                       fontWeight: "bold",
+                      paddingLeft: collapsed ? "" : "3.7px",
                     };
                   }
                   return {
                     height: "35px",
+                    paddingLeft: collapsed ? "" : "3.7px",
                   };
                 },
+
+                icon: () => {
+                  return {
+                    fontSize: "1.15rem",
+                    marginRight: collapsed ? "" : "3.7px",
+                  };
+                }
+              
               }}
             >
               <MenuItem
@@ -92,7 +106,13 @@ const MainSidebar = ({ children }: LayoutProps) => {
             
               <SubMenu
                 style={mainMenuItemStyle}
-                icon={<i className="bi bi-book"></i>}
+                icon={
+                  subjectRegEx.test(location.pathname) ? (
+                    <i className="bi bi-book-half"></i>
+                  ) : (
+                    <i className="bi bi-book"></i>
+                  )
+                }
                 defaultOpen={true}
                 label={<span>Subjects</span>}
               >
@@ -101,7 +121,9 @@ const MainSidebar = ({ children }: LayoutProps) => {
                     return (
                       <MenuItem
                         style={{ 
-                          paddingLeft: collapsed ? "20px" : "36px",
+                          paddingLeft: "20px",
+                          marginLeft: collapsed ? "" : "20px",
+                          borderLeft: collapsed ? "" : "2px #212529 solid",
                         }}
                         key={idx}
                         active={location.pathname === `/${subject.id}`}
@@ -173,7 +195,14 @@ const MainSidebar = ({ children }: LayoutProps) => {
           </div>
         </Sidebar>
       </Col>
-      <Col xs={collapsed ? 11 : 10}>{children}</Col>
+      <Col 
+      style={{ 
+        width: `calc(100% - ${collapsed ? "80px" : "240px"})`,
+        flex: "0 0 auto",
+      }}
+      >
+        {children}
+      </Col>
     </Row>
   );
 };
