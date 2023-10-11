@@ -68,7 +68,6 @@ interface MainAction {
     | typeof GET_SUBJECT_REQUESTS
     | typeof GET_PENDING_SUBJECT_REQUESTS
     | typeof GET_SUBJECT_CONTENT
-    | typeof GET_VISIBLE_SUBJECT_CONTENT;
   name?: string;
   value?: any;
   mode?: boolean;
@@ -112,12 +111,6 @@ export const MainReducer = (state: MainState = initialState, action: MainAction)
         tests: action.tests
       }
       break;
-      case GET_VISIBLE_SUBJECT_CONTENT:
-        state = {
-          ...state,
-          tests: action.tests
-        }
-        break;
     case GET_PENDING_SUBJECT_REQUESTS: 
       state = {
         ...state,
@@ -140,4 +133,3 @@ export const GET_ALL_SUBJECTS = "GET_ALL_SUBJECTS";
 export const GET_SUBJECT_REQUESTS = "GET_SUBJECT_REQUESTS";
 export const GET_PENDING_SUBJECT_REQUESTS = "GET_PENDING_SUBJECT_REQUESTS";
 export const GET_SUBJECT_CONTENT = "GET_SUBJECT_CONTENT";
-export const GET_VISIBLE_SUBJECT_CONTENT = "GET_VISIBLE_SUBJECT_CONTENT";

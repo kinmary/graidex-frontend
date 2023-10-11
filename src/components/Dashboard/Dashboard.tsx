@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
-import { getSubjectContent } from "./SubjectActions";
+import { getSubjectContent, getVisibleSubjectContent } from "./SubjectActions";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ const Dashboard = () => {
   const HandleCardClick = (e: any) => {
     const selectedSubjectId = e.currentTarget.id;
     dispatch(SetOpen("selectedSubjectId", selectedSubjectId));
-    auth.userRole === 0 ? dispatch(getSubjectContent(false, selectedSubjectId)) : dispatch(getSubjectContent(true, selectedSubjectId));
+    auth.userRole === 0 ? dispatch(getSubjectContent(selectedSubjectId)) : dispatch(getVisibleSubjectContent(selectedSubjectId));
     navigate(`${selectedSubjectId}`);
   };
 

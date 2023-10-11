@@ -10,7 +10,7 @@ import {
   sidebarClasses,
 } from "react-pro-sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getSubjectContent } from "./Dashboard/SubjectActions";
+import { getSubjectContent, getVisibleSubjectContent } from "./Dashboard/SubjectActions";
 import { useAppDispatch } from "../app/hooks";
 
 interface LayoutProps {
@@ -106,7 +106,8 @@ const MainSidebar = ({ children }: LayoutProps) => {
                         key={idx}
                         active={location.pathname === `/${subject.id}`}
                         onClick={() => {
-                          auth.userRole === 0 ? dispatch(getSubjectContent(false, subject.id)) : dispatch(getSubjectContent(true, subject.id));
+                          auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)) 
+                          : dispatch(getVisibleSubjectContent(subject.id));
                           navigate("/" + subject.id);
                         }}
                       >
