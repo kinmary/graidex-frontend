@@ -1,5 +1,5 @@
-import { Breadcrumb, Button} from "react-bootstrap";
-import { SetOpen} from "../MainAction";
+import { Breadcrumb, Button } from "react-bootstrap";
+import { SetOpen } from "../MainAction";
 import AnswersGrid from "./AnswersGrid";
 import { testExample } from "../../constants/TestExample";
 import { useAppDispatch } from "../../app/hooks";
@@ -27,14 +27,13 @@ const TestTab = () => {
 
   const { selectedSubjectId, selectedTest } = main;
   const selectedSubject = main.allSubjects.find(
-    (obj: any) => obj.id.toString() === selectedSubjectId!.toString());  
+    (obj: any) => obj.id.toString() === selectedSubjectId!.toString()
+  );
 
   return (
     <>
       <MessageModal />
-      <div
-      style={{marginTop: "10px"}}
-      >
+      <div style={{ marginTop: "10px" }}>
         <div
           style={{
             display: "flex",
@@ -44,16 +43,24 @@ const TestTab = () => {
           }}
         >
           <h5 style={{ fontWeight: "bold", textAlign: "left", margin: 0 }}>
-          {selectedTest && selectedTest.examName}
-          {auth.userRole === 0 &&   <i style = {{marginLeft: 10}} className="bi bi-gear" onClick={() => navigate("settings")}></i>}
+            {selectedTest && selectedTest.examName}
+            {auth.userRole === 0 && (
+              <i
+                style={{ marginLeft: 10 }}
+                className="bi bi-gear"
+                onClick={() => navigate("settings")}
+              ></i>
+            )}
           </h5>
           <div style={{ marginLeft: "auto" }}>
-          {auth.userRole === 0 &&  <Button  size="sm" onClick={onEditTestClick}>
-              <i className="bi bi-pencil-square"></i> Edit test
-            </Button> }
-          </div> 
+            {auth.userRole === 0 && (
+              <Button size="sm" onClick={onEditTestClick}>
+                <i className="bi bi-pencil-square"></i> Edit test
+              </Button>
+            )}
+          </div>
         </div>
-        <Breadcrumb style={{fontSize: 14}}>
+        <Breadcrumb style={{ fontSize: 14 }}>
           <Breadcrumb.Item onClick={() => navigate("/")}>
             Dashboard
           </Breadcrumb.Item>
@@ -72,15 +79,15 @@ const TestTab = () => {
           style={{ marginLeft: "auto", marginRight: 0 }}
         >
           <Tab eventKey="settings" title="Settings"> */}
-            {/* <Settings /> */}
-          {/* </Tab>
+        {/* <Settings /> */}
+        {/* </Tab>
           <Tab
             eventKey="answers"
             disabled={selectedTest && selectedTest.status !== 2}
             title="Answers"
           > */}
-            <AnswersGrid />
-          {/* </Tab>
+        <AnswersGrid />
+        {/* </Tab>
         </Tabs> */}
       </div>
     </>

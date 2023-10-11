@@ -63,7 +63,10 @@ const AnswersGrid = () => {
   return (
     <>
       {/* //TODO: Add filter and sort buttons, + search in name field */}
-      <div className="ag-theme-alpine" style={{ marginTop: 10, height: "100%" }}>
+      <div
+        className="ag-theme-alpine"
+        style={{ marginTop: 10, height: "100%" }}
+      >
         <AgGridReact<IAnswerGrid>
           ref={gridRef}
           getRowId={getRowId}

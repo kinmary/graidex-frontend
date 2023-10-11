@@ -21,16 +21,16 @@ const Dashboard = () => {
   const HandleCardClick = (e: any) => {
     const selectedSubjectId = e.currentTarget.id;
     dispatch(SetOpen("selectedSubjectId", selectedSubjectId));
-    auth.userRole === 0 ? dispatch(getSubjectContent(selectedSubjectId)) : dispatch(getVisibleSubjectContent(selectedSubjectId));
+    auth.userRole === 0
+      ? dispatch(getSubjectContent(selectedSubjectId))
+      : dispatch(getVisibleSubjectContent(selectedSubjectId));
     navigate(`${selectedSubjectId}`);
   };
 
   return (
     <>
       <AddSubjectModal />
-      <div
-      style={{marginTop: "10px"}}
-      >
+      <div style={{ marginTop: "10px" }}>
         <div
           style={{
             display: "flex",
@@ -52,8 +52,8 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        <Breadcrumb  style={{fontSize: 14}}>
-          <Breadcrumb.Item active > Dashboard</Breadcrumb.Item>
+        <Breadcrumb style={{ fontSize: 14 }}>
+          <Breadcrumb.Item active> Dashboard</Breadcrumb.Item>
         </Breadcrumb>
         {/*//TODO: add filter button */}
         {allSubjects.length > 0 ? (
