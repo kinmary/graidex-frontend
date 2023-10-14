@@ -5,7 +5,7 @@ import {
   GET_SUBJECT_CONTENT,
   SET_OPEN,
 } from "../MainReducer";
-import { CheckAuthorization, SetOpen } from "../MainAction";
+import { CheckAuthorization, SetOpen, hideLoader, showLoader } from "../MainAction";
 import { AppDispatch } from "../../app/store";
 
 export const getAllSubjects = () => {
@@ -67,6 +67,7 @@ export const updateSubject = (
 ) => {
   return async (dispatch: AppDispatch) => {
     try {
+      
       let updateSubjectDto = {
         title: title,
         customId: subjectId,
@@ -152,6 +153,7 @@ export const deleteStudent = (id: string, studentEmail: string) => {
 export const getSubjectContent = (subjectId: number | string) => {
   return async (dispatch: AppDispatch) => {
     try {
+      dispatch(showLoader());
       dispatch({
         type: GET_SUBJECT_CONTENT,
         tests: [],
@@ -168,11 +170,13 @@ export const getSubjectContent = (subjectId: number | string) => {
       dispatch(CheckAuthorization(error.response.status));
       // alert(error.message);
     }
+    dispatch(hideLoader());
   };
 };
 export const getVisibleSubjectContent = (subjectId: number | string) => {
   return async (dispatch: AppDispatch) => {
     try {
+      dispatch(showLoader());
       const url =
         `${API_BASE_URL}/api/Subject/visblesubject-content/` + subjectId;
       const response = await axios.get(url);
@@ -186,5 +190,37 @@ export const getVisibleSubjectContent = (subjectId: number | string) => {
       dispatch(CheckAuthorization(error.response.status));
       alert(error.message);
     }
+    dispatch(hideLoader());
+  };
+};
+
+
+export const updateContentVisibility = (
+  contentid: string | number,
+  visibility: boolean,
+  subjectId: string | number
+) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(showLoader());
+      const response = await axios.put(
+        `${API_BASE_URL}/api/Subject/set-subject-content-visibility/${contentid}?isVisible=` + visibility,
+        
+      );
+      if (response.status === 200) {
+        dispatch(getSubjectContent(subjectId));
+      }
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        //Bad Request
+        error.response.data.map((obj: any) =>
+          alert(obj.attemptedValue + ": " + obj.errorMessage)
+        );
+      } else {
+        dispatch(CheckAuthorization(error.response.status));
+        alert(error.message);
+      }
+    }
+    dispatch(hideLoader());
   };
 };

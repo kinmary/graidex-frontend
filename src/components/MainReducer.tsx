@@ -2,6 +2,7 @@ import { IOutgoingSubjectRequest } from "../interfaces/OutgoingSubjectRequests";
 import { ISubject } from "../interfaces/Subject";
 import { IIncomingSubjectRequest } from "../interfaces/SubjectRequests";
 import ISubjectContent from "../interfaces/SubjectContent";
+import { ITestDto } from "../interfaces/TestDto";
 
 interface MainState {
   editPage: boolean;
@@ -29,6 +30,9 @@ interface MainState {
   addStudentModal: boolean;
   tests: ISubjectContent[] | undefined;
   selectedTest: ISubjectContent | undefined;
+  showLoader?: boolean;
+  currentTestDraft?: ITestDto;
+
 }
 
 const initialState: MainState = {
@@ -57,6 +61,9 @@ const initialState: MainState = {
   addStudentModal: false,
   selectedTest: undefined,
   tests: Array<ISubjectContent>(),
+  showLoader: false,
+  currentTestDraft: undefined
+
 };
 
 interface MainAction {
@@ -67,7 +74,9 @@ interface MainAction {
     | typeof GET_ALL_SUBJECTS
     | typeof GET_SUBJECT_REQUESTS
     | typeof GET_PENDING_SUBJECT_REQUESTS
-    | typeof GET_SUBJECT_CONTENT
+    | typeof GET_SUBJECT_CONTENT 
+    | typeof SHOW_LOADER
+    | typeof SET_CURRENT_TEST_DRAFT;
   name?: string;
   value?: any;
   mode?: boolean;
@@ -76,6 +85,8 @@ interface MainAction {
   subjectRequests?: IIncomingSubjectRequest[];
   tests?: ISubjectContent[];
   pendingSubjectRequests?: IOutgoingSubjectRequest[];
+  showLoader?: boolean;
+  currentTestDraft?: ITestDto;
 }
 
 export const MainReducer = (state: MainState = initialState, action: MainAction) => {
@@ -120,6 +131,16 @@ export const MainReducer = (state: MainState = initialState, action: MainAction)
     case SET_LOGOUT:
       state = initialState;
       break;
+      case SHOW_LOADER:
+        return {
+          ...state,
+          showLoader: action.showLoader,
+        }; 
+        case SET_CURRENT_TEST_DRAFT:
+          return {
+            ...state,
+            currentTestDraft: action.currentTestDraft,
+          }; 
     default:
       break;
   }
@@ -133,3 +154,5 @@ export const GET_ALL_SUBJECTS = "GET_ALL_SUBJECTS";
 export const GET_SUBJECT_REQUESTS = "GET_SUBJECT_REQUESTS";
 export const GET_PENDING_SUBJECT_REQUESTS = "GET_PENDING_SUBJECT_REQUESTS";
 export const GET_SUBJECT_CONTENT = "GET_SUBJECT_CONTENT";
+export const SHOW_LOADER = "SHOW_LOADER";
+export const SET_CURRENT_TEST_DRAFT = "SET_CURRENT_TEST_DRAFT";

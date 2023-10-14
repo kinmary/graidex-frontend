@@ -1,34 +1,27 @@
 import { Breadcrumb, Button } from "react-bootstrap";
-import { SetOpen } from "../MainAction";
 import AnswersGrid from "./AnswersGrid";
-import { testExample } from "../../constants/TestExample";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import MessageModal from "../Modals/MessageModal";
-import {
-  ChangeQuestions,
-  ChangeTitle,
-} from "../TeacherSide/CreateTest/CreateTestActions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TestTab = () => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
   const auth = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
-  const onEditTestClick = () => {
-    dispatch(SetOpen("editTestPage", true));
-    dispatch(SetOpen("createTestPage", true));
-    dispatch(ChangeQuestions(testExample));
-    dispatch(ChangeTitle(main.selectedTest!.examName!));
-    navigate("edit-test");
-  };
-
-  const { selectedSubjectId, selectedTest } = main;
+  const params = useParams();
   const selectedSubject = main.allSubjects.find(
-    (obj: any) => obj.id.toString() === selectedSubjectId!.toString()
+    (obj: any) => obj.id.toString() === params.selectedSubjectId!.toString()
   );
+  const onEditTestClick = () => {
+    // dispatch(SetOpen("editTestPage", true));
+    // dispatch(SetOpen("createTestPage", true));
+    // dispatch(ChangeQuestions(testExample));
+    // dispatch(ChangeTitle(main.selectedTest!.examName!));
+    // navigate("edit-test");
+  };
 
   return (
     <>
@@ -43,7 +36,7 @@ const TestTab = () => {
           }}
         >
           <h5 style={{ fontWeight: "bold", textAlign: "left", margin: 0 }}>
-            {selectedTest && selectedTest.examName}
+            {main.currentTestDraft && main.currentTestDraft.title}
             {auth.userRole === 0 && (
               <i
                 style={{ marginLeft: 10 }}
@@ -65,30 +58,13 @@ const TestTab = () => {
             Dashboard
           </Breadcrumb.Item>
           <Breadcrumb.Item onClick={() => navigate(-1)}>
-            {selectedSubject.title}
+            {selectedSubject && selectedSubject.title}
           </Breadcrumb.Item>
           <Breadcrumb.Item active>
-            {selectedTest && selectedTest.examName}
+          {main.currentTestDraft && main.currentTestDraft.title}
           </Breadcrumb.Item>
         </Breadcrumb>
-        {/* <Tabs
-          fill
-          defaultActiveKey={
-            selectedTest && selectedTest.status !== 2 ? "settings" : "answers"
-          }
-          style={{ marginLeft: "auto", marginRight: 0 }}
-        >
-          <Tab eventKey="settings" title="Settings"> */}
-        {/* <Settings /> */}
-        {/* </Tab>
-          <Tab
-            eventKey="answers"
-            disabled={selectedTest && selectedTest.status !== 2}
-            title="Answers"
-          > */}
         <AnswersGrid />
-        {/* </Tab>
-        </Tabs> */}
       </div>
     </>
   );

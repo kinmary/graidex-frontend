@@ -20,12 +20,13 @@ import ChangeImageModal from "../Modals/ChangeImageModal";
 import MessageModal from "../Modals/MessageModal";
 import StartTestConfirmModal from "../Modals/SendTestConfirmModal";
 import AddStudentModal from "../Modals/AddStudentModal";
+import Loader from "../Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import AddTestModal from "../Modals/AddTestModal";
-import { getSubjectContent } from "./SubjectActions";
-import { createTestDraft, updateTest } from "./TestActions";
+import { getDraft, getTest, updateTest } from "./TestActions";
 import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
+import { updateContentVisibility } from "./SubjectActions";
 
 const SubjectPage = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -57,31 +58,20 @@ const SubjectPage = () => {
     }
   }, [main.tests]);
 
-  const onRowDoubleClick = () => {
-    // const selectedRows = gridRef.current!.api.getSelectedRows();
-    //dispatch(SetOpen("selectedTest", 0));
-    // navigate("test");
+  const onTestClick = (testid: string | number, itemType: string) => {
+    if(itemType === "Test"){
+       dispatch(getTest(testid));
+    }
+    if(itemType === "TestDraft"){
+      dispatch(getDraft(testid));
+
+    }
+    if(main.currentTestDraft){
+      navigate(`${testid}`);
+    }
   };
 
   const onRowClickByStudent = () => {
-    // const selectedRows = gridRef.current!.api.getSelectedRows();
-    // let status = selectedRows[0].status;
-    // let studentName = "Mariia Kindratyshyn"; //TODO: take name from settings
-    // if (status === 2 && studentName) {
-    //   dispatch(SetOpen("studentName", studentName));
-    //   dispatch(SetOpen("testOfStudentPage", true));
-    //   navigate(
-    //     "test/" + studentName
-    //   );
-    // }
-    // if (status === 0) {
-    //   //TODO: make as modal
-    //   dispatch(SetMessageOpen(true, "You cannot access this test"));
-    // }
-    // if (status === 1) {
-    //   dispatch(SetOpen("startConfirmModal", true));
-    //   //TODO: check the procedure when the exam is in progress
-    // }
   };
   const OnCreateTestClick = () => {
     dispatch(SetOpen("openTestModal", true));
@@ -107,8 +97,8 @@ const SubjectPage = () => {
     setPreview(preview);
   };
 
-  const onChangeVisible = (testid: string, updateTestDto: IUpdateTestDto) => {
-    // dispatch(updateTest())
+  const onChangeVisible = (testid: string | number, visible: boolean, subjectid: string | number) => {
+      dispatch(updateContentVisibility(testid, visible, subjectid))
   }
 
   return (
@@ -138,7 +128,7 @@ const SubjectPage = () => {
               ></i>
             )}
           </h5>
-
+             
           <div style={{ marginLeft: "auto", display: "flex" }}>
             {auth.userRole === 0 && (
               <>
@@ -186,13 +176,14 @@ const SubjectPage = () => {
             {selectedSubject && selectedSubject.title}{" "}
           </Breadcrumb.Item>
         </Breadcrumb>
+        {/* {main.showLoader ? <Loader /> :  */}
         {auth.userRole === 0 ? (
           <>
             {tests && tests.length > 0 && (
               <>
                 <h6>Planned tests</h6>
                 {tests.map(
-                  (test: any, idx: number) =>
+                  (test: ISubjectContent, idx: number) =>
                     test && (
                       <div
                         key={idx + "planned"}
@@ -202,7 +193,7 @@ const SubjectPage = () => {
                           key={idx + "-planned-card"}
                           className="mb-2"
                           style={{ flexGrow: 4 }}
-                          onClick={onRowDoubleClick}
+                          onClick={() => onTestClick(test.id, test.itemType)}
                         >
                           <Card.Body>
                             <Card.Title className="d-flex justify-content-between mb-0 h6">
@@ -228,13 +219,13 @@ const SubjectPage = () => {
                             <Dropdown.Menu>
                               <Dropdown.Item
                                 value={true}
-                                onClick={() => onPreviewDDClick(true)}
+                                onClick={() => onChangeVisible( test.id, true, test.subjectId)}
                               >
                                 Shown
                               </Dropdown.Item>
                               <Dropdown.Item
                                 value={false}
-                                onClick={() => onPreviewDDClick(false)}
+                                onClick={() => onChangeVisible(test.id, false, test.subjectId)}
                               >
                                 Hidden
                               </Dropdown.Item>
@@ -261,6 +252,7 @@ const SubjectPage = () => {
                             key={idx + "-draft-card"}
                             className="mb-2"
                             style={{ flexGrow: 4 }}
+                            onClick={() => onTestClick(test.id, test.itemType)}
                           >
                             <Card.Body>
                               <Card.Title className="d-flex justify-content-between mb-0 h6">
@@ -326,7 +318,7 @@ const SubjectPage = () => {
               ))}
           </>
         )}
-        {(!main.tests || main.tests.length === 0) && !isPreview && (
+        {/* {!main.showLoader && (!main.tests || main.tests.length === 0) && !isPreview &&  (
           <Alert variant="primary" style={{ textAlign: "center" }}>
             {auth.userRole === 0 ? (
               <>
@@ -345,7 +337,7 @@ const SubjectPage = () => {
               </h6>
             )}
           </Alert>
-        )}
+        )} */}
       </div>
     </>
   );

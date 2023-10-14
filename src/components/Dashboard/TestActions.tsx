@@ -6,6 +6,7 @@ import { getSubjectContent } from "./SubjectActions";
 import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
 import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
 import { ICreateTestDto } from "../../interfaces/CreateTestDto";
+import { SET_CURRENT_TEST_DRAFT } from "../MainReducer";
 
 export const createTestDraft = (
   subjectId: string | number | undefined,
@@ -93,10 +94,12 @@ export const duplicateDraft = (draftid: string | number) => {
 export const getDraft = (draftid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
+      dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
       const response = await axios.get(
         `${API_BASE_URL}/api/Test/get-draft/` + draftid
       );
       if (response.status === 200) {
+        dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: response.data });
         //  dispatch(getSubjectContent(subjectId!));
         // dispatch(SetOpen("openSubjectModal", false));
       }
@@ -196,11 +199,12 @@ export const createTest = (
 export const getTest = (testid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
+      dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
       const response = await axios.get(
         `${API_BASE_URL}/api/Test/get-test/` + testid
       );
       if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
+         dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: response.data });
         // dispatch(SetOpen("openSubjectModal", false));
       }
     } catch (error: any) {
@@ -244,7 +248,8 @@ export const getVisibleTestStudent = (testid: string | number) => {
 
 export const updateTest = (
   testid: string | number,
-  updateTestDto: IUpdateTestDto
+  updateTestDto: IUpdateTestDto,
+  subjectId: string | number
 ) => {
   return async (dispatch: AppDispatch) => {
     try {
@@ -253,7 +258,7 @@ export const updateTest = (
         updateTestDto
       );
       if (response.status === 200) {
-        // dispatch(getAllSubjects());
+         dispatch(getSubjectContent(subjectId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {

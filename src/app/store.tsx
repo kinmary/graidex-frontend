@@ -11,7 +11,7 @@ import { CreateTestReducer } from "../components/TeacherSide/CreateTest/CreateTe
 const mainPersistConfig = {
   key: 'main',
   storage,
-  whitelist: ['selectedSubjectId', 'editPage', 'createTestPage', 'studentName', 'testOfStudentPage', 'selectedTest', 'editTestPage', 'userRole', 'allSubjects', 'tests']
+  whitelist: ['selectedSubjectId', 'editPage', 'createTestPage', 'studentName', 'testOfStudentPage', 'selectedTest', 'editTestPage', 'userRole', 'allSubjects', 'tests', 'currentTestDraft']
 }
 
 const newTestPersistConfig = {

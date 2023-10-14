@@ -43,12 +43,12 @@ function App() {
           <Route path=":selectedSubjectId" element={<SubjectPage />} />
           {auth.userRole === 0 &&<Route path=":selectedSubjectId/settings" element={<SubjectSettings />} />}
           {/* //TODO: change paths to test id or name  */}
-          {auth.userRole === 0 && <Route path=":selectedSubjectId/test" element={<TestTab />} />}
-         {auth.userRole === 0 && <Route path=":selectedSubjectId/test/settings" element={<Settings />} />}
-          <Route path=":selectedSubjectId/test/take-test" element={<TakeTest />} />
-          <Route path=":selectedSubjectId/test/edit-test" element={<CreateTest />} />
-          <Route path=":selectedSubjectId/test/:studentName" element={<TestOfStudent />} />
-          <Route path=":selectedSubjectId/new-test" element={<CreateTest />} />
+          {auth.userRole === 0 && <Route path=":selectedSubjectId/:test" element={<TestTab />} />}
+         {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/settings" element={<Settings />} />}
+          <Route path=":selectedSubjectId/:test/take-test" element={<TakeTest />} />
+          {auth.userRole === 0 &&<Route path=":selectedSubjectId/:test/editTest" element={<CreateTest />} />}
+          <Route path=":selectedSubjectId/:test/:studentName" element={<TestOfStudent />} />
+          {auth.userRole === 0 && <Route path=":selectedSubjectId/:newTest" element={<CreateTest />} />}
           <Route path="*" element={<Dashboard />} />
         </Routes>
         </Layout>

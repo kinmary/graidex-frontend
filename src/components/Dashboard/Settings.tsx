@@ -20,12 +20,13 @@ import profilePic from "../../images/blank-profile-picture.jpg";
 
 const Settings = () => {
   const main = useSelector((state: RootState) => state.main);
-  const [title, setTitle] = useState(main.selectedTest!.examName);
-  const [date, setDate] = useState(main.selectedTest!.date);
-  const [status, setStatus] = useState(main.selectedTest!.status);
+  const { currentTestDraft } = main;
+  const [inputs, setInputs] = useState({title: currentTestDraft.title, description: currentTestDraft.description});
+
+  // const [date, setDate] = useState(currentTestDraft.date);
+  // const [status, setStatus] = useState(currentTestDraft.title);
   const navigate = useNavigate();
   const params = useParams();
-  const { selectedTest } = main;
 
   const [isCustomTimeLimit, setIsCustomTimeLimit] = useState(false);
 
@@ -37,18 +38,18 @@ const Settings = () => {
     { name: 'Saul Goodman', email: 'saul.goodman@example.com' },
 ]);
 
-  const handleTitleChange = (event: any) => {
-    setTitle(event.target.value);
-  };
+  const handleInputsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs({
+        ...inputs,
+        [event.target.name]: event.target.value,
+    });
+  }
 
   const handleDateChange = (event: any) => {
-    setDate(event.target.value);
+    // setDate(event.target.value);
   };
 
-  const handleStatusChange = (event: any) => {
-    setStatus(event);
-  };
-
+  
   const handleRemoveStudent = (idx: number) => {
     setTargetGroup(targetGroup.filter((s, sidx) => idx !== sidx));
   }
@@ -73,17 +74,7 @@ const Settings = () => {
           navigate(-1);
         }}
       >
-        {/*selectedTest && selectedTest.examName*/}
-        Final Exam
-
-        {/* <Button
-            variant="danger"
-            size="sm"
-            style={{ marginLeft: 10 }}
-            //onClick={this.handleDeleteTest}
-          >
-            Delete test
-          </Button> */}
+        Settings
       </h5>
       <Breadcrumb style={{ fontSize: 14 }}>
         <Breadcrumb.Item onClick={() => navigate("/")}>
@@ -96,7 +87,7 @@ const Settings = () => {
         </Breadcrumb.Item>
         <Breadcrumb.Item onClick={() => navigate(-1)}>
           {/*selectedTest && selectedTest.examName*/}
-          ???
+          {currentTestDraft && currentTestDraft.title}
         </Breadcrumb.Item>
         <Breadcrumb.Item active>Settings</Breadcrumb.Item>
       </Breadcrumb>
@@ -108,9 +99,10 @@ const Settings = () => {
             <Form.Label>Title</Form.Label>
             <Form.Control
               type="text"
+              name="title"
               placeholder="Enter title"
-              value={title}
-              onChange={handleTitleChange}
+              value={inputs.title}
+              onChange={handleInputsChange}
             />
           </Form.Group>
 
@@ -119,7 +111,10 @@ const Settings = () => {
             <Form.Control
               as="textarea" 
               rows={4}
+              name="description"
               placeholder="Enter description"
+              value={inputs.description}
+              onChange={handleInputsChange}
             />
           </Form.Group>
 
@@ -234,7 +229,7 @@ const Settings = () => {
                   All except the group
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
+                {/* <Dropdown.Menu>
                   <Dropdown.Item value={0} onClick={() => handleStatusChange("0")}>
                     All subject students
                   </Dropdown.Item>
@@ -247,7 +242,7 @@ const Settings = () => {
                   <Dropdown.Item value={3} onClick={() => handleStatusChange("3")}>
                     Nobody
                   </Dropdown.Item>
-                </Dropdown.Menu>
+                </Dropdown.Menu> */}
               </Dropdown>
             </Form.Group>
 

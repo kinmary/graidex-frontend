@@ -1,7 +1,7 @@
 import { AppDispatch } from "../app/store";
 import { Logout } from "./Auth/AuthAction";
 import { CHANGE_USER_ROLE } from "./Auth/AuthReducer";
-import { SET_MESSAGE_OPEN, SET_OPEN } from "./MainReducer";
+import { SET_MESSAGE_OPEN, SET_OPEN, SHOW_LOADER } from "./MainReducer";
 
 export const SetOpen = (name: string, value: any) => {
   return (dispatch: AppDispatch) => {
@@ -29,3 +29,13 @@ export const CheckAuthorization = (status: any) => {
   };
 };
 
+export const showLoader = () => {
+  return (dispatch: AppDispatch) => {
+      dispatch({type: SHOW_LOADER, showLoader: true})
+  }
+}
+export const hideLoader = () => {
+  return (dispatch: AppDispatch) => {
+      dispatch({type: SHOW_LOADER, showLoader: false})
+  }
+}
