@@ -14,5 +14,7 @@ export interface ITestDto {
     timeLimit: number | undefined;
     allowedStudents: IStudent[];
     autoCheckAfterSubmission: boolean;
-    reviewResult: any; //TODO: check type
+    reviewResult: string;
+    orderIndex: number;
+
 }

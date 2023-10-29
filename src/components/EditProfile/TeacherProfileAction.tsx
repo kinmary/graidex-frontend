@@ -70,3 +70,33 @@ export const changeTeacherPassword = (newPassword: string, oldPassword: string) 
   return false;
 };
 };
+
+export const UpdateProfilePic = (file: File) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      let email = getState().auth.email;
+      let f = new FormData();
+      f.append("file", file);
+      let res = await axios.put(`${API_BASE_URL}/api/teacher/update-profile-image`, f);
+      if (res.status === 200) {
+        dispatch(getTeacher(email!));
+      } 
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+};
+
+export const DeleteProfilePic = () => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      let email = getState().auth.email;
+      let res = await axios.delete(`${API_BASE_URL}/api/teacher/delete-profile-image`);
+      if (res.status === 200) {
+        dispatch(getTeacher(email!));
+      } 
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+};

@@ -42,7 +42,6 @@ function App() {
           {auth.userRole === 1 && <Route path="subject-requests" element={<SubjectRequests />} />}
           <Route path=":selectedSubjectId" element={<SubjectPage />} />
           {auth.userRole === 0 &&<Route path=":selectedSubjectId/settings" element={<SubjectSettings />} />}
-          {/* //TODO: change paths to test id or name  */}
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:test" element={<TestTab />} />}
          {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/settings" element={<Settings />} />}
           <Route path=":selectedSubjectId/:test/take-test" element={<TakeTest />} />

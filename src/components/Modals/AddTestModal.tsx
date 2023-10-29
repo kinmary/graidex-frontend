@@ -84,7 +84,6 @@ const AddTestModal = ({subjectId}: IProps) => {
           <Button variant="secondary" onClick={closeModal}>
             Close
           </Button>
-          {/* //TODO: Add post request to backend  */}
           <Button variant="primary" onClick={confirmModal}>
             Create
           </Button>

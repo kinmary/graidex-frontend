@@ -6,6 +6,7 @@ import {
   SET_AUTHENTICATION_TOKEN,
   SET_ERRORS,
   SET_NEW_USER,
+  SET_PROFILE_PIC,
 } from "./AuthReducer";
 import { AppDispatch, RootState } from "../../app/store";
 import { API_BASE_URL } from "../../constants/config";
@@ -92,6 +93,14 @@ export const getStudent = (email: string) => {
         });
         dispatch(getAllSubjects());
         dispatch(getSubjectRequests());
+        const profilePic = await axios.get(`${API_BASE_URL}/api/student/download-profile-image`);
+        if(profilePic.status === 200){
+          dispatch({
+            type: SET_PROFILE_PIC,
+            profilePic: URL.createObjectURL(response.data)
+          }); 
+        }
+
       }
     } catch (error: any) {
     }
@@ -152,8 +161,17 @@ export const getTeacher = (email: string) => {
           name: response.data.name,
           surname: response.data.surname,
           email: email,
-        });
+        }); 
         dispatch(getAllSubjects());
+
+        const profilePic = await axios.get(`${API_BASE_URL}/api/teacher/download-profile-image`);
+        if(profilePic.status === 200){
+          dispatch({
+            type: SET_PROFILE_PIC,
+            profilePic: URL.createObjectURL(response.data)
+          }); 
+        }
+
       }
     } catch (error: any) {
     }

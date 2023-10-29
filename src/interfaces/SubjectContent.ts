@@ -6,4 +6,6 @@ export default interface ISubjectContent {
     isVisible: boolean;
     subjectId: number | string;
     itemType: string;
+    orderIndex: number;
+
 }

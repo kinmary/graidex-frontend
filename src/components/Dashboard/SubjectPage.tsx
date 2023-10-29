@@ -24,9 +24,10 @@ import Loader from "../Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import AddTestModal from "../Modals/AddTestModal";
-import { getDraft, getTest, updateTest } from "./TestActions";
+import { getDraft, getTest, getVisibleTestStudent, updateTest } from "./TestActions";
 import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
-import { updateContentVisibility } from "./SubjectActions";
+import { getSubjectContent, getVisibleSubjectContent, updateContentVisibility } from "./SubjectActions";
+import { CheckAuthentication } from "../Auth/AuthAction";
 
 const SubjectPage = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -41,6 +42,14 @@ const SubjectPage = () => {
   const selectedSubject = main.allSubjects.find(
     (obj: any) => obj.id.toString() === params.selectedSubjectId!.toString()
   );
+  useEffect(() => {
+    dispatch(CheckAuthentication());
+  }, []);
+  useEffect(() => {
+    auth.userRole === 0
+      ? dispatch(getSubjectContent(params.selectedSubjectId!))
+      : dispatch(getVisibleSubjectContent(params.selectedSubjectId!));
+  }, []);
   useEffect(() => {
     //navigate("/");
     if (main.tests && main.tests.length > 0) {
@@ -59,20 +68,21 @@ const SubjectPage = () => {
   }, [main.tests]);
 
   const onTestClick = (testid: string | number, itemType: string) => {
-    if(itemType === "Test"){
-       dispatch(getTest(testid));
+    if (itemType === "Test") {
+      dispatch(getTest(testid));
     }
-    if(itemType === "TestDraft"){
+    if (itemType === "TestDraft") {
       dispatch(getDraft(testid));
-
     }
-    if(main.currentTestDraft){
+    if (main.currentTestDraft) {
       navigate(`${testid}`);
     }
   };
 
-  const onRowClickByStudent = () => {
+  const onRowClickByStudent = (testid: string | number) => {
+    dispatch(getVisibleTestStudent(testid));
   };
+
   const OnCreateTestClick = () => {
     dispatch(SetOpen("openTestModal", true));
   };
@@ -97,9 +107,13 @@ const SubjectPage = () => {
     setPreview(preview);
   };
 
-  const onChangeVisible = (testid: string | number, visible: boolean, subjectid: string | number) => {
-      dispatch(updateContentVisibility(testid, visible, subjectid))
-  }
+  const onChangeVisible = (
+    testid: string | number,
+    visible: boolean,
+    subjectid: string | number
+  ) => {
+    dispatch(updateContentVisibility(testid, visible, subjectid));
+  };
 
   return (
     <>
@@ -128,7 +142,7 @@ const SubjectPage = () => {
               ></i>
             )}
           </h5>
-             
+
           <div style={{ marginLeft: "auto", display: "flex" }}>
             {auth.userRole === 0 && (
               <>
@@ -162,7 +176,6 @@ const SubjectPage = () => {
             )}
           </div>
         </div>
-        {/* //TODO: move style to css */}
         <Breadcrumb style={{ fontSize: 14 }}>
           <Breadcrumb.Item
             onClick={() => {
@@ -181,16 +194,16 @@ const SubjectPage = () => {
           <>
             {tests && tests.length > 0 && (
               <>
-                <h6>Planned tests</h6>
+                <h6>Tests</h6>
                 {tests.map(
                   (test: ISubjectContent, idx: number) =>
                     test && (
                       <div
-                        key={idx + "planned"}
+                        key={idx + "test"}
                         className="d-flex justify-content-between"
                       >
                         <Card
-                          key={idx + "-planned-card"}
+                          key={idx + "-test-card"}
                           className="mb-2"
                           style={{ flexGrow: 4 }}
                           onClick={() => onTestClick(test.id, test.itemType)}
@@ -219,13 +232,21 @@ const SubjectPage = () => {
                             <Dropdown.Menu>
                               <Dropdown.Item
                                 value={true}
-                                onClick={() => onChangeVisible( test.id, true, test.subjectId)}
+                                onClick={() =>
+                                  onChangeVisible(test.id, true, test.subjectId)
+                                }
                               >
                                 Shown
                               </Dropdown.Item>
                               <Dropdown.Item
                                 value={false}
-                                onClick={() => onChangeVisible(test.id, false, test.subjectId)}
+                                onClick={() =>
+                                  onChangeVisible(
+                                    test.id,
+                                    false,
+                                    test.subjectId
+                                  )
+                                }
                               >
                                 Hidden
                               </Dropdown.Item>
@@ -257,13 +278,6 @@ const SubjectPage = () => {
                             <Card.Body>
                               <Card.Title className="d-flex justify-content-between mb-0 h6">
                                 <div>{test.title}</div>
-                                {/* TODO: add date! */}
-                                {/* <div className="text-danger">
-
-                      Last update:
-                       {test.date} 
-                       at {idx % 2 === 0 ? "19:00" : "22:00"}
-                    </div> */}
                               </Card.Title>
                             </Card.Body>
                           </Card>
@@ -290,7 +304,7 @@ const SubjectPage = () => {
           </>
         ) : (
           <>
-            <h6>Planned tests</h6>
+            <h6>Tests</h6>
             {tests &&
               tests.map((test: any, idx: number) => (
                 <div
@@ -307,10 +321,7 @@ const SubjectPage = () => {
                     <Card.Body>
                       <Card.Title className="d-flex justify-content-between mb-0 h6">
                         <div>{test.title}</div>
-                        {/* TODO: add date */}
-                        {/* <div className="text-secondary">
-                        {test.date}, {idx % 2 === 0 ? "10:00" : "12:00"} - {idx % 2 === 0 ? "14:00" : "13:00"}
-                      </div> */}
+                      
                       </Card.Title>
                     </Card.Body>
                   </Card>
@@ -318,26 +329,7 @@ const SubjectPage = () => {
               ))}
           </>
         )}
-        {/* {!main.showLoader && (!main.tests || main.tests.length === 0) && !isPreview &&  (
-          <Alert variant="primary" style={{ textAlign: "center" }}>
-            {auth.userRole === 0 ? (
-              <>
-                <h6>
-                  You don't have any tests or drafts yet. Create the first one
-                  here!
-                </h6>
-                <Button onClick={OnCreateTestClick}>
-                  <i className="bi bi-plus-lg me-2"></i>Create test
-                </Button>
-              </>
-            ) : (
-              <h6>
-                You don't have any opened test yet. Wait until teacher opens
-                one!
-              </h6>
-            )}
-          </Alert>
-        )} */}
+        
       </div>
     </>
   );

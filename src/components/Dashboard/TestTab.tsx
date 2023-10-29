@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import MessageModal from "../Modals/MessageModal";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { CheckAuthentication } from "../Auth/AuthAction";
 
 const TestTab = () => {
   const dispatch = useAppDispatch();
@@ -12,6 +14,9 @@ const TestTab = () => {
   const auth = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const params = useParams();
+  useEffect(() => {
+    dispatch(CheckAuthentication());
+  }, []);
   const selectedSubject = main.allSubjects.find(
     (obj: any) => obj.id.toString() === params.selectedSubjectId!.toString()
   );

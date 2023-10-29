@@ -28,6 +28,7 @@ interface MainState {
   message: string;
   studentName: string;
   addStudentModal: boolean;
+  addStudentsToTestModal: boolean;
   tests: ISubjectContent[] | undefined;
   selectedTest: ISubjectContent | undefined;
   showLoader?: boolean;
@@ -56,6 +57,7 @@ const initialState: MainState = {
   addQuestionModal: false,
   deleteSubjectModal: false,
   manageStudentsModal: false,
+  addStudentsToTestModal: false,
   message: "",
   studentName: "",
   addStudentModal: false,

@@ -7,14 +7,19 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { getSubjectContent, getVisibleSubjectContent } from "./SubjectActions";
+import { useEffect } from "react";
+import { CheckAuthentication } from "../Auth/AuthAction";
 
 const Dashboard = () => {
+  
   const dispatch = useAppDispatch();
   const auth = useSelector((state: RootState) => state.auth);
   const main = useSelector((state: RootState) => state.main);
   const navigate = useNavigate();
   let { allSubjects } = main;
-
+  useEffect(() => {
+    dispatch(CheckAuthentication());
+  }, []);
   const OpenModal = () => {
     dispatch(SetOpen("openSubjectModal", true));
   };

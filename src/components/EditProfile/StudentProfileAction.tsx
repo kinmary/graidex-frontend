@@ -73,3 +73,33 @@ export const changeStudentPassword = (newPassword: string, oldPassword: string) 
   return false;
 };
 };
+
+export const UpdateProfilePicStudent = (file: File) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      let email = getState().auth.email;
+      let f = new FormData();
+      f.append("file", file);
+      let res = await axios.put(`${API_BASE_URL}/api/student/update-profile-image`, f);
+      if (res.status === 200) {
+        dispatch(getStudent(email!));
+      } 
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+};
+
+export const DeleteProfilePicStudent = () => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      let email = getState().auth.email;
+      let res = await axios.delete(`${API_BASE_URL}/api/student/delete-profile-image`);
+      if (res.status === 200) {
+        dispatch(getStudent(email!));
+      } 
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+};

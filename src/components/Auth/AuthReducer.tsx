@@ -6,6 +6,7 @@ interface AuthState {
   name: string | undefined;
   surname: string | undefined;
   studentId: string | undefined;
+  profilePic: string | undefined;
   errors:
     | {
         email?: string | undefined;
@@ -18,6 +19,7 @@ interface AuthState {
 export const initialState: AuthState = {
   isAuth: false,
   isNewUser: false,
+  profilePic: undefined,
   userRole: 0,
   email: "",
   name: "",
@@ -34,7 +36,8 @@ export interface Action {
     | typeof CHANGE_VALUES
     | typeof SET_ERRORS
     | typeof CHANGE_USER_ROLE
-    | typeof SET_AUTHENTICATION_TOKEN;
+    | typeof SET_AUTHENTICATION_TOKEN
+    | typeof SET_PROFILE_PIC;
   isAuth?: boolean;
   isNewUser?: boolean;
   userRole?: number;
@@ -42,6 +45,7 @@ export interface Action {
   name?: string;
   surname?: string;
   studentId?: string;
+  profilePic?: string;
   errors?: {
     email?: string | undefined;
     password?: string | undefined;
@@ -51,7 +55,6 @@ export interface Action {
   value?: any;
 }
 
-//TODO: Logout,
 export const AuthReducer = (
   state: AuthState = initialState,
   action: Action
@@ -73,6 +76,12 @@ export const AuthReducer = (
         isNewUser: action.isNewUser,
       };
       break;
+      case SET_PROFILE_PIC:
+        state = {
+          ...state,
+          profilePic: action.profilePic,
+        };
+        break;
     case CHANGE_VALUES:
       state = {
         ...state,
@@ -108,6 +117,7 @@ export const SET_NEW_USER = "SET_NEW_USER";
 export const CHANGE_VALUES = "CHANGE_VALUES";
 export const SET_ERRORS = "SET_ERRORS";
 export const SET_AUTHENTICATION_TOKEN = "SET_AUTHENTICATION_TOKEN";
+export const SET_PROFILE_PIC = "SET_PROFILE_PIC";
 //TODO: add messages
 export const CHANGE_USER_ROLE = "CHANGE_USER_ROLE";
 export const LOGIN_TEACHER_FAIL = "LOGIN_TEACHER_FAIL";

@@ -87,7 +87,7 @@ const SubjectSettings = () => {
                   navigate("/" + selectedSubject!.id);
                 }}
               >
-                {selectedSubject!.title}
+                {selectedSubject?.title}
                 <Button
                   variant="danger"
                   size="sm"
@@ -110,8 +110,7 @@ const SubjectSettings = () => {
                     navigate("/" + selectedSubject!.id);
                   }}
                 >
-                  {" "}
-                  {selectedSubject!.title}{" "}
+                  {selectedSubject?.title}
                 </Breadcrumb.Item>
                 <Breadcrumb.Item active>Settings</Breadcrumb.Item>
               </Breadcrumb>

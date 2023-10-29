@@ -153,7 +153,6 @@ export const deleteStudent = (id: string, studentEmail: string) => {
 export const getSubjectContent = (subjectId: number | string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      dispatch(showLoader());
       dispatch({
         type: GET_SUBJECT_CONTENT,
         tests: [],
@@ -170,15 +169,16 @@ export const getSubjectContent = (subjectId: number | string) => {
       dispatch(CheckAuthorization(error.response.status));
       // alert(error.message);
     }
-    dispatch(hideLoader());
   };
 };
 export const getVisibleSubjectContent = (subjectId: number | string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      dispatch(showLoader());
-      const url =
-        `${API_BASE_URL}/api/Subject/visblesubject-content/` + subjectId;
+      dispatch({
+        type: GET_SUBJECT_CONTENT,
+        tests: [],
+      });
+      const url =`${API_BASE_URL}/api/Subject/visible-subject-content/` + subjectId;
       const response = await axios.get(url);
       if (response.status === 200) {
         dispatch({
@@ -188,9 +188,8 @@ export const getVisibleSubjectContent = (subjectId: number | string) => {
       }
     } catch (error: any) {
       dispatch(CheckAuthorization(error.response.status));
-      alert(error.message);
+      // alert(error.message);
     }
-    dispatch(hideLoader());
   };
 };
 

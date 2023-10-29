@@ -32,9 +32,6 @@ export const createTestDraft = (
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -50,15 +47,11 @@ export const createDraftFromTest = (testid: string | number) => {
         `${API_BASE_URL}/api/Test/create-draft-from-test/` + testid
       );
       if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
-        // dispatch(SetOpen("openSubjectModal", false));
+        dispatch(getSubjectContent(response.data.subjectId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
-        //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        alert("400 Bad request");
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -74,17 +67,15 @@ export const duplicateDraft = (draftid: string | number) => {
         `${API_BASE_URL}/api/Test/duplicate-draft/` + draftid
       );
       if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
+        dispatch(getSubjectContent(response.data.subjectId));
         // dispatch(SetOpen("openSubjectModal", false));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        alert("400 Bad request");
       } else {
-        //   dispatch(CheckAuthorization(error.response.status));
+        // dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
       }
     }
@@ -94,14 +85,15 @@ export const duplicateDraft = (draftid: string | number) => {
 export const getDraft = (draftid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
+      // dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
       const response = await axios.get(
         `${API_BASE_URL}/api/Test/get-draft/` + draftid
       );
       if (response.status === 200) {
-        dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: response.data });
-        //  dispatch(getSubjectContent(subjectId!));
-        // dispatch(SetOpen("openSubjectModal", false));
+        dispatch({
+          type: SET_CURRENT_TEST_DRAFT,
+          currentTestDraft: response.data,
+        });
       }
     } catch (error: any) {
       if (error.response.status === 400) {
@@ -128,7 +120,7 @@ export const updateDraft = (
         updateTestDraftDto
       );
       if (response.status === 200) {
-        // dispatch(getAllSubjects());
+        dispatch(getDraft(draftId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
@@ -144,15 +136,17 @@ export const updateDraft = (
   };
 };
 
-export const deleteDraft = (draftid: string | number) => {
+export const deleteDraft = (
+  draftid: string | number,
+  subjectId: string | number
+) => {
   return async (dispatch: AppDispatch) => {
     try {
       const response = await axios.delete(
         `${API_BASE_URL}/api/Test/delete-draft/` + draftid
       );
       if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
-        // dispatch(SetOpen("openSubjectModal", false));
+        dispatch(getSubjectContent(subjectId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
@@ -170,24 +164,30 @@ export const deleteDraft = (draftid: string | number) => {
 
 export const createTest = (
   draftid: string | number,
-  createTestDto: ICreateTestDto
+  updateTestDraftDto: IUpdateTestDraftDto,
+  createTestDto: ICreateTestDto, 
+  subjectId: string | number
 ) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/Test/create-test/` + draftid,
-        createTestDto
+      const response = await axios.put(
+        `${API_BASE_URL}/api/Test/update-draft/` + draftid,
+        updateTestDraftDto
       );
       if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
-        // dispatch(SetOpen("openSubjectModal", false));
+        const res = await axios.post(
+          `${API_BASE_URL}/api/Test/create-test/` + draftid,
+          createTestDto
+        );
+        if (res.status === 200) {
+          dispatch(getSubjectContent(subjectId));
+          // dispatch(SetOpen("openSubjectModal", false));
+        }
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+          alert("Error occurred while creating test! One or more fields didn't pass validation")
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -199,13 +199,15 @@ export const createTest = (
 export const getTest = (testid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
+      // dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
       const response = await axios.get(
         `${API_BASE_URL}/api/Test/get-test/` + testid
       );
       if (response.status === 200) {
-         dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: response.data });
-        // dispatch(SetOpen("openSubjectModal", false));
+        dispatch({
+          type: SET_CURRENT_TEST_DRAFT,
+          currentTestDraft: response.data,
+        });
       }
     } catch (error: any) {
       if (error.response.status === 400) {
@@ -258,14 +260,15 @@ export const updateTest = (
         updateTestDto
       );
       if (response.status === 200) {
-         dispatch(getSubjectContent(subjectId));
+        dispatch(getSubjectContent(subjectId));
+        dispatch(getTest(testid));
       }
     } catch (error: any) {
-      if (error.response.status === 400) {
+      if (error.response.status === 400 && error.response.data) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        // error.response.data.map((obj: any) =>
+        alert(error.response.data);
+        // );
       } else {
         dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -274,22 +277,25 @@ export const updateTest = (
   };
 };
 
-export const deleteTest = (testid: string | number) => {
+export const deleteTest = (
+  testid: string | number,
+  subjectId: string | number
+) => {
   return async (dispatch: AppDispatch) => {
     try {
       const response = await axios.delete(
         `${API_BASE_URL}/api/Test/delete-test/` + testid
       );
       if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
+        dispatch(getSubjectContent(subjectId!));
         // dispatch(SetOpen("openSubjectModal", false));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        // error.response.data.map((obj: any) =>
+        alert("Bad request");
+        // );
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -413,7 +419,7 @@ export const addStudentsToTest = (
         studentEmails
       );
       if (response.status === 200) {
-        // dispatch(getAllSubjects());
+        dispatch(getTest(testid));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
