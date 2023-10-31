@@ -38,3 +38,29 @@ code {
 .ag-root-wrapper { 
   border-radius: 0.375rem 
 }
+
+
+.gradient {
+	background: linear-gradient(-45deg, #2376FF, #4082EA, #0D6EFD, #010155);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+  /* min-height: 160px; */
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.blured-image{
+  backdrop-filter: blur(8px) saturate(150%) contrast(150%) brightness(80%);
+  -webkit-backdrop-filter: blur(8px);
+  min-height: 160px;
+}
