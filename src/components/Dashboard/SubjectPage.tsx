@@ -25,6 +25,7 @@ import ISubjectContent from "../../interfaces/SubjectContent";
 import AddTestModal from "../Modals/AddTestModal";
 import { getDraft, getTest, getVisibleTestStudent } from "./TestActions";
 import { getSubjectContent, getVisibleSubjectContent, updateContentVisibility } from "./SubjectActions";
+import logoDark from '../../images/GraidexLogoDarkJPG.jpg';
 
 const SubjectPage = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -119,11 +120,21 @@ const SubjectPage = () => {
       <AddStudentModal />
       <AddTestModal subjectId={params.selectedSubjectId} />
       <div style={{ marginTop: "10px" }}>
+        <div 
+        className="rounded mb-3"
+        style={{
+          backgroundImage: `url("${selectedSubject.imageUrl || logoDark}"`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}>
+        <div className="d-flex flex-column blured-image p-3 rounded text-light"
+        >
         <div
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "start",
             marginBottom: 5,
           }}
         >
@@ -142,7 +153,7 @@ const SubjectPage = () => {
             {auth.userRole === 0 && (
               <>
                 <Button onClick={OnCreateTestClick}>
-                  <i className="bi bi-plus-lg me-2"></i>Create draft
+                  <i className="bi bi-plus-lg me-2"></i>Create test
                 </Button>
                 <Dropdown>
                   <Dropdown.Toggle variant="light" id="dropdown-basic">
@@ -171,7 +182,7 @@ const SubjectPage = () => {
             )}
           </div>
         </div>
-        <Breadcrumb style={{ fontSize: 14 }}>
+        <Breadcrumb style={{ fontSize: 14, marginTop: "-12px" }} className="mt-0wq" data-bs-theme="dark">
           <Breadcrumb.Item
             onClick={() => {
               navigate("/");
@@ -184,12 +195,14 @@ const SubjectPage = () => {
             {selectedSubject && selectedSubject.title}{" "}
           </Breadcrumb.Item>
         </Breadcrumb>
+        </div>
+        </div>
         {/* {main.showLoader ? <Loader /> :  */}
         {auth.userRole === 0 ? (
           <>
             {tests && tests.length > 0 && (
               <>
-                <h6>Tests</h6>
+                <h6 className="ms-1">Tests</h6>
                 {tests.map(
                   (test: ISubjectContent, idx: number) =>
                     test && (
@@ -255,7 +268,7 @@ const SubjectPage = () => {
             )}
             {drafts && drafts.length > 0 && !isPreview && (
               <>
-                <h6 className="mt-3 text-danger">Drafts</h6>
+                <h6 className="ms-1 mt-3 text-danger">Drafts</h6>
                 {drafts.map(
                   (test: any, idx: number) =>
                     test && (
