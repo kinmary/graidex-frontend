@@ -14,6 +14,7 @@ interface MainState {
   subjectRequests: IIncomingSubjectRequest[] | undefined; 
   pendingSubjRequests: IOutgoingSubjectRequest[] | undefined;
   studentsList: any[];
+  studentsListWithImages: any[];
   openTestModal: boolean;
   messageModal: boolean;
   deleteConfirmModal: boolean;
@@ -33,6 +34,7 @@ interface MainState {
   selectedTest: ISubjectContent | undefined;
   showLoader?: boolean;
   currentTestDraft?: ITestDto;
+  createTestFromDraft?: boolean
 
 }
 
@@ -46,6 +48,7 @@ const initialState: MainState = {
   subjectRequests: Array<IIncomingSubjectRequest>(),
   pendingSubjRequests: Array<IOutgoingSubjectRequest>(),
   studentsList: [],
+  studentsListWithImages: [],
   openTestModal: false,
   messageModal: false,
   deleteConfirmModal: false,
@@ -64,7 +67,8 @@ const initialState: MainState = {
   selectedTest: undefined,
   tests: Array<ISubjectContent>(),
   showLoader: false,
-  currentTestDraft: undefined
+  currentTestDraft: undefined,
+  createTestFromDraft: false
 
 };
 

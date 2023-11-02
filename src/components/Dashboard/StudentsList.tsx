@@ -9,9 +9,9 @@ import { SetOpen } from "../MainAction";
 import { useAppDispatch } from "../../app/hooks";
 
 type StudentListArg = {
-  subjectId: string
-}
-const StudentsList = ({subjectId}: StudentListArg) => {
+  subjectId: string;
+};
+const StudentsList = ({ subjectId }: StudentListArg) => {
   const main = useSelector((state: RootState) => state.main);
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,9 +43,14 @@ const StudentsList = ({subjectId}: StudentListArg) => {
     dispatch(getStudentsList(subjectId));
     dispatch(SetOpen("addStudentsToTestModal", true));
   };
+
   return (
     <Form.Group style={{ marginTop: 20 }}>
-      {currentStudents.length === 0 && <Alert variant='danger'>Note! This test has no students. Add them below</Alert>}
+      {currentStudents.length === 0 && (
+        <Alert variant="danger">
+          Note! This test has no students. Add them below
+        </Alert>
+      )}
       <Form.Label>Students List</Form.Label>
       <ListGroup>
         <ListGroup.Item
@@ -57,53 +62,62 @@ const StudentsList = ({subjectId}: StudentListArg) => {
           Add students
         </ListGroup.Item>
 
-        {currentStudents.map((student, idx) => (
-          <ListGroup.Item
-            key={idx}
-            className="d-flex justify-content-between align-items-center"
-          >
-            <div>
-              <Row>
-                <Col className="d-flex align-items-center">
-                  <Image className="profile-image me-2" src={profilePic} />
-                  <span className="">{student.name}</span>
-                </Col>
-              </Row>
-              <Row>
-                <span className="text-muted text-nowrap ms-1">
-                  {student.email}
-                </span>
-              </Row>
-            </div>
-            <i
-              className="bi bi-dash-circle text-danger"
-              onClick={() => handleRemoveStudent(student.email)}
-            ></i>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
-     {allowedStudents.length > 5 && <Pagination>
-        <Pagination.Prev
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        />
-        {[...Array(Math.ceil(allowedStudents.length / studentsPerPage))].map(
-          (item, index) => (
-            <Pagination.Item 
-                style={{width: "100%", textAlign: "center"}}
-              key={index}
-              active={index + 1 === currentPage}
-              onClick={() => handlePageChange(index + 1)}
+        {currentStudents.length > 0 &&
+          currentStudents.map((student, idx) => (
+            <ListGroup.Item
+              key={idx}
+              className="d-flex justify-content-between align-items-center"
             >
-              {index + 1}
-            </Pagination.Item>
-          )
-        )}
-        <Pagination.Next
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={indexOfLastStudent >= allowedStudents.length}
-        />
-      </Pagination> }
+              <div>
+                <Row>
+                  <Col className="d-flex align-items-center">
+                    <Image
+                      className="profile-image me-2"
+                      src={profilePic}
+                      style={{ objectFit: "cover" }}
+                    />
+                    <span className="">
+                      {student.name} {student.surname}
+                    </span>
+                  </Col>
+                </Row>
+                <Row>
+                  <span className="text-muted text-nowrap ms-1">
+                    {student.email}
+                  </span>
+                </Row>
+              </div>
+              <i
+                className="bi bi-dash-circle text-danger"
+                onClick={() => handleRemoveStudent(student.email)}
+              ></i>
+            </ListGroup.Item>
+          ))}
+      </ListGroup>
+      {allowedStudents.length > 5 && (
+        <Pagination>
+          <Pagination.Prev
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          />
+          {[...Array(Math.ceil(allowedStudents.length / studentsPerPage))].map(
+            (item, index) => (
+              <Pagination.Item
+                style={{ width: "100%", textAlign: "center" }}
+                key={index}
+                active={index + 1 === currentPage}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            )
+          )}
+          <Pagination.Next
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={indexOfLastStudent >= allowedStudents.length}
+          />
+        </Pagination>
+      )}
     </Form.Group>
   );
 };

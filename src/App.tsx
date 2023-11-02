@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "./app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store";
@@ -11,7 +11,7 @@ import TestOfStudent from "./components/ReviewTest/TestOfStudent";
 import SubjectPage from "./components/Dashboard/SubjectPage";
 import TestTab from "./components/Dashboard/TestTab";
 import TakeTest from "./components/StudentSide/TakeTest/TakeTest";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { CheckAuthentication } from "./components/Auth/AuthAction";
 import Layout from "./components/Layout";
 import SubjectSettings from "./components/Dashboard/SubjectSettings";
@@ -21,17 +21,24 @@ import SubjectRequests from "./components/Dashboard/SubjectRequests";
 function App() {
   const dispatch = useAppDispatch();
   const auth = useSelector((state: RootState) => state.auth);
+  const currentTestDraft = useSelector((state: RootState) => state.main.currentTestDraft);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {   
-     //navigate("/");
-    dispatch(CheckAuthentication());
+    dispatch(CheckAuthentication())
+    .then(() => {
+      setDataLoaded(true);
+    });
   }, []);
 
   let layout = null;
+  if (!dataLoaded) {
+    return null;
+  }
   if (!auth.isAuth) {
     layout = auth.isNewUser ? <SignUp /> : <Login />;
   }
-
+  
   return (
     <div className="App" style={{ height: "100%" }}>
       {layout || (
@@ -43,9 +50,9 @@ function App() {
           <Route path=":selectedSubjectId" element={<SubjectPage />} />
           {auth.userRole === 0 &&<Route path=":selectedSubjectId/settings" element={<SubjectSettings />} />}
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:test" element={<TestTab />} />}
-         {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/settings" element={<Settings />} />}
+          {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/settings" element={<Settings />} />}
           <Route path=":selectedSubjectId/:test/take-test" element={<TakeTest />} />
-          {auth.userRole === 0 &&<Route path=":selectedSubjectId/:test/editTest" element={<CreateTest />} />}
+          {auth.userRole === 0 &&<Route path=":selectedSubjectId/:test/edit-test" element={<CreateTest />} />}
           <Route path=":selectedSubjectId/:test/:studentName" element={<TestOfStudent />} />
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:newTest" element={<CreateTest />} />}
           <Route path="*" element={<Dashboard />} />

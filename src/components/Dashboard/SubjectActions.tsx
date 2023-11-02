@@ -5,8 +5,16 @@ import {
   GET_SUBJECT_CONTENT,
   SET_OPEN,
 } from "../MainReducer";
-import { CheckAuthorization, SetOpen, hideLoader, showLoader } from "../MainAction";
+import {
+  CheckAuthorization,
+  SetOpen,
+  hideLoader,
+  showLoader,
+} from "../MainAction";
 import { AppDispatch } from "../../app/store";
+import { IStudent } from "../../interfaces/Student";
+import JSZip from "jszip";
+import profilePic from "../../images/blank-profile-picture.jpg";
 
 export const getAllSubjects = () => {
   return async (dispatch: AppDispatch) => {
@@ -67,7 +75,6 @@ export const updateSubject = (
 ) => {
   return async (dispatch: AppDispatch) => {
     try {
-      
       let updateSubjectDto = {
         title: title,
         customId: subjectId,
@@ -124,7 +131,63 @@ export const getStudentsList = (subjectId: number | string) => {
           name: "studentsList",
           value: response.data,
         });
+        dispatch(getStudentImages(subjectId, response.data));
       }
+      // return Promise.resolve();
+    } catch (error: any) {
+      dispatch(CheckAuthorization(error.response.status));
+      alert(error.message);
+    }
+  };
+};
+
+export const getStudentImages = (
+  subjectId: number | string,
+  students: IStudent[]
+) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/Student/all-profile-images-of-subject/` +
+          subjectId,
+        { responseType: "arraybuffer" }
+      );
+      let studentsWithImages: IStudent[] = [];
+      if (response.status === 200) {
+        const zip = await JSZip.loadAsync(response.data);
+        students.forEach(async (student) => {
+          let studentWithImg: IStudent = {
+            email: student.email,
+            name: student.name,
+            surname: student.surname,
+            profileImage: profilePic,
+            id: student.id,
+            customId: student.customId,
+          };
+
+          // Find the matching image in the zip archive based on email
+          const matchedImage = Object.keys(zip.files).find((filename) =>
+            filename.startsWith(student.email)
+          );
+
+          if (matchedImage) {
+            const file = zip.files[matchedImage];
+            const blob = new Blob([await file.async("blob")], {
+              type: file.comment,
+            });
+            // Associate the image with the student
+            studentWithImg.profileImage = URL.createObjectURL(blob);
+          }
+          studentsWithImages.push(studentWithImg);
+        });
+
+        dispatch({
+          type: SET_OPEN,
+          name: "studentsListWithImages",
+          value: studentsWithImages,
+        });
+      }
+      return Promise.resolve();
     } catch (error: any) {
       dispatch(CheckAuthorization(error.response.status));
       alert(error.message);
@@ -149,7 +212,6 @@ export const deleteStudent = (id: string, studentEmail: string) => {
     }
   };
 };
-//TODO: check subject id is string or num and change everywhere
 export const getSubjectContent = (subjectId: number | string) => {
   return async (dispatch: AppDispatch) => {
     try {
@@ -169,6 +231,7 @@ export const getSubjectContent = (subjectId: number | string) => {
       dispatch(CheckAuthorization(error.response.status));
       // alert(error.message);
     }
+    // return Promise.resolve()
   };
 };
 export const getVisibleSubjectContent = (subjectId: number | string) => {
@@ -178,7 +241,8 @@ export const getVisibleSubjectContent = (subjectId: number | string) => {
         type: GET_SUBJECT_CONTENT,
         tests: [],
       });
-      const url =`${API_BASE_URL}/api/Subject/visible-subject-content/` + subjectId;
+      const url =
+        `${API_BASE_URL}/api/Subject/visible-subject-content/` + subjectId;
       const response = await axios.get(url);
       if (response.status === 200) {
         dispatch({
@@ -193,7 +257,6 @@ export const getVisibleSubjectContent = (subjectId: number | string) => {
   };
 };
 
-
 export const updateContentVisibility = (
   contentid: string | number,
   visibility: boolean,
@@ -203,8 +266,8 @@ export const updateContentVisibility = (
     try {
       dispatch(showLoader());
       const response = await axios.put(
-        `${API_BASE_URL}/api/Subject/set-subject-content-visibility/${contentid}?isVisible=` + visibility,
-        
+        `${API_BASE_URL}/api/Subject/set-subject-content-visibility/${contentid}?isVisible=` +
+          visibility
       );
       if (response.status === 200) {
         dispatch(getSubjectContent(subjectId));

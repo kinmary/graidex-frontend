@@ -17,9 +17,6 @@ const Dashboard = () => {
   const main = useSelector((state: RootState) => state.main);
   const navigate = useNavigate();
   let { allSubjects } = main;
-  useEffect(() => {
-    dispatch(CheckAuthentication());
-  }, []);
   const OpenModal = () => {
     dispatch(SetOpen("openSubjectModal", true));
   };

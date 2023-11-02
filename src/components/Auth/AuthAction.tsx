@@ -13,6 +13,7 @@ import { API_BASE_URL } from "../../constants/config";
 import { getAllSubjects } from "../Dashboard/SubjectActions";
 import jwtDecode from "jwt-decode";
 import { getSubjectRequests } from "../Dashboard/SubjectRequestActions";
+import blankProf from "../../images/blank-profile-picture.jpg";
 
 export const SetNewUser = (isNewUser: boolean) => {
   return (dispatch: AppDispatch) => {
@@ -54,8 +55,7 @@ export const registerStudent = (student: any) => {
       if (response.status === 200) {
         dispatch(loginStudent(studentDto));
       }
-    } catch (error: any) {
-    }
+    } catch (error: any) {}
   };
 };
 
@@ -73,8 +73,7 @@ export const loginStudent = (user: any) => {
         setAuthorizationHeader(token);
         dispatch(getStudent(user.email));
       }
-    } catch (error: any) {
-    }
+    } catch (error: any) {}
   };
 };
 
@@ -93,19 +92,38 @@ export const getStudent = (email: string) => {
         });
         dispatch(getAllSubjects());
         dispatch(getSubjectRequests());
-        const profilePic = await axios.get(`${API_BASE_URL}/api/student/download-profile-image`);
-        if(profilePic.status === 200){
-          dispatch({
-            type: SET_PROFILE_PIC,
-            profilePic: URL.createObjectURL(response.data)
-          }); 
-        }
-
+        dispatch(getStudentProfilePic());
       }
     } catch (error: any) {
     }
   };
 };
+
+export const getStudentProfilePic = () => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const profilePic = await axios.get(
+        `${API_BASE_URL}/api/student/download-profile-image`,
+        { responseType: "arraybuffer" }
+      );
+      if (profilePic.status === 200) {
+        const imageBlob = new Blob([profilePic.data], {
+          type: profilePic.headers["content-type"],
+        });
+        dispatch({
+          type: SET_PROFILE_PIC,
+          profilePic: URL.createObjectURL(imageBlob),
+        });
+      }  
+    } catch (error: any) {
+      dispatch({
+        type: SET_PROFILE_PIC,
+        profilePic: blankProf,
+      });
+    }
+  };
+};
+
 
 // Register a teacher
 export const registerTeacher = (teacher: any) => {
@@ -124,8 +142,7 @@ export const registerTeacher = (teacher: any) => {
       if (response.status === 200) {
         dispatch(loginTeacher(teacherDto));
       }
-    } catch (error: any) {
-    }
+    } catch (error: any) {}
   };
 };
 
@@ -149,7 +166,6 @@ export const loginTeacher = (user: any) => {
     }
   };
 };
-
 export const getTeacher = (email: string) => {
   return async (dispatch: AppDispatch) => {
     try {
@@ -161,19 +177,38 @@ export const getTeacher = (email: string) => {
           name: response.data.name,
           surname: response.data.surname,
           email: email,
-        }); 
+        });
         dispatch(getAllSubjects());
-
-        const profilePic = await axios.get(`${API_BASE_URL}/api/teacher/download-profile-image`);
-        if(profilePic.status === 200){
-          dispatch({
-            type: SET_PROFILE_PIC,
-            profilePic: URL.createObjectURL(response.data)
-          }); 
-        }
-
+        dispatch(getTeacherProfilePic());
       }
     } catch (error: any) {
+    }
+  };
+};
+
+
+export const getTeacherProfilePic = () => {
+  return async (dispatch: AppDispatch) => {
+    try {
+        const profilePic = await axios.get(
+          `${API_BASE_URL}/api/teacher/download-profile-image`,
+          { responseType: "arraybuffer" }
+        );
+        if (profilePic.status === 200) {
+          const imageBlob = new Blob([profilePic.data], {
+            type: profilePic.headers["content-type"],
+          });
+          dispatch({
+            type: SET_PROFILE_PIC,
+            profilePic: URL.createObjectURL(imageBlob),
+          });
+        }
+      
+    } catch (error: any) {
+      dispatch({
+        type: SET_PROFILE_PIC,
+        profilePic: blankProf,
+      });
     }
   };
 };
@@ -184,6 +219,7 @@ export const Logout = () => {
     localStorage.removeItem("mainSidebarState");
     localStorage.clear();
     dispatch({ type: SET_AUTHENTICATION, isAuth: false });
+    dispatch({type: SET_PROFILE_PIC, profilePic: blankProf});
   };
 };
 
@@ -198,21 +234,25 @@ export const ChangeUserRole = (userRole: number) => {
 };
 
 export const CheckAuthentication = () => {
-  return (dispatch: AppDispatch, getState: ()=> RootState) => {
+  return (dispatch: AppDispatch, getState: () => RootState) => {
     const authToken = localStorage.token;
     if (authToken) {
       const decodedToken: any = jwtDecode(authToken);
       if (decodedToken.exp * 1000 < Date.now()) {
         dispatch(Logout());
       } else {
-        dispatch({ type: SET_AUTHENTICATION_TOKEN, isAuth: true,  });
+        dispatch({ type: SET_AUTHENTICATION_TOKEN, isAuth: true });
         setAuthorizationHeader(authToken);
-        dispatch(getAllSubjects());
         let userRole = getState().auth.userRole;
-        if(userRole === 1){
+        if (userRole === 1) {
+          dispatch(getStudentProfilePic());
           dispatch(getSubjectRequests());
+        } else {
+          dispatch(getTeacherProfilePic());
         }
+        dispatch(getAllSubjects());
       }
     }
+    return Promise.resolve();
   };
 };

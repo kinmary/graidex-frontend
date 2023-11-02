@@ -193,7 +193,6 @@ const TestConstructor = () => {
           clientId={GRAMMARLY_CLIENT_ID}
           config={{
             documentDialect: "british",
-            autocomplete: "on",
             activation: "immediate",
           }}
         >

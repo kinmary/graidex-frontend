@@ -220,6 +220,7 @@ export const getTest = (testid: string | number) => {
         alert(error.message);
       }
     }
+    return Promise.resolve()
   };
 };
 

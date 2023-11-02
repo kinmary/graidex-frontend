@@ -16,5 +16,4 @@ export interface ITestDto {
     autoCheckAfterSubmission: boolean;
     reviewResult: string;
     orderIndex: number;
-
 }

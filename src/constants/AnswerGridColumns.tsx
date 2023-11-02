@@ -18,7 +18,7 @@ export const AnswerGridCol = [
     cellRenderer: (params: any) => (
       <div className="d-flex my-1">
         <div className="d-flex flex-column">
-          <Image className="profile-image my-1 ms-0 me-2" src={profilePic} />
+          <Image className="profile-image my-1 ms-0 me-2" src={params.value.profileImage || profilePic} />
         </div>
         <div className="d-flex flex-column lh-base">
             <div>{params.value.name}</div>
@@ -60,23 +60,23 @@ export const AnswerGridCol = [
         </div>)
     ),
   },
-  { 
-    minWidth: 100,
-    field: "isShown",
-    sortable: true,
-    unSortIcon: true,
-    flex: 1, 
-    headerName: "Shown?",
-    getQuickFilterText: (params: any) => {
-      return (params.value ? "Yes" : "No");
-    },
-    cellRenderer: (params: any) => (
-      <Form.Select size="sm" className="mt-2">
-        <option selected={!params.value} value={0}>No</option>
-        <option selected={params.value} value={1}>Yes</option>
-    </Form.Select>
-    ),
-  },
+  // { 
+  //   minWidth: 100,
+  //   field: "isShown",
+  //   sortable: true,
+  //   unSortIcon: true,
+  //   flex: 1, 
+  //   headerName: "Shown?",
+  //   getQuickFilterText: (params: any) => {
+  //     return (params.value ? "Yes" : "No");
+  //   },
+  //   cellRenderer: (params: any) => (
+  //     <Form.Select size="sm" className="mt-2">
+  //       <option selected={!params.value} value={0}>No</option>
+  //       <option selected={params.value} value={1}>Yes</option>
+  //   </Form.Select>
+  //   ),
+  // },
   { 
     minWidth: 125,
     field: "status", 

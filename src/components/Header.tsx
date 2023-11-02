@@ -89,7 +89,7 @@ const Header = () => {
           id="basic-nav-dropdown"
           title={
             <>
-              <Image className="profile-image" src={profilePic} />
+              <Image className="profile-image" src={auth.profilePic || profilePic}  />
             </>
           }
         >
@@ -97,7 +97,7 @@ const Header = () => {
           <NavDropdown.ItemText className="flex-nowrap">
             <Row className="flex-nowrap">
               <Col className="pe-0">
-                <Image className="rounded-circle" src={profilePic} style={{height: "3rem"}} />
+                <Image className="rounded-circle" src={auth.profilePic || profilePic} style={{height: "3rem", width: "3rem", objectFit: "cover"}} />
               </Col>
               <Col>
                   <span className="h6 text-nowrap">

@@ -20,14 +20,11 @@ import ChangeImageModal from "../Modals/ChangeImageModal";
 import MessageModal from "../Modals/MessageModal";
 import StartTestConfirmModal from "../Modals/SendTestConfirmModal";
 import AddStudentModal from "../Modals/AddStudentModal";
-import Loader from "../Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import AddTestModal from "../Modals/AddTestModal";
-import { getDraft, getTest, getVisibleTestStudent, updateTest } from "./TestActions";
-import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
+import { getDraft, getTest, getVisibleTestStudent } from "./TestActions";
 import { getSubjectContent, getVisibleSubjectContent, updateContentVisibility } from "./SubjectActions";
-import { CheckAuthentication } from "../Auth/AuthAction";
 
 const SubjectPage = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -42,9 +39,7 @@ const SubjectPage = () => {
   const selectedSubject = main.allSubjects.find(
     (obj: any) => obj.id.toString() === params.selectedSubjectId!.toString()
   );
-  useEffect(() => {
-    dispatch(CheckAuthentication());
-  }, []);
+
   useEffect(() => {
     auth.userRole === 0
       ? dispatch(getSubjectContent(params.selectedSubjectId!))
@@ -69,14 +64,14 @@ const SubjectPage = () => {
 
   const onTestClick = (testid: string | number, itemType: string) => {
     if (itemType === "Test") {
-      dispatch(getTest(testid));
+      dispatch(getTest(testid)).then(() => navigate(`${testid}`));
     }
     if (itemType === "TestDraft") {
-      dispatch(getDraft(testid));
+      dispatch(getDraft(testid)).then(() => navigate(`${testid}`));;
     }
-    if (main.currentTestDraft) {
-      navigate(`${testid}`);
-    }
+    // if (main.currentTestDraft) {
+    //   navigate(`${testid}`);
+    // }
   };
 
   const onRowClickByStudent = (testid: string | number) => {
@@ -147,7 +142,7 @@ const SubjectPage = () => {
             {auth.userRole === 0 && (
               <>
                 <Button onClick={OnCreateTestClick}>
-                  <i className="bi bi-plus-lg me-2"></i>Create test
+                  <i className="bi bi-plus-lg me-2"></i>Create draft
                 </Button>
                 <Dropdown>
                   <Dropdown.Toggle variant="light" id="dropdown-basic">

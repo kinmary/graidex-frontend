@@ -1,21 +1,17 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Breadcrumb,
   Button,
-  Dropdown,
   Form,
   InputGroup,
   Row,
   Col,
-  ListGroup,
-  Image,
   Alert,
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageModal from "../Modals/MessageModal";
-
 import { useAppDispatch } from "../../app/hooks";
 import {
   createDraftFromTest,
@@ -23,6 +19,8 @@ import {
   deleteDraft,
   deleteTest,
   duplicateDraft,
+  getDraft,
+  getTest,
   updateDraft,
   updateTest,
 } from "./TestActions";
@@ -30,8 +28,11 @@ import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
 import StudentsList from "./StudentsList";
 import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
 import { ICreateTestDto } from "../../interfaces/CreateTestDto";
-import AddStudentModal from "../Modals/AddStudentModal";
 import AddStudentsToTestModal from "../Modals/AddStudentsToTestModal";
+import { getSubjectContent } from "./SubjectActions";
+import ISubjectContent from "../../interfaces/SubjectContent";
+import { SetOpen } from "../MainAction";
+import CreateTestFromDraft from "../Modals/CreateTestFrDraftModal";
 
 interface ITimeLimit {
   hours: number;
@@ -43,6 +44,7 @@ const Settings = () => {
   const dispatch = useAppDispatch();
   const params = useParams();
   const { currentTestDraft } = main;
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [inputs, setInputs] = useState({
     title: "",
     description: "",
@@ -56,12 +58,32 @@ const Settings = () => {
     endDate: new Date(),
   });
   const [autoCheck, setAutoCheck] = useState<boolean>(false);
-  const [reviewResult, setReviewResult] = useState<string | undefined>("");
+  //TODO: check if shuffleQuestions needed
+  // const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
+  const [reviewResult, setReviewResult] = useState<string | undefined>("SetManually");
   const [isCustomTimeLimit, setIsCustomTimeLimit] = useState<boolean>(false);
   const [timeLimit, setTimeLimit] = useState<ITimeLimit>({
     hours: 0,
     minutes: 0,
   });
+
+  useEffect(() => {
+    dispatch(getSubjectContent(params.selectedSubjectId!)).then(() => {
+      if (main.tests) {
+        let selectedTest = main.tests.find(
+          (x: ISubjectContent) => x.id.toString() === params.test
+        );
+        if (selectedTest) {
+          if (selectedTest.itemType === "Test") {
+            dispatch(getTest(selectedTest.id)).then(() => setDataLoaded(true));
+          }
+          if (selectedTest.itemType === "TestDraft") {
+            dispatch(getDraft(selectedTest.id)).then(() => setDataLoaded(true));
+          }
+        }
+      }
+    });
+  }, []);
 
   useEffect(() => {
     setInputs({
@@ -72,6 +94,7 @@ const Settings = () => {
 
     if (currentTestDraft.itemType === "Test") {
       setAutoCheck(currentTestDraft.autoCheckAfterSubmission);
+      // setShuffleQuestions(currentTestDraft.shuffleQuestions);
       setReviewResult(currentTestDraft.reviewResult);
       setDates({
         startDate: new Date(currentTestDraft.startDateTime),
@@ -91,15 +114,15 @@ const Settings = () => {
       setIsCustomTimeLimit(true);
     }
   }, [dates.endDate, dates.startDate, timeLimit.hours, timeLimit.minutes]);
-  useEffect(() => {
-    if (!isCustomTimeLimit) {
-      const timeDifference =
-        dates.endDate.getTime() - dates.startDate.getTime();
-      const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-      setTimeLimit({ hours: hours, minutes: minutes });
-    }
-  }, [dates.startDate, dates.endDate, isCustomTimeLimit]);
+  // useEffect(() => {
+  //   if (!isCustomTimeLimit) {
+  //     const timeDifference =
+  //       dates.endDate.getTime() - dates.startDate.getTime();
+  //     const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+  //     const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+  //     setTimeLimit({ hours: hours, minutes: minutes });
+  //   }
+  // }, [dates.startDate, dates.endDate, isCustomTimeLimit]);
 
   const handleDiscardChanges = () => {
     setInputs({
@@ -171,33 +194,8 @@ const Settings = () => {
   };
 
   const handleCreateTest = () => {
-    let updateTDraft: IUpdateTestDraftDto = {
-      title: inputs.title,
-      description: inputs.description,
-      gradeToPass: inputs.gradeToPass,
-      isVisible: currentTestDraft.isVisible,
-      orderIndex: currentTestDraft.orderIndex,
-    };
-    let start = new Date(dates.startDate);
-        let hoursDiff = start.getHours() - start.getTimezoneOffset() / 60;
-        start.setHours(hoursDiff);
-        let end = new Date(dates.endDate);
-        let endhoursDiff = end.getHours() - end.getTimezoneOffset() / 60;
-        end.setHours(endhoursDiff);
-        let createTestDto : ICreateTestDto = {
-          startDateTime: start,
-          endDateTime: end,
-          timeLimit: `${String(timeLimit.hours).padStart(2, "0")}:${String(
-            timeLimit.minutes
-          ).padStart(2, "0")}:00`,
-          autoCheckAfterSubmission: autoCheck,
-          reviewResult: reviewResult,
-          orderIndex: currentTestDraft.orderIndex,
-        };
-   
-    dispatch(createTest(currentTestDraft.id, updateTDraft, createTestDto, params.selectedSubjectId!));
-    navigate(`/${params.selectedSubjectId}`)
-  }
+    dispatch(SetOpen("createTestFromDraft", true));
+  };
 
   const handleInputsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({
@@ -281,27 +279,34 @@ const Settings = () => {
   const handleTestDraftDuplicate = () => {
     if (currentTestDraft.itemType === "Test") {
       dispatch(createDraftFromTest(currentTestDraft.id));
-    }
-    else if (currentTestDraft.itemType === "TestDraft") {
+    } else if (currentTestDraft.itemType === "TestDraft") {
       dispatch(duplicateDraft(currentTestDraft.id));
     }
     navigate(`/${params.selectedSubjectId!}`);
   };
 
   const handleDelete = () => {
-    if(currentTestDraft.itemType === "Test"){
-      dispatch(deleteTest(currentTestDraft.id, params.selectedSubjectId!))
-
-    } 
-    else if(currentTestDraft.itemType === "TestDraft"){
-      dispatch(deleteDraft(currentTestDraft.id, params.selectedSubjectId!))
+    if (currentTestDraft.itemType === "Test") {
+      dispatch(deleteTest(currentTestDraft.id, params.selectedSubjectId!));
+    } else if (currentTestDraft.itemType === "TestDraft") {
+      dispatch(deleteDraft(currentTestDraft.id, params.selectedSubjectId!));
     }
-    navigate(`/${params.selectedSubjectId}`)
+    navigate(`/${params.selectedSubjectId}`);
+  };
+
+  if (!dataLoaded) {
+    return null; //TODO: loader
   }
   return (
     <>
       <MessageModal />
-      <AddStudentsToTestModal testid={currentTestDraft.id} selectedSubjectId={params.selectedSubjectId!} />
+      {currentTestDraft.itemType === "TestDraft" && <CreateTestFromDraft subjectId={params.selectedSubjectId} 
+      inputs={inputs} />}
+
+      <AddStudentsToTestModal
+        testid={currentTestDraft.id}
+        selectedSubjectId={params.selectedSubjectId!}
+      />
       <Form style={{ marginTop: 20 }}>
         <h5
           style={{
@@ -326,11 +331,18 @@ const Settings = () => {
           >
             {selectedSubject.title}
           </Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate(-1)}>
+          <Breadcrumb.Item
+            active={currentTestDraft.itemType === "TestDraft"}
+            onClick={() =>
+              navigate("/" + params.selectedSubjectId + "/" + params.test)
+            }
+          >
             {/*selectedTest && selectedTest.examName*/}
             {currentTestDraft && currentTestDraft.title}
           </Breadcrumb.Item>
-          <Breadcrumb.Item active>Settings</Breadcrumb.Item>
+          {currentTestDraft && currentTestDraft.itemType === "Test" && (
+            <Breadcrumb.Item active>Settings</Breadcrumb.Item>
+          )}
         </Breadcrumb>
 
         <Row className="mb-4">
@@ -365,13 +377,16 @@ const Settings = () => {
                   name="gradeToPass"
                   min={0}
                   max={10}
-                  disabled={currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()}
+                  disabled={
+                    currentTestDraft.itemType === "Test" &&
+                    dates.endDate.getTime() < new Date().getTime()
+                  }
                   value={inputs.gradeToPass}
                   onChange={handleInputsChange}
                 />
               </Form.Group>
 
-              {/* {currentTestDraft.itemType === "Test" && ( */}
+              {currentTestDraft.itemType === "Test" && (
                 <>
                   <Form.Group style={{ marginTop: 5 }}>
                     <Form.Label>Start date and time</Form.Label>
@@ -383,7 +398,8 @@ const Settings = () => {
                     <InputGroup>
                       <Form.Control
                         disabled={
-                          currentTestDraft.itemType === "Test" && dates.startDate.getTime() < new Date().getTime()
+                          currentTestDraft.itemType === "Test" &&
+                          dates.startDate.getTime() < new Date().getTime()
                         }
                         type="date"
                         placeholder="Enter date"
@@ -399,7 +415,8 @@ const Settings = () => {
                         placeholder="Enter time"
                         name="startDate"
                         disabled={
-                          currentTestDraft.itemType === "Test" && dates.startDate.getTime() < new Date().getTime()
+                          currentTestDraft.itemType === "Test" &&
+                          dates.startDate.getTime() < new Date().getTime()
                         }
                         value={`${String(dates.startDate.getHours()).padStart(
                           2,
@@ -421,7 +438,8 @@ const Settings = () => {
                         placeholder="Enter date"
                         name="endDate"
                         disabled={
-                          currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()
+                          currentTestDraft.itemType === "Test" &&
+                          dates.endDate.getTime() < new Date().getTime()
                         }
                         value={
                           dates.endDate &&
@@ -434,7 +452,8 @@ const Settings = () => {
                         placeholder="Enter time"
                         name="endDate"
                         disabled={
-                          currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()
+                          currentTestDraft.itemType === "Test" &&
+                          dates.endDate.getTime() < new Date().getTime()
                         }
                         value={`${String(dates.endDate.getHours()).padStart(
                           2,
@@ -458,7 +477,8 @@ const Settings = () => {
                         min={0}
                         disabled={
                           !isCustomTimeLimit ||
-                          (currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime())
+                          (currentTestDraft.itemType === "Test" &&
+                            dates.endDate.getTime() < new Date().getTime())
                         }
                         // defaultValue="5"
                         className="border-end-0"
@@ -476,7 +496,8 @@ const Settings = () => {
                       <Form.Control
                         disabled={
                           !isCustomTimeLimit ||
-                          (currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime())
+                          (currentTestDraft.itemType === "Test" &&
+                            dates.endDate.getTime() < new Date().getTime())
                         }
                         value={timeLimit.minutes}
                         name="minutes"
@@ -497,7 +518,8 @@ const Settings = () => {
                       <InputGroup.Text>
                         <Form.Check
                           disabled={
-                            currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()
+                            currentTestDraft.itemType === "Test" &&
+                            dates.endDate.getTime() < new Date().getTime()
                           }
                           reverse
                           type="switch"
@@ -521,7 +543,8 @@ const Settings = () => {
                         id="custom-switch"
                         label="Auto check after submission"
                         disabled={
-                          currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()
+                          currentTestDraft.itemType === "Test" &&
+                          dates.endDate.getTime() < new Date().getTime()
                         }
                         checked={autoCheck}
                         onChange={(event) => {
@@ -530,44 +553,63 @@ const Settings = () => {
                       />
                     </InputGroup.Text>
                   </Form.Group>
-                  <Form.Group style={{ marginTop: 5 }}>
-                    <InputGroup.Text>
-                      <Form.Label>Review results of test</Form.Label>
-                      <Dropdown style={{ marginLeft: "auto" }}>
-                        <Dropdown.Toggle
-                          variant="outline-primary"
-                          id="status-dropdown"
-                          disabled={
-                            currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()
-                          }
+                  {/* <Form.Group style={{ marginTop: 5 }}>
+                  <InputGroup.Text>
+                    <Form.Label>Review results of test</Form.Label>
+                    <Dropdown style={{ marginLeft: "auto" }}>
+                      <Dropdown.Toggle
+                        variant="outline-primary"
+                        id="status-dropdown"
+                        disabled={
+                          currentTestDraft.itemType === "Test" &&
+                          dates.endDate.getTime() < new Date().getTime()
+                        }
+                      >
+                        {reviewResult}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          value={"SetManually"}
+                          onClick={() => setReviewResult("SetManually")}
                         >
-                          {reviewResult}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item
-                            value={"SetManually"}
-                            onClick={() => setReviewResult("SetManually")}
-                          >
-                            Set manually
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            value={"AfterSubmission"}
-                            onClick={() => setReviewResult("AfterSubmission")}
-                          >
-                            After submission
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            value={"AfterAutoCheck"}
-                            onClick={() => setReviewResult("AfterAutoCheck")}
-                          >
-                            After auto check
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
+                          Set manually
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          value={"AfterSubmission"}
+                          onClick={() => setReviewResult("AfterSubmission")}
+                        >
+                          After submission
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          value={"AfterAutoCheck"}
+                          onClick={() => setReviewResult("AfterAutoCheck")}
+                        >
+                          After auto check
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </InputGroup.Text>
+                </Form.Group> */}
+
+                  {/* <Form.Group style={{ marginTop: 10 }}>
+                    <InputGroup.Text>
+                      <Form.Check
+                        type="switch"
+                        id="custom-switch"
+                        label="Shuffle questions on start"
+                        disabled={
+                          currentTestDraft.itemType === "Test" &&
+                          dates.endDate.getTime() < new Date().getTime()
+                        }
+                        checked={shuffleQuestions}
+                        onChange={(event) => {
+                          setShuffleQuestions(event.target.checked);
+                        }}
+                      />
                     </InputGroup.Text>
-                  </Form.Group>
+                  </Form.Group> */}
                 </>
-              {/* )} */}
+              )}
               <Form.Group style={{ marginTop: 20 }}>
                 <div className="d-100 d-flex">
                   <Button
@@ -599,46 +641,51 @@ const Settings = () => {
                     again - duplicate it!
                   </Alert>
                 )}
-                {currentTestDraft.itemType === "TestDraft" &&
-                  (<Alert variant="warning" dismissible>
-                    This is a <b>draft</b>. Only title, description and grade to pass changes will be saved here. 
-                    <b> To create test from this draft:</b>
-                    <ol type="1">
-                    <li>Set start and end date of test</li>
+              {currentTestDraft.itemType === "TestDraft" && (
+                <Alert variant="warning" dismissible>
+                  This is a <b>draft</b>. Only title, description and grade to
+                  pass changes will be saved here.
+                  <b> To create test from this draft:</b>
+                  <ol type="1">
+                  <li>
+                      Double check everything again and click{" "}
+                      <b>"Create test from draft"</b>.
+                    </li>
+                    {/* <li>Set start and end date of test</li>
                     <li>Set custom time limit (if needed)</li>
-                    <li>Set if test should be checked automatically</li>
-                    <li>Set how to review results of test</li>
-                    <li>Double check everything again and click <b>"Create test from draft"</b>.</li> </ol>
-                   Note: You won't be able to change start and end dates of test after it's start!
-                  </Alert>
-                )}
+                    <li>Set if test should be checked automatically</li> */}
+                    {/* <li>Set how to review results of test</li> */}
+                  </ol>
+                  Note: You won't be able to change start and end dates of test
+                  after it's start!
+                </Alert>
+              )}
               {currentTestDraft.itemType === "Test" && (
                 <>
-                <StudentsList subjectId={params.selectedSubjectId!} />
-                <Form.Group>
-                  <Button
-                    variant="outline-primary"
-                    style={{ marginTop: 10, width: "100%" }}
-                    onClick={handleTestDraftDuplicate}
-                  >
-                    Duplicate test
-                  </Button>
+                  <StudentsList subjectId={params.selectedSubjectId!} />
+                  <Form.Group>
+                    <Button
+                      variant="outline-primary"
+                      style={{ marginTop: 10, width: "100%" }}
+                      onClick={handleTestDraftDuplicate}
+                    >
+                      Duplicate test
+                    </Button>
 
-                  <Button
-                    variant="danger"
-                    // className="flex-grow-1"
-                    style={{ marginTop: 10, width: "100%" }}
-                    onClick={handleDelete}
-
-                  >
-                    Delete test
-                  </Button>
-                </Form.Group>
+                    <Button
+                      variant="danger"
+                      // className="flex-grow-1"
+                      style={{ marginTop: 10, width: "100%" }}
+                      onClick={handleDelete}
+                    >
+                      Delete test
+                    </Button>
+                  </Form.Group>
                 </>
               )}
               {currentTestDraft.itemType === "TestDraft" && (
                 <Form.Group>
-                   <Button
+                  <Button
                     variant="primary"
                     style={{ marginTop: 10, width: "100%" }}
                     onClick={handleCreateTest}

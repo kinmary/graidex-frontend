@@ -103,7 +103,7 @@ export const AuthReducer = (
     case SET_AUTHENTICATION_TOKEN:
       state = {
         ...state,
-        isAuth: action.isAuth,}
+        isAuth: action.isAuth }
         break;
 
     default:

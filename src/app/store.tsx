@@ -32,7 +32,7 @@ const takeTestPersistConfig = {
 const authPersistConfig = {
   key: 'auth',
   storage,
-
+  blacklist: ['profilePic']
 }
 
 export const store = configureStore({

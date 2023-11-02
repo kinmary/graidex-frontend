@@ -20,6 +20,7 @@ import MessageModal from "../Modals/MessageModal";
 import AddStudentModal from "../Modals/AddStudentModal";
 import ManageStudentsModal from "../Modals/ManageStudentsModal";
 import { ISubject } from "../../interfaces/Subject";
+import { getSubjRequestsOfTeacher } from "./SubjectRequestActions";
 
 const SubjectSettings = () => {
   const dispatch = useAppDispatch();
@@ -54,6 +55,7 @@ const SubjectSettings = () => {
 
   const handleManageStudents = async () => {
     dispatch(getStudentsList(selectedSubject.id));
+    dispatch(getSubjRequestsOfTeacher(selectedSubject.id));
     dispatch(SetOpen("manageStudentsModal", true));
   };
 

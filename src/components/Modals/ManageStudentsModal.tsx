@@ -1,4 +1,4 @@
-import { Button, Modal, Tab, Tabs } from "react-bootstrap";
+import { Button, Image, Modal, Tab, Tabs } from "react-bootstrap";
 import { SetOpen } from "../MainAction";
 import { AgGridReact } from "ag-grid-react";
 import { useAppDispatch } from "../../app/hooks";
@@ -9,6 +9,8 @@ import { useCallback, useEffect } from "react";
 import { getSubjRequestsOfTeacher } from "../Dashboard/SubjectRequestActions";
 import { getStudentsList } from "../Dashboard/SubjectActions";
 import { ColumnState, GridReadyEvent } from "ag-grid-community";
+import profilePic from "../../images/blank-profile-picture.jpg";
+
 interface Props {
   selectedSubjectId: string;
 }
@@ -23,17 +25,15 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
       flex: 2,
       headerName: "Date",
       valueFormatter: (params: any) => {
-        const date = 
-        new Date(params.value)
-        .toLocaleString("en-US", {
+        const date = new Date(params.value).toLocaleString("en-US", {
           year: "numeric",
           day: "2-digit",
           month: "long",
-          hour: '2-digit',
-          minute: '2-digit', 
-          hour12: false
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
         });
-        
+
         return date;
       },
     },
@@ -55,6 +55,7 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
   const StudentListGridColumns = [
     { field: "name", flex: 1, headerName: "Name" },
     { field: "surname", flex: 2, headerName: "Surname" },
+    { field: "profileImage", flex: 1 },
     { field: "customId", flex: 1, headerName: "Student Id" },
     { field: "email", flex: 2, headerName: "Email" },
     {
@@ -74,8 +75,7 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
   useEffect(() => {
     dispatch(getStudentsList(selectedSubjectId));
     dispatch(getSubjRequestsOfTeacher(selectedSubjectId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSubjectId]);
+  }, []);
 
   const onGridReady = useCallback((params: GridReadyEvent) => {
     var defaultSortModel: ColumnState[] = [
@@ -117,7 +117,12 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
               justifyContent: "center",
             }}
           >
-            <Tab title={"Active students (" + (main.studentsList.length  || 0) + ")"} eventKey={"active-students"}>
+            <Tab
+              title={
+                "Active students (" + (main.studentsList.length || 0) + ")"
+              }
+              eventKey={"active-students"}
+            >
               <div className="ag-theme-alpine" style={{ height: 450 }}>
                 <AgGridReact
                   rowSelection={"single"}
@@ -128,7 +133,14 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
               </div>
             </Tab>
             {/* //TODO: add row count of pending requests to see how much pending in header */}
-            <Tab title={"Pending requests (" + (main.pendingSubjRequests.length  || 0) + ")"} eventKey={"pending-students"}>
+            <Tab
+              title={
+                "Pending requests (" +
+                (main.pendingSubjRequests.length || 0) +
+                ")"
+              }
+              eventKey={"pending-students"}
+            >
               <div className="ag-theme-alpine" style={{ height: 450 }}>
                 <AgGridReact
                   rowSelection={"single"}

@@ -9,6 +9,7 @@
     height: 145px;
     border-radius: 50%;
     margin-right: 40;
+    object-fit: cover;
   }
   
   .user-profile {
@@ -21,6 +22,7 @@
     border-radius: 50%;
     margin-left: 10px;
     cursor: pointer;
+    object-fit: cover;
   }
   /* .sidebar {
     position: fixed;

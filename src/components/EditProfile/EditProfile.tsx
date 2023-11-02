@@ -1,8 +1,6 @@
-import React, { Component, useState } from "react";
-import { Button, Col, Form, Image, Row } from "react-bootstrap";
-import { connect } from "react-redux";
+import React, { useEffect,  useState } from "react";
+import { Button, Col, Form, Image } from "react-bootstrap";
 import blankProf from "../../images/blank-profile-picture.jpg";
-import { ChangeInputValues } from "../Auth/AuthAction";
 import DeleteConfirmModal from "../Modals/DeleteConfirmModal";
 import { SetOpen } from "../MainAction";
 import {
@@ -31,6 +29,13 @@ const EditProfile = () => {
     surname: auth.surname || "",
     studentId: auth.studentId || "",
   });
+
+  const [pic , setProfilePic] = useState<any>();
+
+  useEffect(() => {
+    setProfilePic(auth.profilePic)
+  }, [auth.profilePic]);
+
   const HandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState((prevState) => ({
       ...prevState,
@@ -58,7 +63,7 @@ const EditProfile = () => {
       const file = event.target.files[0];
       auth.userRole === 0
         ? dispatch(UpdateProfilePic(file))
-        : dispatch(UpdateProfilePicStudent(file));
+        : dispatch(UpdateProfilePicStudent(file));      
     }
   };
 
@@ -66,6 +71,7 @@ const EditProfile = () => {
     auth.userRole === 0
       ? dispatch(DeleteProfilePic())
       : dispatch(DeleteProfilePicStudent());
+
   };
   const { userRole } = auth;
   return (
@@ -77,7 +83,7 @@ const EditProfile = () => {
           <div style={{ display: "flex", alignItems: "flex-end" }}>
             <Image
               className="profile-image-edit mb-4"
-              src={auth.profilePic || blankProf}
+              src={pic || blankProf}
             />
             <Col className="mb-4 ms-2">
               <Form.Control
@@ -85,6 +91,7 @@ const EditProfile = () => {
                 size="sm"
                 className="mb-1"
                 onChange={handleProfilePicChange}
+                value={""}
               />
               <Button variant="outline-danger" size="sm" onClick={handleDeleteProfilePic}>
                 Delete picture
