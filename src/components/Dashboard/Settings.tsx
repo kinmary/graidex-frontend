@@ -156,19 +156,13 @@ const Settings = () => {
       } else if (timeLimit.hours === 0 && timeLimit.minutes === 0) {
         alert(`Time limit should be at least 1 minute (00:01:00)`);
       } else {
-        let start = new Date(dates.startDate);
-        let hoursDiff = start.getHours() - start.getTimezoneOffset() / 60;
-        start.setHours(hoursDiff);
-        let end = new Date(dates.endDate);
-        let endhoursDiff = end.getHours() - end.getTimezoneOffset() / 60;
-        end.setHours(endhoursDiff);
         let newTest: IUpdateTestDto = {
           title: inputs.title,
           description: inputs.description,
           gradeToPass: inputs.gradeToPass,
           isVisible: currentTestDraft.isVisible,
-          startDateTime: start,
-          endDateTime: end,
+          startDateTime: dates.startDate,
+          endDateTime: dates.endDate,
           timeLimit: `${String(timeLimit.hours).padStart(2, "0")}:${String(
             timeLimit.minutes
           ).padStart(2, "0")}:00`,
@@ -418,13 +412,7 @@ const Settings = () => {
                           currentTestDraft.itemType === "Test" &&
                           dates.startDate.getTime() < new Date().getTime()
                         }
-                        value={`${String(dates.startDate.getHours()).padStart(
-                          2,
-                          "0"
-                        )}:${String(dates.startDate.getMinutes()).padStart(
-                          2,
-                          "0"
-                        )}`}
+                        value={dates.startDate.toLocaleTimeString().slice(0,5)}
                         onChange={handleTimeChange}
                       />
                     </InputGroup>
@@ -455,13 +443,7 @@ const Settings = () => {
                           currentTestDraft.itemType === "Test" &&
                           dates.endDate.getTime() < new Date().getTime()
                         }
-                        value={`${String(dates.endDate.getHours()).padStart(
-                          2,
-                          "0"
-                        )}:${String(dates.endDate.getMinutes()).padStart(
-                          2,
-                          "0"
-                        )}`}
+                        value={dates.endDate.toLocaleTimeString().slice(0,5)}
                         onChange={handleTimeChange}
                       />
                     </InputGroup>
