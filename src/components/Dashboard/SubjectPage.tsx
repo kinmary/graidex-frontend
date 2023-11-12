@@ -135,7 +135,6 @@ const SubjectPage = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "start",
-            marginBottom: 5,
           }}
         >
           <h5 style={{ fontWeight: "bold", textAlign: "left", margin: 0 }}>
@@ -182,7 +181,7 @@ const SubjectPage = () => {
             )}
           </div>
         </div>
-        <Breadcrumb style={{ fontSize: 14, marginTop: "-12px" }} className="mt-0wq" data-bs-theme="dark">
+        <Breadcrumb style={{ fontSize: 14 }} data-bs-theme="dark">
           <Breadcrumb.Item
             onClick={() => {
               navigate("/");

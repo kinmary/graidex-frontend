@@ -204,6 +204,11 @@ export const getTest = (testid: string | number) => {
         `${API_BASE_URL}/api/Test/get-test/` + testid
       );
       if (response.status === 200) {
+
+        // TODO: remove this when backend is fixed
+        response.data.startDateTime += "Z";
+        response.data.endDateTime += "Z";
+        
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
           currentTestDraft: response.data,
