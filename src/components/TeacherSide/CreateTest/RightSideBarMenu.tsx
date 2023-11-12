@@ -40,7 +40,7 @@ const RightSideBarMenu = () => {
     );
     if(selectedQuestion){
       let answerOptions = selectedQuestion.answerOptions.map((answer: any) => {
-        return { ...answer, isRight: false };
+        return { ...answer, isCorrect: false };
       });
       dispatch(InputChange(
         selectedQuestion.id,

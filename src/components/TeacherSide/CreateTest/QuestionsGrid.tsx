@@ -32,7 +32,7 @@ const QuestionsGrid = () => {
       selected: true,
       files: [],
       previews: [],
-      answerOptions: [{ id: 0, text: "", isRight: false }],
+      answerOptions: [{ id: 0, text: "", isCorrect: false }],
     }
   });
 

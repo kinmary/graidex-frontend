@@ -21,13 +21,13 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: true,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
             {
               id: 2,
               text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
 
-              isRight: true,
+              isCorrect: true,
               selected: false,
             },
           ],
@@ -51,9 +51,9 @@ const initialState: TestOfStudentState = {
           type: 1,
           selected: false,
           answerOptions: [
-            { id: 0, text: "lorem", isRight: true, selected: true },
-            { id: 1, text: "ipsum", isRight: true, selected: true },
-            { id: 2, text: "dolor", isRight: false, selected: false },
+            { id: 0, text: "lorem", isCorrect: true, selected: true },
+            { id: 1, text: "ipsum", isCorrect: true, selected: true },
+            { id: 2, text: "dolor", isCorrect: false, selected: false },
           ],
         },
         {
@@ -80,9 +80,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: true, selected: true },
-            { id: 2, text: "wrong", isRight: false, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: true, selected: true },
+            { id: 2, text: "wrong", isCorrect: false, selected: false },
           ],
         },
         {
@@ -94,9 +94,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
-            { id: 2, text: "wrong", isRight: true, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
+            { id: 2, text: "wrong", isCorrect: true, selected: false },
           ],
         },
         {
@@ -108,9 +108,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
-            { id: 2, text: "wrong", isRight: true, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
+            { id: 2, text: "wrong", isCorrect: true, selected: false },
           ],
         },
       ],
@@ -129,13 +129,13 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: true,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
             {
               id: 2,
               text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
 
-              isRight: true,
+              isCorrect: true,
               selected: false,
             },
           ],
@@ -159,9 +159,9 @@ const initialState: TestOfStudentState = {
           type: 1,
           selected: false,
           answerOptions: [
-            { id: 0, text: "lorem", isRight: true, selected: true },
-            { id: 1, text: "ipsum", isRight: true, selected: true },
-            { id: 2, text: "dolor", isRight: false, selected: false },
+            { id: 0, text: "lorem", isCorrect: true, selected: true },
+            { id: 1, text: "ipsum", isCorrect: true, selected: true },
+            { id: 2, text: "dolor", isCorrect: false, selected: false },
           ],
         },
         {
@@ -188,9 +188,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: true, selected: true },
-            { id: 2, text: "wrong", isRight: false, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: true, selected: true },
+            { id: 2, text: "wrong", isCorrect: false, selected: false },
           ],
         },
         {
@@ -202,9 +202,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
-            { id: 2, text: "wrong", isRight: true, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
+            { id: 2, text: "wrong", isCorrect: true, selected: false },
           ],
         },
         {
@@ -216,9 +216,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
-            { id: 2, text: "wrong", isRight: true, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
+            { id: 2, text: "wrong", isCorrect: true, selected: false },
           ],
         },
       ],
@@ -237,13 +237,13 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: true,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
             {
               id: 2,
               text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
 
-              isRight: true,
+              isCorrect: true,
               selected: false,
             },
           ],
@@ -267,9 +267,9 @@ const initialState: TestOfStudentState = {
           type: 1,
           selected: false,
           answerOptions: [
-            { id: 0, text: "lorem", isRight: true, selected: true },
-            { id: 1, text: "ipsum", isRight: true, selected: true },
-            { id: 2, text: "dolor", isRight: false, selected: false },
+            { id: 0, text: "lorem", isCorrect: true, selected: true },
+            { id: 1, text: "ipsum", isCorrect: true, selected: true },
+            { id: 2, text: "dolor", isCorrect: false, selected: false },
           ],
         },
         {
@@ -296,9 +296,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: true, selected: true },
-            { id: 2, text: "wrong", isRight: false, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: true, selected: true },
+            { id: 2, text: "wrong", isCorrect: false, selected: false },
           ],
         },
         {
@@ -310,9 +310,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
-            { id: 2, text: "wrong", isRight: true, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
+            { id: 2, text: "wrong", isCorrect: true, selected: false },
           ],
         },
         {
@@ -324,9 +324,9 @@ const initialState: TestOfStudentState = {
           type: 0,
           selected: false,
           answerOptions: [
-            { id: 0, text: "left", isRight: false, selected: false },
-            { id: 1, text: "right", isRight: false, selected: true },
-            { id: 2, text: "wrong", isRight: true, selected: false },
+            { id: 0, text: "left", isCorrect: false, selected: false },
+            { id: 1, text: "right", isCorrect: false, selected: true },
+            { id: 2, text: "wrong", isCorrect: true, selected: false },
           ],
         },
       ],

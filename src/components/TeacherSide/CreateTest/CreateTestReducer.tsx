@@ -18,10 +18,10 @@ const initialState: CreateTestState = {
       plagiarismCheck: true,
       allowFiles: false,
       type: 0,
-      selected: true,
+      selected: false,
       files: [],
       previews: [],
-      answerOptions: [{ id: 0, text: "", isRight: false }],
+      answerOptions: [{ id: 0, text: "", isCorrect: false }],
     },
   ],
 };

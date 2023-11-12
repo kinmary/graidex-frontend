@@ -31,7 +31,7 @@ const QuestionsDraggableList = () => {
       selected: true,
       files: [],
       previews: [],
-      answerOptions: [{ id: 0, text: "", isRight: false }],
+      answerOptions: [{ id: 0, text: "", isCorrect: false }],
     }})
 
   const onDragEnd = (result: any) => {
@@ -111,7 +111,7 @@ const QuestionsDraggableList = () => {
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {questions && questions.map((question: any, index: any) => (
                   <Draggable
-                    key={question.id}
+                    key={question.id+question.title}
                     draggableId={question.title + question.id}
                     index={index}
                   >
@@ -126,7 +126,7 @@ const QuestionsDraggableList = () => {
                             className="d-flex align-items-center"
                           >
                             <i className="bi bi-grip-vertical" {...provided.dragHandleProps}></i>
-                            <Badge bg="secondary" className="me-2">{index + 1}</Badge>
+                            <Badge bg="secondary" className="me-2">{question.id + 1}</Badge>
                             <span
                               id={question.id.toString()}
                               onClick={handleCardClick}

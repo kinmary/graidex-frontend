@@ -7,6 +7,14 @@ import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
 import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
 import { ICreateTestDto } from "../../interfaces/CreateTestDto";
 import { SET_CURRENT_TEST_DRAFT } from "../MainReducer";
+import { CHANGE_QUESTIONS } from "../ReviewTest/TestOfStudentReducer";
+import { RESET_STATE } from "../TeacherSide/CreateTest/CreateTestReducer";
+import { IOpenQuestion } from "../../interfaces/OpenQuestion";
+import { IMultipleChoiceQuestion } from "../../interfaces/MutipleChoiceQuestion";
+import { ISingleChoiceQuestion } from "../../interfaces/SingleChoiceQuestion";
+import { forEach } from "jszip";
+import { IQuestion } from "../../interfaces/Questions";
+import IAnswerOption from "../../interfaces/AnswerOption";
 
 export const createTestDraft = (
   subjectId: string | number | undefined,
@@ -165,7 +173,7 @@ export const deleteDraft = (
 export const createTest = (
   draftid: string | number,
   updateTestDraftDto: IUpdateTestDraftDto,
-  createTestDto: ICreateTestDto, 
+  createTestDto: ICreateTestDto,
   subjectId: string | number
 ) => {
   return async (dispatch: AppDispatch) => {
@@ -187,7 +195,9 @@ export const createTest = (
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-          alert("Error occurred while creating test! One or more fields didn't pass validation")
+        alert(
+          "Error occurred while creating test! One or more fields didn't pass validation"
+        );
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -225,7 +235,7 @@ export const getTest = (testid: string | number) => {
         alert(error.message);
       }
     }
-    return Promise.resolve()
+    return Promise.resolve();
   };
 };
 
@@ -311,15 +321,14 @@ export const deleteTest = (
 };
 
 export const updateTestQuestions = (
-  testid: string | number
-  // updateTestDto: IUpdateTestDto
+  testid: string | number,
+  updateQuestionsDto: any[]
 ) => {
   return async (dispatch: AppDispatch) => {
     try {
       const response = await axios.put(
-        `${API_BASE_URL}/api/Test/update-test-questions/` + testid
-        // TODO: add List<TestBaseQuestionDto>
-        // updateTestDto
+        `${API_BASE_URL}/api/Test/update-test-questions/` + testid,
+        updateQuestionsDto
       );
       if (response.status === 200) {
         // dispatch(getAllSubjects());
@@ -327,9 +336,10 @@ export const updateTestQuestions = (
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        // error.response.data.map((obj: any) =>
+        //   alert(obj.attemptedValue + ": " + obj.errorMessage)
+        // );
+        alert(error.response.data);
       } else {
         dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -344,20 +354,76 @@ export const getTestQuestionsOfTeacher = (testid: string | number) => {
       const response = await axios.get(
         `${API_BASE_URL}/api/Test/test-questions-of-teacher/` + testid
       );
-      if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
-        // dispatch(SetOpen("openSubjectModal", false));
+      dispatch({ type: RESET_STATE });
+      if (response.data.length !== 0) {
+        let questions: IQuestion[] = [];
+        response.data.forEach((question: any, idx: number) => {
+          switch (question.$type) {
+            case "TestBaseSingleChoiceQuestionDto":
+              let options: IAnswerOption[] = question.options.map(
+                (x: any, idx: number) => {
+                  return {
+                    id: idx,
+                    text: x.text,
+                    isCorrect:
+                    question.correctOptionIndex.toString() === idx.toString(),
+                    selected:
+                    question.correctOptionIndex.toString() === idx.toString(),
+                  };
+                }
+              );
+              let single: IQuestion = {
+                id: idx,
+                title: question.text,
+                comment: question.defaultComment,
+                maxPoints: question.maxPoints,
+                type: 0,
+                selected: false,
+                answerOptions: options,
+              };
+              questions.push(single);
+              break;
+            case "TestBaseMultipleChoiceQuestionDto":
+              let answerOptions: IAnswerOption[] = question.options.map(
+                (x: any, idx: number) => {
+                  return {
+                    id: idx,
+                    text: x.option.text,
+                    isCorrect: x.isCorrect,
+                    selected: x.isCorrect,
+                  };
+                }
+              );
+              let multiple: IQuestion = {
+                id: idx,
+                title: question.text,
+                comment: question.defaultComment,
+                maxPoints: question.pointsPerCorrectAnswer,
+                type: 1,
+                selected: false,
+                answerOptions: answerOptions,
+              };
+              questions.push(multiple);
+              break;
+            case "TestBaseOpenQuestionDto":
+              let open: IQuestion = {
+                id: idx,
+                title: question.text,
+                comment: question.defaultComment,
+                maxPoints: question.maxPoints,
+                type: 2,
+                selected: false,
+                answerOptions: [],
+              };
+              questions.push(open);
+              break;
+          }
+        });
+        dispatch({ type: CHANGE_QUESTIONS, questions: questions });
+        // dispatch({ type: CHANGE_QUESTIONS, questions: response.data });
       }
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
-      } else {
-        //   dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-      }
+      alert(error.message);
     }
   };
 };
@@ -368,44 +434,95 @@ export const getTestDraftQuestions = (draftid: string | number) => {
       const response = await axios.get(
         `${API_BASE_URL}/api/Test/test-draft-questions/` + draftid
       );
-      if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
-        // dispatch(SetOpen("openSubjectModal", false));
+      dispatch({ type: RESET_STATE });
+      if (response.data.length !== 0) {
+        let questions: IQuestion[] = [];
+        response.data.forEach((question: any, idx: number) => {
+          switch (question.$type) {
+            case "TestBaseSingleChoiceQuestionDto":
+              let options: IAnswerOption[] = question.options.map(
+                (x: any, idx: number) => {
+                  return {
+                    id: idx,
+                    text: x.text,
+                    isCorrect:
+                    question.correctOptionIndex.toString() === idx.toString(),
+                    selected:
+                    question.correctOptionIndex.toString() === idx.toString(),
+                  };
+                }
+              );
+              let single: IQuestion = {
+                id: idx,
+                title: question.text,
+                comment: question.defaultComment,
+                maxPoints: question.maxPoints,
+                type: 0,
+                selected: false,
+                answerOptions: options,
+              };
+              questions.push(single);
+              break;
+            case "TestBaseMultipleChoiceQuestionDto":
+              let answerOptions: IAnswerOption[] = question.options.map(
+                (x: any, idx: number) => {
+                  return {
+                    id: idx,
+                    text: x.option.text,
+                    isCorrect: x.isCorrect,
+                    selected: x.isCorrect,
+                  };
+                }
+              );
+              let multiple: IQuestion = {
+                id: idx,
+                title: question.text,
+                comment: question.defaultComment,
+                maxPoints: question.pointsPerCorrectAnswer,
+                type: 1,
+                selected: false,
+                answerOptions: answerOptions,
+              };
+              questions.push(multiple);
+              break;
+            case "TestBaseOpenQuestionDto":
+              let open: IQuestion = {
+                id: idx,
+                title: question.text,
+                comment: question.defaultComment,
+                maxPoints: question.maxPoints,
+                type: 2,
+                selected: false,
+                answerOptions: [],
+              };
+              questions.push(open);
+              break;
+          }
+        });
+        dispatch({ type: CHANGE_QUESTIONS, questions: questions });
       }
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
-      } else {
-        //   dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-      }
+      alert(error.message);
     }
   };
 };
 
 export const updateTestDraftQuestions = (
-  draftid: string | number
-  // updateTestDto: IUpdateTestDto
+  draftid: string | number,
+  updateQuestionsDto: any[]
 ) => {
   return async (dispatch: AppDispatch) => {
     try {
       const response = await axios.put(
-        `${API_BASE_URL}/api/Test/update-test-draft-questions/` + draftid
-        // TODO: add List<TestBaseQuestionDto>
-        // updateTestDto
+        `${API_BASE_URL}/api/Test/update-test-draft-questions/` + draftid,
+        updateQuestionsDto
       );
       if (response.status === 200) {
         // dispatch(getAllSubjects());
       }
     } catch (error: any) {
       if (error.response.status === 400) {
-        //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        alert(error.response.data);
       } else {
         dispatch(CheckAuthorization(error.response.status));
         alert(error.message);

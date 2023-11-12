@@ -1,6 +1,6 @@
 export default interface IAnswerOption {
     id: number;
     text: string;
-    isRight?: boolean | undefined;
+    isCorrect?: boolean | undefined;
     selected?: boolean | undefined;
   }

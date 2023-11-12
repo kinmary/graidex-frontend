@@ -1,11 +1,6 @@
 import {
-  Alert,
   Breadcrumb,
   Button,
-  Col,
-  Row,
-  ToggleButtonGroup,
-  ToggleButton,
 } from "react-bootstrap";
 import AnswersGrid from "./AnswersGrid";
 import { useAppDispatch } from "../../app/hooks";
@@ -14,10 +9,8 @@ import { RootState } from "../../app/store";
 import MessageModal from "../Modals/MessageModal";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CheckAuthentication } from "../Auth/AuthAction";
-import RightSideMenu from "../RightSideMenu";
-import { getDraft, getTest, getTestQuestionsOfTeacher } from "./TestActions";
-import { getStudentsList, getSubjectContent } from "./SubjectActions";
+import { getDraft, getTest, getTestDraftQuestions, getTestQuestionsOfTeacher } from "./TestActions";
+import {  getSubjectContent } from "./SubjectActions";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import Settings from "./Settings";
 

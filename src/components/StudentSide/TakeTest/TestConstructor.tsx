@@ -1,11 +1,7 @@
 import { Button, Card, Form, Navbar } from "react-bootstrap";
 import { Grammarly, GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
-import {
-  ChangeAnswers,
-  InputChange,
-  SetSelectedQ,
-} from "./TakeTestActions";
+import { ChangeAnswers, InputChange, SetSelectedQ } from "./TakeTestActions";
 import { SetOpen } from "../../MainAction";
 import { useAppDispatch } from "../../../app/hooks";
 import { RootState } from "../../../app/store";
@@ -18,7 +14,9 @@ const TestConstructor = () => {
   const onInputChange = (event: any, data: any) => {
     const { questions } = takeTest;
     if (questions) {
-      const question = questions.find((question: any) => question.selected === true);
+      const question = questions.find(
+        (question: any) => question.selected === true
+      );
       if (question) {
         const id = question.id;
         dispatch(InputChange(id, event.target.value));
@@ -28,7 +26,9 @@ const TestConstructor = () => {
   const handleCheck = (event: any) => {
     const { questions } = takeTest;
     if (questions) {
-      const question = questions.find((question: any) => question.selected === true);
+      const question = questions.find(
+        (question: any) => question.selected === true
+      );
       if (question) {
         const id = question.id;
         let type = question.type;
@@ -36,13 +36,17 @@ const TestConstructor = () => {
         if (type === 0) {
           updated = question.answerOptions.map((answer: any) =>
             answer.id.toString() === event.target.name.toString()
-              ? { ...answer, selected: true }
-              : { ...answer, selected: false }
+              ? { ...answer, isCorrect: true, selected: true }
+              : { ...answer, isCorrect: false, selected: false }
           );
         } else {
           updated = question.answerOptions.map((answer: any) =>
             answer.id.toString() === event.target.name.toString()
-              ? { ...answer, selected: event.target.checked }
+              ? {
+                  ...answer,
+                  isCorrect: event.target.checked,
+                  selected: event.target.checked,
+                }
               : answer
           );
         }
@@ -54,7 +58,9 @@ const TestConstructor = () => {
   const handleBackClick = () => {
     const { questions } = takeTest;
     if (questions) {
-      const question = questions.find((question: any) => question.selected === true);
+      const question = questions.find(
+        (question: any) => question.selected === true
+      );
       if (question) {
         const index = questions.indexOf(question);
         let setSelected = questions[index - 1];
@@ -65,7 +71,9 @@ const TestConstructor = () => {
   const handleNextClick = () => {
     const { questions } = takeTest;
     if (questions) {
-      const question = questions.find((question: any) => question.selected === true);
+      const question = questions.find(
+        (question: any) => question.selected === true
+      );
       if (question) {
         const index = questions.indexOf(question);
         let setSelected = questions[index + 1];
@@ -137,7 +145,7 @@ const TestConstructor = () => {
                   type={selectedQuestion.type === 0 ? "radio" : "checkbox"}
                   style={{ marginRight: 10, color: "red" }}
                   name={answer.id.toString()}
-                  checked={answer.selected}
+                  checked={answer.isCorrect}
                   onChange={handleCheck}
                 />
                 <Card

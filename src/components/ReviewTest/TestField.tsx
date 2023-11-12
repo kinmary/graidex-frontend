@@ -104,8 +104,8 @@ const TestField = () => {
               key={idx+"c"}
                 type={selectedQuestion.type === 0 ? "radio" : "checkbox"}
                 readOnly
-                isValid={answer.isRight}
-                isInvalid={answer.isRight === false && answer.selected === true}
+                isValid={answer.isCorrect}
+                isInvalid={answer.isCorrect === false && answer.selected === true}
                 style={{ marginRight: 10, color: "red" }}
                 name={answer.id.toString()}
                 checked={answer.selected}
@@ -121,8 +121,8 @@ const TestField = () => {
                 <Card.Text
                   style={{
                     color:
-                      (answer.isRight && "green") ||
-                      (answer.isRight === false &&
+                      (answer.isCorrect && "green") ||
+                      (answer.isCorrect === false &&
                         answer.selected === true &&
                         "red") as Color,
                   }}

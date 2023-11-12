@@ -15,19 +15,18 @@ import MessageModal from "../Modals/MessageModal";
 import { useAppDispatch } from "../../app/hooks";
 import {
   createDraftFromTest,
-  createTest,
   deleteDraft,
   deleteTest,
   duplicateDraft,
   getDraft,
   getTest,
+  getTestDraftQuestions,
   updateDraft,
   updateTest,
 } from "./TestActions";
 import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
 import StudentsList from "./StudentsList";
 import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
-import { ICreateTestDto } from "../../interfaces/CreateTestDto";
 import AddStudentsToTestModal from "../Modals/AddStudentsToTestModal";
 import { getSubjectContent } from "./SubjectActions";
 import ISubjectContent from "../../interfaces/SubjectContent";
@@ -60,7 +59,9 @@ const Settings = () => {
   const [autoCheck, setAutoCheck] = useState<boolean>(false);
   //TODO: check if shuffleQuestions needed
   // const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
-  const [reviewResult, setReviewResult] = useState<string | undefined>("SetManually");
+  const [reviewResult, setReviewResult] = useState<string | undefined>(
+    "SetManually"
+  );
   const [isCustomTimeLimit, setIsCustomTimeLimit] = useState<boolean>(false);
   const [timeLimit, setTimeLimit] = useState<ITimeLimit>({
     hours: 0,
@@ -287,6 +288,12 @@ const Settings = () => {
     }
     navigate(`/${params.selectedSubjectId}`);
   };
+  const onEditTestClick = () => {
+    if (main.currentTestDraft.itemType === "TestDraft") {
+      dispatch(getTestDraftQuestions(main.currentTestDraft.id));
+    }
+    navigate("edit-test");
+  };
 
   if (!dataLoaded) {
     return null; //TODO: loader
@@ -294,8 +301,12 @@ const Settings = () => {
   return (
     <>
       <MessageModal />
-      {currentTestDraft.itemType === "TestDraft" && <CreateTestFromDraft subjectId={params.selectedSubjectId} 
-      inputs={inputs} />}
+      {currentTestDraft.itemType === "TestDraft" && (
+        <CreateTestFromDraft
+          subjectId={params.selectedSubjectId}
+          inputs={inputs}
+        />
+      )}
 
       <AddStudentsToTestModal
         testid={currentTestDraft.id}
@@ -629,7 +640,7 @@ const Settings = () => {
                   pass changes will be saved here.
                   <b> To create test from this draft:</b>
                   <ol type="1">
-                  <li>
+                    <li>
                       Double check everything again and click{" "}
                       <b>"Create test from draft"</b>.
                     </li>
@@ -668,7 +679,14 @@ const Settings = () => {
               {currentTestDraft.itemType === "TestDraft" && (
                 <Form.Group>
                   <Button
+                    style={{ marginTop: 10, width: "100%" }}
                     variant="primary"
+                    onClick={onEditTestClick}
+                  >
+                    <i className="bi bi-pencil-square"></i> Edit draft questions
+                  </Button>
+                  <Button
+                    variant="outline-primary"
                     style={{ marginTop: 10, width: "100%" }}
                     onClick={handleCreateTest}
                   >

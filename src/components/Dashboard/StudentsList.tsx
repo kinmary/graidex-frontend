@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Form, ListGroup, Row, Col, Image, Pagination, Alert } from "react-bootstrap";
+import {
+  Form,
+  ListGroup,
+  Row,
+  Col,
+  Image,
+  Pagination,
+  Alert,
+} from "react-bootstrap";
 import profilePic from "../../images/blank-profile-picture.jpg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
@@ -16,13 +24,16 @@ const StudentsList = ({ subjectId }: StudentListArg) => {
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const { currentTestDraft } = main;
-
   const [allowedStudents, setAllowedStudents] = useState<Array<IStudent>>([]);
-  useEffect(()=>{
-    if(currentTestDraft.itemType === "Test"){
-      setAllowedStudents(currentTestDraft.allowedStudents)
+
+  useEffect(() => {
+    if (currentTestDraft.itemType === "Test" && main.studentsList) {
+      const filteredStudents = main.studentsList.filter((student: IStudent) =>
+        currentTestDraft.allowedStudents.includes(student.email)
+      );
+      setAllowedStudents(filteredStudents);
     }
-  },[currentTestDraft]);
+  }, [currentTestDraft]);
 
   const studentsPerPage = 5;
   const handleRemoveStudent = (email: string) => {
@@ -71,18 +82,18 @@ const StudentsList = ({ subjectId }: StudentListArg) => {
               <div>
                 <Row>
                   <Col className="d-flex align-items-center">
-                    <Image
+                    {/* <Image
                       className="profile-image me-2"
                       src={profilePic}
                       style={{ objectFit: "cover" }}
-                    />
+                    /> */}
                     <span className="">
                       {student.name} {student.surname}
                     </span>
                   </Col>
                 </Row>
                 <Row>
-                  <span className="text-muted text-nowrap ms-1">
+                  <span className="text-muted text-nowrap ">
                     {student.email}
                   </span>
                 </Row>

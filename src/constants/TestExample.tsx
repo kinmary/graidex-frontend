@@ -12,12 +12,12 @@ export const testExample = [{
       files: [],
       previews: [],
       answerOptions: [
-      { id: 0, text: "left", isRight: false },
-      { id: 1, text: "right", isRight: false },
+      { id: 0, text: "left", isCorrect: false },
+      { id: 1, text: "right", isCorrect: false },
       {
         id: 2,
         text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-        isRight: true,
+        isCorrect: true,
       },
     ],
   },
@@ -50,9 +50,9 @@ export const testExample = [{
     previews: [],
     selected: false,
     answerOptions: [
-      { id: 0, text: "lorem", isRight: true },
-      { id: 1, text: "ipsum", isRight: true},
-      { id: 2, text: "dolor", isRight: false },
+      { id: 0, text: "lorem", isCorrect: true },
+      { id: 1, text: "ipsum", isCorrect: true},
+      { id: 2, text: "dolor", isCorrect: false },
     ],
   },
   {
@@ -90,9 +90,9 @@ export const testExample = [{
     previews: [],
     selected: false,
     answerOptions: [
-      { id: 0, text: "left", isRight: false },
-      { id: 1, text: "right", isRight: true },
-      { id: 2, text: "wrong", isRight: false },
+      { id: 0, text: "left", isCorrect: false },
+      { id: 1, text: "right", isCorrect: true },
+      { id: 2, text: "wrong", isCorrect: false },
     ],
   },
   {
@@ -110,9 +110,9 @@ export const testExample = [{
     previews: [],
     selected: false,
     answerOptions: [
-      { id: 0, text: "left", isRight: false },
-      { id: 1, text: "right", isRight: false },
-      { id: 2, text: "wrong", isRight: true },
+      { id: 0, text: "left", isCorrect: false },
+      { id: 1, text: "right", isCorrect: false },
+      { id: 2, text: "wrong", isCorrect: true },
     ],
   },
   {
@@ -130,8 +130,8 @@ export const testExample = [{
     previews: [],
     selected: false,
     answerOptions: [
-      { id: 0, text: "left", isRight: false},
-      { id: 1, text: "right", isRight: false },
-      { id: 2, text: "wrong", isRight: true },
+      { id: 0, text: "left", isCorrect: false},
+      { id: 1, text: "right", isCorrect: false },
+      { id: 2, text: "wrong", isCorrect: true },
     ],
   },]
