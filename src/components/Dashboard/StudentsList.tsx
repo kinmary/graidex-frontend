@@ -23,17 +23,17 @@ const StudentsList = ({ subjectId }: StudentListArg) => {
   const main = useSelector((state: RootState) => state.main);
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  const { currentTestDraft } = main;
+  const { currentTestDraft, studentsList } = main;
   const [allowedStudents, setAllowedStudents] = useState<Array<IStudent>>([]);
 
   useEffect(() => {
-    if (currentTestDraft.itemType === "Test" && main.studentsList) {
+    if (currentTestDraft.itemType === "Test" && studentsList) {
       const filteredStudents = main.studentsList.filter((student: IStudent) =>
         currentTestDraft.allowedStudents.includes(student.email)
       );
       setAllowedStudents(filteredStudents);
     }
-  }, [currentTestDraft]);
+  }, [currentTestDraft, studentsList]);
 
   const studentsPerPage = 5;
   const handleRemoveStudent = (email: string) => {

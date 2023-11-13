@@ -69,8 +69,11 @@ const SubjectPage = () => {
     // }
   };
 
-  const onRowClickByStudent = (testid: string | number) => {
-    dispatch(getVisibleTestStudent(testid));
+  const onRowClickByStudent = async (testid: string | number) => {
+    await dispatch(getVisibleTestStudent(testid)).then(()=> {
+      navigate(`${testid}`);
+    });
+
   };
 
   const OnCreateTestClick = () => {
@@ -316,8 +319,7 @@ const SubjectPage = () => {
                     key={idx + "-student-card"}
                     className="mb-2"
                     style={{ flexGrow: 4 }}
-                    //TODO: add onClick for student
-                    // onClick={onRowDoubleClick}
+                    onClick={()=> onRowClickByStudent(test.id)}
                   >
                     <Card.Body>
                       <Card.Title className="d-flex justify-content-between mb-0 h6">

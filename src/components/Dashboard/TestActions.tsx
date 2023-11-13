@@ -214,11 +214,10 @@ export const getTest = (testid: string | number) => {
         `${API_BASE_URL}/api/Test/get-test/` + testid
       );
       if (response.status === 200) {
-
         // TODO: remove this when backend is fixed
         response.data.startDateTime += "Z";
         response.data.endDateTime += "Z";
-        
+
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
           currentTestDraft: response.data,
@@ -247,15 +246,18 @@ export const getVisibleTestStudent = (testid: string | number) => {
         `${API_BASE_URL}/api/Test/get-visible-test/` + testid
       );
       if (response.status === 200) {
-        //  dispatch(getSubjectContent(subjectId!));
+        response.data.startDateTime += "Z";
+        response.data.endDateTime += "Z";
+        dispatch({
+          type: SET_CURRENT_TEST_DRAFT,
+          currentTestDraft: response.data,
+        });
         // dispatch(SetOpen("openSubjectModal", false));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        alert("Error");
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -366,9 +368,9 @@ export const getTestQuestionsOfTeacher = (testid: string | number) => {
                     id: idx,
                     text: x.text,
                     isCorrect:
-                    question.correctOptionIndex.toString() === idx.toString(),
+                      question.correctOptionIndex.toString() === idx.toString(),
                     selected:
-                    question.correctOptionIndex.toString() === idx.toString(),
+                      question.correctOptionIndex.toString() === idx.toString(),
                   };
                 }
               );
@@ -446,9 +448,9 @@ export const getTestDraftQuestions = (draftid: string | number) => {
                     id: idx,
                     text: x.text,
                     isCorrect:
-                    question.correctOptionIndex.toString() === idx.toString(),
+                      question.correctOptionIndex.toString() === idx.toString(),
                     selected:
-                    question.correctOptionIndex.toString() === idx.toString(),
+                      question.correctOptionIndex.toString() === idx.toString(),
                   };
                 }
               );

@@ -17,6 +17,7 @@ import Layout from "./components/Layout";
 import SubjectSettings from "./components/Dashboard/SubjectSettings";
 import Settings from "./components/Dashboard/Settings";
 import SubjectRequests from "./components/Dashboard/SubjectRequests";
+import StartTestSummary from "./components/StudentSide/TakeTest/StartTestSummary";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -51,7 +52,8 @@ function App() {
           {auth.userRole === 0 &&<Route path=":selectedSubjectId/settings" element={<SubjectSettings />} />}
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:test" element={<TestTab />} />}
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/settings" element={<Settings />} />}
-          <Route path=":selectedSubjectId/:test/take-test" element={<TakeTest />} />
+          {auth.userRole === 1 && <Route path=":selectedSubjectId/:test" element={<StartTestSummary />} />}
+          {auth.userRole === 1 && <Route path=":selectedSubjectId/:test/take-test" element={<StartTestSummary />} />}
           {auth.userRole === 0 &&<Route path=":selectedSubjectId/:test/edit-test" element={<CreateTest />} />}
           <Route path=":selectedSubjectId/:test/:studentName" element={<TestOfStudent />} />
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:newTest" element={<CreateTest />} />}
