@@ -1,17 +1,26 @@
 import { Button, Card, Form, Navbar } from "react-bootstrap";
 import { Grammarly, GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
-import { ChangeAnswers, InputChange, SetSelectedQ } from "./TakeTestActions";
+import {
+  ChangeAnswers,
+  InputChange,
+  SetSelectedQ,
+  updateTestAttempt,
+} from "./TakeTestActions";
 import { SetOpen } from "../../MainAction";
 import { useAppDispatch } from "../../../app/hooks";
 import { RootState } from "../../../app/store";
 import { useSelector } from "react-redux";
+import QuestionsList from "./QuestionsList";
 
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
+  const currentTestDraft = useSelector(
+    (state: RootState) => state.main.currentTestDraft
+  );
   const takeTest = useSelector((state: RootState) => state.takeTest);
 
-  const onInputChange = (event: any, data: any) => {
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { questions } = takeTest;
     if (questions) {
       const question = questions.find(
@@ -55,7 +64,7 @@ const TestConstructor = () => {
     }
   };
 
-  const handleBackClick = () => {
+  const handleBackClick = async () => {
     const { questions } = takeTest;
     if (questions) {
       const question = questions.find(
@@ -63,12 +72,13 @@ const TestConstructor = () => {
       );
       if (question) {
         const index = questions.indexOf(question);
+        await updateAnswer();
         let setSelected = questions[index - 1];
         dispatch(SetSelectedQ(setSelected.id));
       }
     }
   };
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
     const { questions } = takeTest;
     if (questions) {
       const question = questions.find(
@@ -76,6 +86,7 @@ const TestConstructor = () => {
       );
       if (question) {
         const index = questions.indexOf(question);
+        await updateAnswer();
         let setSelected = questions[index + 1];
         dispatch(SetSelectedQ(setSelected.id));
       }
@@ -83,6 +94,21 @@ const TestConstructor = () => {
   };
   const handleSaveAndSendClick = () => {
     dispatch(SetOpen("sendTestModal", true));
+  };
+
+  const updateAnswer = () => {
+    const { questions } = takeTest;
+    if (questions) {
+      const question = questions.find(
+        (question: any) => question.selected === true
+      );
+      if (question) {
+        let questionIndex = questions.indexOf(question);
+        dispatch(
+          updateTestAttempt(currentTestDraft.id, question, questionIndex)
+        );
+      }
+    }
   };
 
   let { questions } = takeTest;
@@ -127,7 +153,7 @@ const TestConstructor = () => {
                   placeholder="Enter your answer here"
                   name="text"
                   value={answer.text}
-                  onChange={() => onInputChange}
+                  onChange={onInputChange}
                   style={{ marginTop: 20 }}
                 />
               </GrammarlyEditorPlugin>
@@ -156,7 +182,7 @@ const TestConstructor = () => {
                     width: "90%",
                   }}
                 >
-                  <Card.Text>{answer.text}</Card.Text>
+                  <Card.Text style={{ padding: 10 }}>{answer.text}</Card.Text>
                 </Card>
               </div>
             )
@@ -203,9 +229,15 @@ const TestConstructor = () => {
           </Navbar>
         </Form>
       ) : (
-        <Card className="text-center">
-          <Card.Header>Please select question</Card.Header>
-        </Card>
+        <div>
+          <h5
+            className="ms-1"
+            style={{ fontWeight: "bold", textAlign: "left", marginBottom: 5 }}
+          >
+            {currentTestDraft && currentTestDraft.title}
+          </h5>
+          <QuestionsList />
+        </div>
       )}{" "}
     </Grammarly>
   );

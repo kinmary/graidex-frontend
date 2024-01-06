@@ -29,8 +29,8 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
   const [autoCheck, setAutoCheck] = useState<boolean>(false);
   //TODO: check if shuffleQuestions needed
   // const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
-  const [reviewResult, setReviewResult] = useState<string | undefined>(
-    "SetManually"
+  const [reviewResult, setReviewResult] = useState<number | undefined>(
+    0
   );
   const [isCustomTimeLimit, setIsCustomTimeLimit] = useState<boolean>(false);
   const [timeLimit, setTimeLimit] = useState<ITimeLimit>({
@@ -62,7 +62,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
       endDate: new Date(),
     });
     setAutoCheck(false);
-    setReviewResult("SetManually");
+    setReviewResult(0);
     setTimeLimit({
       hours: 0,
       minutes: 0,
@@ -84,7 +84,8 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
         timeLimit.minutes
       ).padStart(2, "0")}:00`,
       autoCheckAfterSubmission: autoCheck,
-      reviewResult: reviewResult,
+      reviewResult: 0,
+      isVisible: false,
       orderIndex: currentTestDraft.orderIndex,
     };
 
@@ -120,18 +121,18 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     newDate.setMonth(Number(event.target.value.substring(5, 7)) - 1);
     newDate.setDate(Number(event.target.value.substring(8)));
     if (event.target.name === "startDate") {
-      if (newDate < dates.endDate) {
+      // if (newDate < dates.endDate) {
         setDates({ ...dates, [event.target.name]: newDate });
-      } else {
-        alert(`Start date can not be later than end date ${dates.endDate}`);
-      }
+      // } else {
+        // alert(`Start date can not be later than end date ${dates.endDate}`);
+      // }
     }
     if (event.target.name === "endDate") {
-      if (newDate > dates.startDate) {
+      // if (newDate > dates.startDate) {
         setDates({ ...dates, [event.target.name]: newDate });
-      } else {
-        alert(`End date can not be earlier than start date ${dates.startDate}`);
-      }
+      // } else {
+        // alert(`End date can not be earlier than start date ${dates.startDate}`);
+      // }
     }
   };
 
@@ -145,20 +146,20 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
       newDate.setHours(Number(hours), Number(minutes));
       // newDate.setMinutes(Number(minutes));
       if (event.target.name === "startDate") {
-        if (newDate < dates.endDate) {
+        // if (newDate < dates.endDate) {
           setDates({ ...dates, [event.target.name]: newDate });
-        } else {
-          alert(`Start date can not be later than end date ${dates.endDate}`);
-        }
+        // } else {
+          // alert(`Start date can not be later than end date ${dates.endDate}`);
+        // }
       }
       if (event.target.name === "endDate") {
-        if (newDate > dates.startDate) {
+        // if (newDate > dates.startDate) {
           setDates({ ...dates, [event.target.name]: newDate });
-        } else {
-          alert(
-            `End date can not be earlier than start date ${dates.startDate}`
-          );
-        }
+        // } else {
+          // alert(
+          //   `End date can not be earlier than start date ${dates.startDate}`
+          // );
+        // }
       }
     }
   };
@@ -197,7 +198,11 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                     currentTestDraft.itemType === "Test" &&
                     dates.startDate.getTime() < new Date().getTime()
                   }
-                  value={dates.startDate.toLocaleTimeString().slice(0,5)}
+                  value={new Intl.DateTimeFormat("default", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  }).format(dates.startDate)}
                   onChange={handleTimeChange}
                 />
               </InputGroup>
@@ -227,7 +232,11 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                     currentTestDraft.itemType === "Test" &&
                     dates.endDate.getTime() < new Date().getTime()
                   }
-                  value={dates.endDate.toLocaleTimeString().slice(0,5)}
+                  value={new Intl.DateTimeFormat("default", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  }).format(dates.endDate)}
                   onChange={handleTimeChange}
                 />
               </InputGroup>

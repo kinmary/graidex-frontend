@@ -9,7 +9,6 @@ export interface IQuestion {
         type: number;
         selected: boolean;
         answerOptions: IAnswerOption[];
-
         shuffleOptions?: boolean;
         aiCheck?:  boolean;
         plagiarismCheck?: boolean;

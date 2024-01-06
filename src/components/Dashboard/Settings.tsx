@@ -224,18 +224,18 @@ const Settings = () => {
     newDate.setMonth(Number(event.target.value.substring(5, 7)) - 1);
     newDate.setDate(Number(event.target.value.substring(8)));
     if (event.target.name === "startDate") {
-      if (newDate < dates.endDate) {
+      // if (newDate < dates.endDate) {
         setDates({ ...dates, [event.target.name]: newDate });
-      } else {
-        alert(`Start date can not be later than end date ${dates.endDate}`);
-      }
+      // } else {
+        // alert(`Start date can not be later than end date ${dates.endDate}`);
+      // }
     }
     if (event.target.name === "endDate") {
-      if (newDate > dates.startDate) {
+      // if (newDate > dates.startDate) {
         setDates({ ...dates, [event.target.name]: newDate });
-      } else {
-        alert(`End date can not be earlier than start date ${dates.startDate}`);
-      }
+      // } else {
+        // alert(`End date can not be earlier than start date ${dates.startDate}`);
+      // }
     }
   };
 
@@ -249,20 +249,20 @@ const Settings = () => {
       newDate.setHours(Number(hours), Number(minutes));
       // newDate.setMinutes(Number(minutes));
       if (event.target.name === "startDate") {
-        if (newDate < dates.endDate) {
+        // if (newDate < dates.endDate) {
           setDates({ ...dates, [event.target.name]: newDate });
-        } else {
-          alert(`Start date can not be later than end date ${dates.endDate}`);
-        }
+        // } else {
+          // alert(`Start date can not be later than end date ${dates.endDate}`);
+        // }
       }
       if (event.target.name === "endDate") {
-        if (newDate > dates.startDate) {
+        // if (newDate > dates.startDate) {
           setDates({ ...dates, [event.target.name]: newDate });
-        } else {
-          alert(
-            `End date can not be earlier than start date ${dates.startDate}`
-          );
-        }
+        // } else {
+          // alert(
+            // `End date can not be earlier than start date ${dates.startDate}`
+          // );
+        // }
       }
     }
   };
@@ -423,7 +423,11 @@ const Settings = () => {
                           currentTestDraft.itemType === "Test" &&
                           dates.startDate.getTime() < new Date().getTime()
                         }
-                        value={dates.startDate.toLocaleTimeString().slice(0,5)}
+                        value={new Intl.DateTimeFormat("default", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        }).format(dates.startDate)}
                         onChange={handleTimeChange}
                       />
                     </InputGroup>
@@ -454,7 +458,11 @@ const Settings = () => {
                           currentTestDraft.itemType === "Test" &&
                           dates.endDate.getTime() < new Date().getTime()
                         }
-                        value={dates.endDate.toLocaleTimeString().slice(0,5)}
+                        value={new Intl.DateTimeFormat("default", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        }).format(dates.endDate)}
                         onChange={handleTimeChange}
                       />
                     </InputGroup>

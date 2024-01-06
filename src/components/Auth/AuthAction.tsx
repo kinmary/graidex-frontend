@@ -215,8 +215,8 @@ export const getTeacherProfilePic = () => {
 
 export const Logout = () => {
   return (dispatch: AppDispatch) => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("mainSidebarState");
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("mainSidebarState");
     localStorage.clear();
     dispatch({ type: SET_AUTHENTICATION, isAuth: false });
     dispatch({type: SET_PROFILE_PIC, profilePic: blankProf});
