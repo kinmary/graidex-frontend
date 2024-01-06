@@ -73,7 +73,7 @@ const Header = () => {
         marginLeft: "auto",
         marginRight: "10px",
       }}>
-        <i className="bi bi-bell text-muted"></i>
+        {/* <i className="bi bi-bell text-muted"></i> */}
       </div>
 
       <div

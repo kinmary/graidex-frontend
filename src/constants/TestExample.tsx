@@ -1,17 +1,18 @@
-export const testExample = [{
+export const testExample = [
+  {
     id: 0,
     title: "Question 1: What is right?",
     comment: "Right answer is at the moon",
     maxPoints: 1,
     type: 0,
     shuffleOptions: true,
-      aiCheck: true,
-      plagiarismCheck: true,
-      allowFiles: false,
-      selected: true,
-      files: [],
-      previews: [],
-      answerOptions: [
+    aiCheck: true,
+    plagiarismCheck: true,
+    allowFiles: false,
+    selected: true,
+    files: [],
+    previews: [],
+    answerOptions: [
       { id: 0, text: "left", isCorrect: false },
       { id: 1, text: "right", isCorrect: false },
       {
@@ -51,7 +52,7 @@ export const testExample = [{
     selected: false,
     answerOptions: [
       { id: 0, text: "lorem", isCorrect: true },
-      { id: 1, text: "ipsum", isCorrect: true},
+      { id: 1, text: "ipsum", isCorrect: true },
       { id: 2, text: "dolor", isCorrect: false },
     ],
   },
@@ -130,8 +131,167 @@ export const testExample = [{
     previews: [],
     selected: false,
     answerOptions: [
-      { id: 0, text: "left", isCorrect: false},
+      { id: 0, text: "left", isCorrect: false },
       { id: 1, text: "right", isCorrect: false },
       { id: 2, text: "wrong", isCorrect: true },
     ],
-  },]
+  },
+];
+
+export const answersGrid = [
+  {
+    student: {
+      email: "m.kind@vdu.lt",
+      name: "Mary the Student",
+      customId: "IF200001",
+    },
+    startEnd: {
+      start: "December 14, 10:00",
+      end: "December 14, 11:00",
+    },
+    grade: null,
+    status: 1,
+    isShown: true,
+  },
+  {
+    student: {
+      email: "po456@example.com",
+      name: "Paula Ortiz",
+      customId: "PO00456",
+    },
+    startEnd: {
+      start: "December 14, 10:30",
+      end: "December 14, 11:30",
+    },
+    grade: {
+      grade: 9,
+      percent: 92,
+    },
+    status: 3,
+    isShown: true,
+  },
+  {
+    student: {
+      email: "if789@example.com",
+      name: "Isaac Freeman",
+      customId: "IF00789",
+    },
+    startEnd: {
+      start: "December 14, 11:00",
+      end: "December 14, 12:00",
+    },
+    grade: null,
+    status: 1,
+    isShown: true,
+  },
+  {
+    student: {
+      email: "po101@example.com",
+      name: "Pia Olsen",
+      customId: "PO00101",
+    },
+    startEnd: {
+      start: "December 14, 11:30",
+      end: "December 14, 12:30",
+    },
+    grade: null,
+    status: 1,
+    isShown: true,
+  },
+  {
+    student: {
+      email: "if112@example.com",
+      name: "Irene Fisher",
+      customId: "IF00112",
+    },
+    startEnd: {
+      start: "December 15, 12:00",
+      end: "December 15, 13:00",
+    },
+    grade: {
+      grade: 6,
+      percent: 57.55,
+    },
+    status: 3,
+    isShown: true,
+  },
+  {
+    student: {
+      email: "po123@example.com",
+      name: "Pedro Ochoa",
+      customId: "PO00123",
+    },
+    startEnd: {
+      start: "December 15, 12:30",
+      end: "December 15, 13:30",
+    },
+    grade: {
+      grade: 5,
+      percent: 52.01,
+    },
+    status: 3,
+    isShown: true,
+  },
+  {
+    student: {
+      email: "if134@example.com",
+      name: "Ivy Foster",
+      customId: "IF00134",
+    },
+    startEnd: {
+      start: "December 15, 13:00",
+      end: "December 15, 14:00",
+    },
+    grade: {
+      grade: 4,
+      percent: 44.29,
+    },
+    status: 4,
+    isShown: false,
+  },
+  {
+    student: {
+      email: "po145@example.com",
+      name: "Pablo Ortega",
+      customId: "PO00145",
+    },
+    startEnd: {
+      start: "December 16, 13:30",
+      end: "December 16, 14:30",
+    },
+    grade: {
+      grade: 3,
+      percent: 28.12,
+    },
+    status: 4,
+    isShown: false,
+  },
+  {
+    student: {
+      email: "if156@example.com",
+      name: "Ingrid Frank",
+      customId: "IF00156",
+    },
+    startEnd: {
+      start: "December 17, 14:00",
+      end: "December 17, 14:25",
+    },
+    grade: null,
+    status: 1,
+    isShown: false,
+  },
+  {
+    student: {
+      email: "po167@example.com",
+      name: "Peter O'Brien",
+      customId: "PO00167",
+    },
+    startEnd: {
+      start: "December 17, 14:00",
+      end: "December 17, 14:00",
+    },
+    grade: null,
+    status: 1,
+    isShown: false,
+  },
+];

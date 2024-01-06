@@ -85,7 +85,7 @@ const TestConstructor = () => {
       const selectedQuestion = questions.find(
         (question: any) => question.selected === true
       );
-      const answers = selectedQuestion?.answerOptions;
+      let answers = selectedQuestion?.answerOptions;
       const id = selectedQuestion?.id;
       const reorderedQuestion = answers?.splice(result.source.index, 1)[0];
       answers?.splice(result.destination.index, 0, reorderedQuestion!);
@@ -484,7 +484,6 @@ const TestConstructor = () => {
                                       ></i>
                                     </InputGroup>
                                   </div>
-                                  {/* {provided.placeholder} */}
                                 </Col>
                               )}
                             </Draggable>

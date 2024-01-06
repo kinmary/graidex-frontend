@@ -10,173 +10,13 @@ import { RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, Dropdown, Form } from "react-bootstrap";
 import "../../index.css";
+import { answersGrid } from "../../constants/TestExample";
 
 const AnswersGrid = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const auth = useSelector((state: RootState) => state.auth);
-  const main = useSelector((state: RootState) => state.main);
   const gridRef = useRef<AgGridReact<IAnswerGrid>>(null);
-  const [rowData, setRowData] = useState([
-    {
-      student: {
-        email: "if123@example.com",
-        name: "Ivan Fedorov",
-        customId: "IF00123",
-      },
-      startEnd: {
-        start: "January 1, 10:00",
-        end: "January 1, 11:00",
-      },
-      grade: {
-        grade: 10,
-        percent: 100,
-      },
-      status: 3,
-      isShown: true,
-    },
-    {
-      student: {
-        email: "po456@example.com",
-        name: "Paula Ortiz",
-        customId: "PO00456",
-      },
-      startEnd: {
-        start: "January 2, 10:30",
-        end: "January 2, 11:30",
-      },
-      grade: {
-        grade: 9,
-        percent: 92,
-      },
-      status: 3,
-      isShown: true,
-    },
-    {
-      student: {
-        email: "if789@example.com",
-        name: "Isaac Freeman",
-        customId: "IF00789",
-      },
-      startEnd: {
-        start: "January 3, 11:00",
-        end: "January 3, 12:00",
-      },
-      grade: null,
-      status: 2,
-      isShown: true,
-    },
-    {
-      student: {
-        email: "po101@example.com",
-        name: "Pia Olsen",
-        customId: "PO00101",
-      },
-      startEnd: {
-        start: "January 4, 11:30",
-        end: "January 4, 12:30",
-      },
-      grade: null,
-      status: 2,
-      isShown: true,
-    },
-    {
-      student: {
-        email: "if112@example.com",
-        name: "Irene Fisher",
-        customId: "IF00112",
-      },
-      startEnd: {
-        start: "January 5, 12:00",
-        end: "January 5, 13:00",
-      },
-      grade: {
-        grade: 6,
-        percent: 57.55,
-      },
-      status: 3,
-      isShown: true,
-    },
-    {
-      student: {
-        email: "po123@example.com",
-        name: "Pedro Ochoa",
-        customId: "PO00123",
-      },
-      startEnd: {
-        start: "January 6, 12:30",
-        end: "January 6, 13:30",
-      },
-      grade: {
-        grade: 5,
-        percent: 52.01,
-      },
-      status: 3,
-      isShown: true,
-    },
-    {
-      student: {
-        email: "if134@example.com",
-        name: "Ivy Foster",
-        customId: "IF00134",
-      },
-      startEnd: {
-        start: "January 7, 13:00",
-        end: "January 7, 14:00",
-      },
-      grade: {
-        grade: 4,
-        percent: 44.29,
-      },
-      status: 4,
-      isShown: false,
-    },
-    {
-      student: {
-        email: "po145@example.com",
-        name: "Pablo Ortega",
-        customId: "PO00145",
-      },
-      startEnd: {
-        start: "January 8, 13:30",
-        end: "January 8, 14:30",
-      },
-      grade: {
-        grade: 3,
-        percent: 28.12,
-      },
-      status: 4,
-      isShown: false,
-    },
-    {
-      student: {
-        email: "if156@example.com",
-        name: "Ingrid Frank",
-        customId: "IF00156",
-      },
-      startEnd: {
-        start: "January 9, 14:00",
-        end: "now",
-      },
-      grade: null,
-      status: 0,
-      isShown: false,
-    },
-    {
-      student: {
-        email: "po167@example.com",
-        name: "Peter O'Brien",
-        customId: "PO00167",
-      },
-      startEnd: {
-        start: "January10, 14:30",
-        end: "now",
-      },
-      grade: null,
-      status: 1,
-      isShown: false,
-    },
-  ]);
+  const [rowData, setRowData] = useState(answersGrid);
   const [columnDefs, setColumnDefs] = useState<ColDef[]>(AnswerGridCol);
   const getRowId = useCallback((params: GetRowIdParams) => {
     return params.data.student.email;
@@ -194,10 +34,10 @@ const AnswersGrid = () => {
     (param: any) => {
       const selectedStudent = param.data.student.email;
       if (selectedStudent) {
-        console.log(1);
-        dispatch(SetOpen("studentName", selectedStudent));
-        dispatch(SetOpen("testOfStudentPage", true));
-        navigate(selectedStudent);
+        // console.log(1);
+        // dispatch(SetOpen("studentName", selectedStudent));
+        // dispatch(SetOpen("testOfStudentPage", true));
+        navigate(`review/${selectedStudent}`);
       }
     },
     [gridRef]

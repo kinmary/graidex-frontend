@@ -140,7 +140,7 @@ const SubjectSettings = () => {
                 />
               </Form.Group>
 
-              <Form.Group style={{ marginTop: 20 }}>
+              {/* <Form.Group style={{ marginTop: 20 }}>
                 <Form.Label>Share link </Form.Label>
                 <InputGroup style={{ width: "50%" }}>
                   <InputGroup.Text>
@@ -151,18 +151,18 @@ const SubjectSettings = () => {
                     <Button size="sm">Copy</Button>
                   </InputGroup.Text>
                 </InputGroup>
-              </Form.Group>
+              </Form.Group> */}
               <Form.Group style={{ marginTop: 20 }}>
                 <Form.Label>Manage Participants </Form.Label>
                 <InputGroup style={{ width: "40%" }}>
-                  <Button onClick={handleManageStudents}>
+                  <Button variant="outline-primary" onClick={handleManageStudents}>
                     Manage Student List
                   </Button>
                 </InputGroup>
               </Form.Group>
               <Form.Group style={{ marginTop: 20 }}>
                 <InputGroup style={{ width: "40%" }}>
-                  <Button variant="success" onClick={handleUpdateSubject}>
+                  <Button onClick={handleUpdateSubject}>
                     Save changes
                   </Button>
                 </InputGroup>

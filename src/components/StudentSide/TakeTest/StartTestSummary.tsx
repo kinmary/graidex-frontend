@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getVisibleSubjectContent } from "../../Dashboard/SubjectActions";
 import ISubjectContent from "../../../interfaces/SubjectContent";
 import { getVisibleTestStudent } from "../../Dashboard/TestActions";
+import { getAllQuestionsWithAnswers, startTestAttempt } from "./TakeTestActions";
 
 const StartTestSummary = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +43,23 @@ const StartTestSummary = () => {
     });
   }, [dataLoaded]);
 
-  const onStartClick = () => {};
+  const onStartClick = async () => {
+    // await dispatch(startTestAttempt(currentTestDraft.id)).then((response: any) =>{
+    //   if(response.id !== undefined && response.id !== null && response.id !== 0){
+    //     dispatch(getAllQuestionsWithAnswers(response.id)).then((success: any) => {
+    //       if(success){
+            navigate("/" + params.selectedSubjectId + "/" + params.test+ "/" +10);
+    //       } else {
+    //         alert("Error occured in getting questions");
+    //         // navigate(-1);
+    //       }
+    //     });
+    //   } else {
+    //     alert("No attempts available. Error occured in starting test");
+    //     // navigate(-1);
+    //   }
+    // })
+  };
   return (
     <>
       {dataLoaded && (
@@ -114,3 +131,5 @@ const StartTestSummary = () => {
 };
 
 export default StartTestSummary;
+
+

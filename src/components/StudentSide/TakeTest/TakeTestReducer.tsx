@@ -6,15 +6,15 @@ interface TakeTestState {
 
 }
 export const initialState: TakeTestState = {
-  questions: takeTestExample
+  questions: takeTestExample,
 };
 
 export interface Action {
   type:
-    | typeof RESET_STATE
-    | typeof INPUT_CHANGE
-    | typeof CHANGE_QUESTIONS
-    | typeof CHANGE_ANSWERS;
+    | typeof RESET_STUD_STATE
+    | typeof INPUT_STUD_CHANGE
+    | typeof CHANGE_STUD_QUESTIONS
+    | typeof CHANGE_STUD_ANSWERS;
   questions?: IQuestion[];
   id?: number;
   text?: string;
@@ -26,13 +26,13 @@ export interface Action {
     action: Action) => {
     state = state || initialState;
     switch (action.type) {
-        case CHANGE_QUESTIONS:
+        case CHANGE_STUD_QUESTIONS:
             state = {
               ...state,
               questions: action.questions,
             };
             break;
-      case INPUT_CHANGE:
+      case INPUT_STUD_CHANGE:
         state = {
           ...state,
           questions: state.questions!.map((obj) => {
@@ -43,7 +43,7 @@ export interface Action {
           }),
         };
         break;
-      case CHANGE_ANSWERS:
+      case CHANGE_STUD_ANSWERS:
         state = {
           ...state,
           questions: state.questions!.map((obj) => {
@@ -54,7 +54,7 @@ export interface Action {
           }),
         };
         break;
-      case RESET_STATE:
+      case RESET_STUD_STATE:
         state = initialState;
         break;
       default:
@@ -64,8 +64,8 @@ export interface Action {
   };
   
 
-  export const RESET_STATE = "RESET_STATE";
-  export const INPUT_CHANGE = "INPUT_CHANGE";
-  export const CHANGE_QUESTIONS = "CHANGE_QUESTIONS";
-  export const CHANGE_ANSWERS = "CHANGE_ANSWERS";
+  export const RESET_STUD_STATE = "RESET_STUD_STATE";
+  export const INPUT_STUD_CHANGE = "INPUT_STUD_CHANGE";
+  export const CHANGE_STUD_QUESTIONS = "CHANGE_STUD_QUESTIONS";
+  export const CHANGE_STUD_ANSWERS = "CHANGE_STUD_ANSWERS";
   
