@@ -270,17 +270,17 @@ export const updateContentVisibility = (
           visibility
       );
       if (response.status === 200) {
-        dispatch(getSubjectContent(subjectId));
+        // dispatch(getSubjectContent(subjectId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        // error.response.data.map((obj: any) =>
+        //   alert(obj.attemptedValue + ": " + obj.errorMessage)
+        // );
       } else {
         dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
+        // alert(error.message);
       }
     }
     dispatch(hideLoader());

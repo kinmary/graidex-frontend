@@ -7,14 +7,15 @@ import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
 import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
 import { ICreateTestDto } from "../../interfaces/CreateTestDto";
 import { SET_CURRENT_TEST_DRAFT } from "../MainReducer";
-import { CHANGE_REVIEW_QUESTIONS } from "../ReviewTest/TestOfStudentReducer";
 import { CHANGE_QUESTIONS, RESET_STATE } from "../TeacherSide/CreateTest/CreateTestReducer";
-import { IOpenQuestion } from "../../interfaces/OpenQuestion";
-import { IMultipleChoiceQuestion } from "../../interfaces/MutipleChoiceQuestion";
-import { ISingleChoiceQuestion } from "../../interfaces/SingleChoiceQuestion";
-import { forEach } from "jszip";
 import { IQuestion } from "../../interfaces/Questions";
 import IAnswerOption from "../../interfaces/AnswerOption";
+import { TestBaseMultipleChoiceQuestionDto, TestBaseOpenQuestionDto, TestBaseSingleChoiceQuestionDto } from "../../constants/TestBackendTypes";
+import { IMultipleChoiceQuestion } from "../../interfaces/MutipleChoiceQuestion";
+import { IMultipleChoiceOption } from "../../interfaces/MutipleChoiceOptions";
+import { IOption } from "../../interfaces/Option";
+import { ISingleChoiceQuestion } from "../../interfaces/SingleChoiceQuestion";
+import { IOpenQuestion } from "../../interfaces/OpenQuestion";
 
 export const createTestDraft = (
   subjectId: string | number | undefined,
@@ -189,6 +190,7 @@ export const createTest = (
         );
         if (res.status === 200) {
           dispatch(getSubjectContent(subjectId));
+          return res.data;
           // dispatch(SetOpen("openSubjectModal", false));
         }
       }
@@ -358,69 +360,7 @@ export const getTestQuestionsOfTeacher = (testid: string | number) => {
       );
       dispatch({ type: RESET_STATE });
       if (response.data.length !== 0) {
-        let questions: IQuestion[] = [];
-        response.data.forEach((question: any, idx: number) => {
-          switch (question.$type) {
-            case "TestBaseSingleChoiceQuestionDto":
-              let options: IAnswerOption[] = question.options.map(
-                (x: any, idx: number) => {
-                  return {
-                    id: idx,
-                    text: x.text,
-                    isCorrect:
-                      question.correctOptionIndex.toString() === idx.toString(),
-                    selected:
-                      question.correctOptionIndex.toString() === idx.toString(),
-                  };
-                }
-              );
-              let single: IQuestion = {
-                id: idx,
-                title: question.text,
-                comment: question.defaultComment,
-                maxPoints: question.maxPoints,
-                type: 0,
-                selected: false,
-                answerOptions: options,
-              };
-              questions.push(single);
-              break;
-            case "TestBaseMultipleChoiceQuestionDto":
-              let answerOptions: IAnswerOption[] = question.options.map(
-                (x: any, idx: number) => {
-                  return {
-                    id: idx,
-                    text: x.option.text,
-                    isCorrect: x.isCorrect,
-                    selected: x.isCorrect,
-                  };
-                }
-              );
-              let multiple: IQuestion = {
-                id: idx,
-                title: question.text,
-                comment: question.defaultComment,
-                maxPoints: question.pointsPerCorrectAnswer,
-                type: 1,
-                selected: false,
-                answerOptions: answerOptions,
-              };
-              questions.push(multiple);
-              break;
-            case "TestBaseOpenQuestionDto":
-              let open: IQuestion = {
-                id: idx,
-                title: question.text,
-                comment: question.defaultComment,
-                maxPoints: question.maxPoints,
-                type: 2,
-                selected: false,
-                answerOptions: [],
-              };
-              questions.push(open);
-              break;
-          }
-        });
+        const questions: IQuestion[] = mapToFrontendQuestions(response.data).filter(x => x !== undefined) as IQuestion[];
         dispatch({ type: CHANGE_QUESTIONS, questions: questions });
         // dispatch({ type: CHANGE_QUESTIONS, questions: response.data });
       }
@@ -438,69 +378,7 @@ export const getTestDraftQuestions = (draftid: string | number) => {
       );
       dispatch({ type: RESET_STATE });
       if (response.data.length !== 0) {
-        let questions: IQuestion[] = [];
-        response.data.forEach((question: any, idx: number) => {
-          switch (question.$type) {
-            case "TestBaseSingleChoiceQuestionDto":
-              let options: IAnswerOption[] = question.options.map(
-                (x: any, idx: number) => {
-                  return {
-                    id: idx,
-                    text: x.text,
-                    isCorrect:
-                      question.correctOptionIndex.toString() === idx.toString(),
-                    selected:
-                      question.correctOptionIndex.toString() === idx.toString(),
-                  };
-                }
-              );
-              let single: IQuestion = {
-                id: idx,
-                title: question.text,
-                comment: question.defaultComment,
-                maxPoints: question.maxPoints,
-                type: 0,
-                selected: false,
-                answerOptions: options,
-              };
-              questions.push(single);
-              break;
-            case "TestBaseMultipleChoiceQuestionDto":
-              let answerOptions: IAnswerOption[] = question.options.map(
-                (x: any, idx: number) => {
-                  return {
-                    id: idx,
-                    text: x.option.text,
-                    isCorrect: x.isCorrect,
-                    selected: x.isCorrect,
-                  };
-                }
-              );
-              let multiple: IQuestion = {
-                id: idx,
-                title: question.text,
-                comment: question.defaultComment,
-                maxPoints: question.pointsPerCorrectAnswer,
-                type: 1,
-                selected: false,
-                answerOptions: answerOptions,
-              };
-              questions.push(multiple);
-              break;
-            case "TestBaseOpenQuestionDto":
-              let open: IQuestion = {
-                id: idx,
-                title: question.text,
-                comment: question.defaultComment,
-                maxPoints: question.maxPoints,
-                type: 2,
-                selected: false,
-                answerOptions: [],
-              };
-              questions.push(open);
-              break;
-          }
-        });
+        const questions: IQuestion[] = mapToFrontendQuestions(response.data).filter(x => x !== undefined) as IQuestion[];
         dispatch({ type: CHANGE_QUESTIONS, questions: questions });
       }
     } catch (error: any) {
@@ -559,3 +437,140 @@ export const addStudentsToTest = (
     }
   };
 };
+
+
+export const  mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => {
+  return questions.map((question: any, idx: number) => {
+    switch (question.$type) {
+      case TestBaseSingleChoiceQuestionDto:
+        let options: IAnswerOption[] = question.options.map(
+          (x: any, idx: number) => {
+            return {
+              id: idx,
+              text: x.text,
+              isCorrect:
+                question.correctOptionIndex.toString() === idx.toString(),
+              selected:
+                question.correctOptionIndex.toString() === idx.toString(),
+            };
+          }
+        );
+        let single: IQuestion = {
+          id: idx,
+          title: question.text,
+          comment: question.defaultComment,
+          maxPoints: question.maxPoints,
+          type: getQuestionType(question.$type),
+          selected: false,
+          answerOptions: options,
+        };
+        return single;
+      case TestBaseMultipleChoiceQuestionDto:
+        let answerOptions: IAnswerOption[] = question.options.map(
+          (x: any, idx: number) => {
+            return {
+              id: idx,
+              text: x.option.text,
+              isCorrect: x.isCorrect,
+              selected: x.isCorrect,
+            };
+          }
+        );
+        let multiple: IQuestion = {
+          id: idx,
+          title: question.text,
+          comment: question.defaultComment,
+          maxPoints: question.pointsPerCorrectAnswer,
+          type: getQuestionType(question.$type),
+          selected: false,
+          answerOptions: answerOptions,
+        };
+        return multiple;
+      case TestBaseOpenQuestionDto:
+        let open: IQuestion = {
+          id: idx,
+          title: question.text,
+          comment: question.defaultComment,
+          maxPoints: question.maxPoints,
+          type: getQuestionType(question.$type),
+          selected: false,
+          answerOptions: [],
+        };
+        return open;
+      default:
+        return undefined;
+    }
+  });
+}
+
+export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
+  return questions.map((question: IQuestion) => {
+    switch (question.type) {
+      case 0:
+        let single: ISingleChoiceQuestion = {
+          $type: TestBaseSingleChoiceQuestionDto,
+          correctOptionIndex: question.answerOptions.findIndex(
+            (x: any) => x.isCorrect === true
+          ),
+          maxPoints: question.maxPoints,
+          options: question.answerOptions.map((x: any) => {
+            let answer: IOption = {
+              text: x.text,
+            };
+            return answer;
+          }),
+          text: question.title,
+        };
+        return single;
+      case 1:
+        let multiple: IMultipleChoiceQuestion = {
+          $type: TestBaseMultipleChoiceQuestionDto,
+          options: question.answerOptions.map((x: any) => {
+            let answer: IMultipleChoiceOption = {
+              option: {
+                text: x.text,
+              },
+              isCorrect: x.isCorrect,
+            };
+            return answer;
+          }),
+          text: question.title,
+          pointsPerCorrectAnswer: question.maxPoints,
+        };
+        return multiple;
+      case 2:
+        let open: IOpenQuestion = {
+          $type: TestBaseOpenQuestionDto,
+          maxPoints: question.maxPoints,
+          text: question.title,
+        };
+        return open;
+      default:
+        return undefined;
+    }
+  });
+};
+// export const  mapAnswerOptions = (options: any[]): IAnswerOption[] => {
+//   return options.map((option, index) => {
+//       // Logic to map each option to frontend format
+//       let answerOption: IAnswerOption = {
+//         id: index,
+//         text: option.text || option.option.text,
+//         isCorrect: option.isCorrect || false // Defaulting to false if not provided
+//       };
+//       return answerOption;
+//   });
+// }
+
+const getQuestionType = (backendType: string): number => {
+  switch (backendType) {
+      case TestBaseSingleChoiceQuestionDto:
+          return 0; 
+      case TestBaseMultipleChoiceQuestionDto:
+          return 1; 
+      case TestBaseOpenQuestionDto:
+          return 2; 
+      default:
+          return -1; 
+  }
+} 

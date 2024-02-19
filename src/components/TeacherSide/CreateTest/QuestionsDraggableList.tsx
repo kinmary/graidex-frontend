@@ -32,15 +32,16 @@ const QuestionsDraggableList = () => {
       files: [],
       previews: [],
       answerOptions: [{ id: 0, text: "", isCorrect: false }],
-    }})
+    },
+  });
 
   const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
     }
-    
+
     const { questions } = createTest;
-    
+
     if (questions) {
       const reorderedQuestion = questions.splice(result.source.index, 1)[0];
       questions.splice(result.destination.index, 0, reorderedQuestion);
@@ -48,7 +49,7 @@ const QuestionsDraggableList = () => {
     }
   };
 
-  const handleQuestionDelete = (event:any) => {
+  const handleQuestionDelete = (event: any) => {
     let questions = createTest.questions;
     if (questions) {
       const selectedQuestion = questions.find(
@@ -58,10 +59,11 @@ const QuestionsDraggableList = () => {
       let updatedQuestions = questions.filter(
         (question: any) => question.id.toString() !== event.target.id.toString()
       );
-      
+
       if (selectedQuestion?.id.toString() === event.target.id.toString()) {
         let questionToDel = questions.find(
-          (question: any) => question.id.toString() === event.target.id.toString()
+          (question: any) =>
+            question.id.toString() === event.target.id.toString()
         );
 
         const indexToDel = questions.indexOf(questionToDel!);
@@ -87,17 +89,17 @@ const QuestionsDraggableList = () => {
       if (questions.length === 1) {
         updatedQuestions = [state.defaultQuestion];
       }
-    
+
       dispatch(ChangeQuestions(updatedQuestions));
     }
-  }
+  };
 
   const handleCardClick = (event: any) => {
     dispatch(SetSelectedQ(event.currentTarget.id));
-  }
+  };
 
   let { questions } = createTest;
-    
+
   const selectedQuestion = questions?.find(
     (question: IQuestion) => question.selected === true
   );
@@ -105,56 +107,65 @@ const QuestionsDraggableList = () => {
   return (
     <div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Row xs={1} md={1} className="g-2">
+        {/* <Row xs={1} md={1} className="g-2"> */}
           <Droppable droppableId="questions">
-            {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {questions && questions.map((question: any, index: any) => (
-                  <Draggable
-                    key={question.id+question.title}
-                    draggableId={question.title + question.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <Col style={{ marginBottom: 10, }} >
-                        <Card
+            {(provided, snapshot) => (
+              <Row
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {questions &&
+                  questions.map((question: any, index: any) => (
+                    <Draggable
+                      key={question.id + question.title}
+                      draggableId={question.title + question.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                         >
-                          <Card.Body
-                            style={{ fontWeight: "bold", padding: 10 }}
-                            className="d-flex align-items-center"
-                          >
-                            <i className="bi bi-grip-vertical" {...provided.dragHandleProps}></i>
-                            <Badge bg="secondary" className="me-2">{question.id + 1}</Badge>
-                            <span
-                              id={question.id.toString()}
-                              onClick={handleCardClick}
-                              className="flex-grow-1"
+                          <Card style={{ margin: 5 }}>
+                            <Card.Body
+                              style={{ fontWeight: "bold", padding: 10 }}
+                              className="d-flex align-items-center"
                             >
-                              {question.title}
-                            </span>
-                            <i
-                              style={{ cursor: "pointer", }}
-                              className="bi bi-trash-fill"
-                              id={question.id.toString()}
-                              onClick={handleQuestionDelete}
-                            ></i>
-                          </Card.Body>
-                        </Card>
-                        {/* {provided.placeholder} */}
-                      </Col>
-                    )}
-                  </Draggable>
-                ))}
+                              <i
+                                className="bi bi-grip-vertical"
+                                {...provided.dragHandleProps}
+                              ></i>
+                              <Badge bg="secondary" className="me-2">
+                                {index + 1}
+                              </Badge>
+                              <span
+                                id={question.id.toString()}
+                                onClick={handleCardClick}
+                                className="flex-grow-1"
+                              >
+                                {question.title}
+                              </span>
+                              <i
+                                style={{ cursor: "pointer" }}
+                                className="bi bi-trash-fill"
+                                id={question.id.toString()}
+                                onClick={handleQuestionDelete}
+                              ></i>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
                 {provided.placeholder}
-              </div>
+              </Row>
             )}
           </Droppable>
-        </Row>
+        {/* </Row> */}
       </DragDropContext>
     </div>
   );
-}
+};
 
 export default QuestionsDraggableList;

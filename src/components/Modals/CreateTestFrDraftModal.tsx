@@ -6,8 +6,9 @@ import { RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
 import { ICreateTestDto } from "../../interfaces/CreateTestDto";
-import { createTest } from "../Dashboard/TestActions";
+import { addStudentsToTest, createTest } from "../Dashboard/TestActions";
 import { SetOpen } from "../MainAction";
+import { getStudentsList } from "../Dashboard/SubjectActions";
 interface IProps {
   subjectId: string | undefined;
   inputs: { title: string; description: string; gradeToPass: number };
@@ -27,6 +28,8 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     endDate: new Date(),
   });
   const [autoCheck, setAutoCheck] = useState<boolean>(false);
+  const [addAllStudents, setAddAllStudents] = useState<boolean>(true);
+  const [visible, setVisible] = useState<boolean>(true);
   //TODO: check if shuffleQuestions needed
   // const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
   const [reviewResult, setReviewResult] = useState<number | undefined>(
@@ -38,14 +41,14 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     minutes: 0,
   });
 
-  useEffect(() => {
-    const timeDifference = dates.endDate.getTime() - dates.startDate.getTime();
-    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-    if (timeLimit.hours !== hours && timeLimit.minutes !== minutes) {
-      setIsCustomTimeLimit(true);
-    }
-  }, [dates.endDate, dates.startDate, timeLimit.hours, timeLimit.minutes]);
+  // useEffect(() => {
+  //   const timeDifference = dates.endDate.getTime() - dates.startDate.getTime();
+  //   const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+  //   const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+  //   // if (timeLimit.hours !== hours && timeLimit.minutes !== minutes) {
+  //   //   setIsCustomTimeLimit(true);
+  //   // }
+  // }, [dates.endDate, dates.startDate, timeLimit.hours, timeLimit.minutes]);
   useEffect(() => {
     if (!isCustomTimeLimit) {
       const timeDifference =
@@ -69,7 +72,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     });
     dispatch(SetOpen("createTestFromDraft", false));
   };
-  const handleCreateTest = () => {
+  const handleCreateTest = async () => {
     let updateTDraft: IUpdateTestDraftDto = {
       title: inputs.title,
       description: inputs.description,
@@ -85,13 +88,22 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
       ).padStart(2, "0")}:00`,
       autoCheckAfterSubmission: autoCheck,
       reviewResult: 0,
-      isVisible: false,
+      isVisible: visible,
       orderIndex: currentTestDraft.orderIndex,
     };
 
-    dispatch(
+    await dispatch(
       createTest(currentTestDraft.id, updateTDraft, createTestDto, subjectId!)
-    );
+    ).then((response: any) => {
+      if(addAllStudents && subjectId && response.id) {
+        dispatch(getStudentsList(subjectId)).then(() => {
+          const  {studentsList} = main;
+          const  students = studentsList.map((student: any) => student.email);
+          dispatch(addStudentsToTest(response.id, students));
+        });
+      }
+    });
+
     dispatch(SetOpen("createTestFromDraft", false));
     navigate(`/${subjectId}`);
   };
@@ -177,10 +189,10 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
               <Form.Label>Start date and time</Form.Label>
               <InputGroup>
                 <Form.Control
-                  disabled={
-                    currentTestDraft.itemType === "Test" &&
-                    dates.startDate.getTime() < new Date().getTime()
-                  }
+                  // disabled={
+                  //   currentTestDraft.itemType === "Test" &&
+                  //   dates.startDate.getTime() < new Date().getTime()
+                  // }
                   type="date"
                   placeholder="Enter date"
                   name="startDate"
@@ -194,10 +206,10 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                   type="time"
                   placeholder="Enter time"
                   name="startDate"
-                  disabled={
-                    currentTestDraft.itemType === "Test" &&
-                    dates.startDate.getTime() < new Date().getTime()
-                  }
+                  // disabled={
+                  //   currentTestDraft.itemType === "Test" &&
+                  //   dates.startDate.getTime() < new Date().getTime()
+                  // }
                   value={new Intl.DateTimeFormat("default", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -215,10 +227,10 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                   type="date"
                   placeholder="Enter date"
                   name="endDate"
-                  disabled={
-                    currentTestDraft.itemType === "Test" &&
-                    dates.endDate.getTime() < new Date().getTime()
-                  }
+                  // disabled={
+                  //   currentTestDraft.itemType === "Test" &&
+                  //   dates.endDate.getTime() < new Date().getTime()
+                  // }
                   value={
                     dates.endDate && dates.endDate.toISOString().split("T")[0]
                   }
@@ -228,10 +240,10 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                   type="time"
                   placeholder="Enter time"
                   name="endDate"
-                  disabled={
-                    currentTestDraft.itemType === "Test" &&
-                    dates.endDate.getTime() < new Date().getTime()
-                  }
+                  // disabled={
+                  //   currentTestDraft.itemType === "Test" &&
+                  //   dates.endDate.getTime() < new Date().getTime()
+                  // }
                   value={new Intl.DateTimeFormat("default", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -244,8 +256,10 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
 
             <Form.Group style={{ marginTop: 5 }}>
               <Form.Label>Time limit</Form.Label>
-              <InputGroup>
+              <InputGroup >
                 <Form.Control
+                  style={{ color: timeLimit.hours < 0 ? "#dc3545" : "black", borderColor: "#dee2e6"}}
+                  isInvalid={timeLimit.hours < 0}
                   value={timeLimit.hours}
                   name="hours"
                   type="number"
@@ -274,6 +288,8 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                     (currentTestDraft.itemType === "Test" &&
                       dates.endDate.getTime() < new Date().getTime())
                   }
+                  style={{ color: timeLimit.minutes < 0 ? "#dc3545" : "black", borderColor: "#dee2e6"}}
+                  isInvalid={timeLimit.minutes < 0}
                   value={timeLimit.minutes}
                   name="minutes"
                   type="number"
@@ -317,13 +333,47 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                   type="switch"
                   id="custom-switch"
                   label="Auto check after submission"
-                  disabled={
-                    currentTestDraft.itemType === "Test" &&
-                    dates.endDate.getTime() < new Date().getTime()
-                  }
+                  // disabled={
+                  //   currentTestDraft.itemType === "Test" &&
+                  //   dates.endDate.getTime() < new Date().getTime()
+                  // }
                   checked={autoCheck}
                   onChange={(event) => {
                     setAutoCheck(event.target.checked);
+                  }}
+                />
+              </InputGroup.Text>
+            </Form.Group>
+            <Form.Group style={{ marginTop: 10 }}>
+              <InputGroup.Text>
+                <Form.Check
+                  type="switch"
+                  id="custom-switch"
+                  label="Add all students of subject"
+                  // disabled={
+                  //   currentTestDraft.itemType === "Test" &&
+                  //   dates.endDate.getTime() < new Date().getTime()
+                  // }
+                  checked={addAllStudents}
+                  onChange={(event) => {
+                    setAddAllStudents(event.target.checked);
+                  }}
+                />
+              </InputGroup.Text>
+            </Form.Group>
+            <Form.Group style={{ marginTop: 10 }}>
+              <InputGroup.Text>
+                <Form.Check
+                  type="switch"
+                  id="custom-switch"
+                  label="Set visible to all assigned students"
+                  // disabled={
+                  //   currentTestDraft.itemType === "Test" &&
+                  //   dates.endDate.getTime() < new Date().getTime()
+                  // }
+                  checked={visible}
+                  onChange={(event) => {
+                    setVisible(event.target.checked);
                   }}
                 />
               </InputGroup.Text>

@@ -4,6 +4,9 @@ import { Button } from "react-bootstrap";
 import Countdown from "react-countdown";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
+import { submitTestAttempt } from "./TakeTestActions";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   title?: string;
@@ -16,19 +19,39 @@ const RightSideMenu = ({ title, bottomControls, children, startTime }: Props) =>
   const currentTestDraft = useSelector(
     (state: RootState) => state.main.currentTestDraft
   );
+  const {testResultId, questions} = useSelector((state: RootState) => state.takeTest);
+  const dispatch = useAppDispatch(); 
   const parts = currentTestDraft.timeLimit.split(":");
   const hours = parseInt(parts[0], 10);
   const minutes = parseInt(parts[1], 10);
   const seconds = parseInt(parts[2], 10);
   const milliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+  const navigate = useNavigate();
 
-  const Completionist = () => <span>You are good to go!</span>;
-
+  const submitAttempt = async () => {
+    if (questions) {
+      const question = questions.find(
+        (question: any) => question.selected === true
+      ); 
+      let questionIndex = questions.indexOf(questions.length - 1); //last question ??
+      if (question) {
+        questionIndex = questions.indexOf(question);
+      } 
+      await dispatch(
+        submitTestAttempt(testResultId, question, questionIndex)
+      ).then(() => {
+        //TODO: show success/error messages
+        navigate(-1);
+      
+      });
+    }
+  }
   // Renderer callback with condition
   const renderer = ({ hours, minutes, seconds, completed }: any) => {
     if (completed) {
       // Render a completed state
-      return <Completionist />;
+      submitAttempt();
+      return <h3 className="text-center px-2" style={{color: "red"}}>00:00:00</h3>;
     } else {
       // Render a countdown
       return (

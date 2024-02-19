@@ -3,7 +3,8 @@ import { AppDispatch, RootState } from "../../../app/store";
 import IAnswerOption from "../../../interfaces/AnswerOption";
 import { API_BASE_URL } from "../../../constants/config";
 import { IQuestion } from "../../../interfaces/Questions";
-import { CHANGE_STUD_ANSWERS, CHANGE_STUD_QUESTIONS, INPUT_STUD_CHANGE, RESET_STUD_STATE } from "./TakeTestReducer";
+import { CHANGE_STUD_ANSWERS, CHANGE_STUD_QUESTIONS, INPUT_STUD_CHANGE, RESET_STUD_STATE, SET_TEST_RESULT_ID } from "./TakeTestReducer";
+import { GetMultipleChoiceAnswerForStudentDto, GetOpenAnswerForStudentDto, GetSingleChoiceAnswerForStudentDto, TestAttemptMultipleChoiceQuestionForStudentDto, TestAttemptOpenQuestionForStudentDto, TestAttemptSingleChoiceQuestionForStudentDto } from "../../../constants/StudentTestBackendTypes";
 
 
 export const ResetTakeTestState = () => {
@@ -44,69 +45,9 @@ export const getAllQuestionsWithAnswers = (testResultid: string) => {
           );
           dispatch({ type: RESET_STUD_STATE });
           if (response.data.length !== 0) {
-            let questions: IQuestion[] = [];
-            response.data.answers.forEach((question: any, idx: number) => {
-              switch (question.$type) {
-                case 'TestAttemptSingleChoiceQuestionForStudentDto':
-                  let options: IAnswerOption[] = question.options.map(
-                    (x: any, idx: number) => {
-                      return {
-                        id: idx,
-                        text: x.text,
-                        isCorrect: false,
-                        selected: false,
-                      };
-                    }
-                  );
-                  let single: IQuestion = {
-                    id: idx,
-                    title: question.text,
-                    comment: question.defaultComment,
-                    maxPoints: question.maxPoints,
-                    type: 0,
-                    selected: false,
-                    answerOptions: options,
-                  };
-                  questions.push(single);
-                  break;
-                case 'TestAttemptMultipleChoiceQuestionForStudentDto':
-                  let answerOptions: IAnswerOption[] = question.options.map(
-                    (x: any, idx: number) => {
-                      return {
-                        id: idx,
-                        text: x.option.text,
-                        isCorrect: false,
-                        selected: false,
-                      };
-                    }
-                  );
-                  let multiple: IQuestion = {
-                    id: idx,
-                    title: question.text,
-                    comment: question.defaultComment,
-                    maxPoints: question.pointsPerCorrectAnswer,
-                    type: 1,
-                    selected: false,
-                    answerOptions: answerOptions,
-                  };
-                  questions.push(multiple);
-                  break;
-                case 'TestAttemptOpenQuestionForStudentDto':
-                  let open: IQuestion = {
-                    id: idx,
-                    title: question.text,
-                    comment: question.defaultComment,
-                    maxPoints: question.maxPoints,
-                    type: 2,
-                    selected: false,
-                    answerOptions: [],
-                  };
-                  questions.push(open);
-                  break;
-              }
-            });
+            let questions: IQuestion[] = mapToFrontendQuestionsStudent(response.data.answers).filter(x => x!==undefined) as IQuestion[];
             dispatch({ type: CHANGE_STUD_QUESTIONS, questions: questions });
-            // dispatch({ type: CHANGE_QUESTIONS, questions: response.data });
+            dispatch({ type: SET_TEST_RESULT_ID, testResultId: testResultid });
             return true;
           }
         } catch (error: any) {
@@ -123,7 +64,11 @@ export const startTestAttempt = (testid: string) => {
         `${API_BASE_URL}/api/TestResult/start-test-attempt/` + testid
       );
       if (response.status === 200) {
-        
+        if (response.data.length !== 0) {
+          let questions: IQuestion[] = mapToFrontendQuestionsStudent(response.data.answers).filter(x => x!==undefined) as IQuestion[];
+          dispatch({ type: CHANGE_STUD_QUESTIONS, questions: questions });
+        } 
+        dispatch({ type: SET_TEST_RESULT_ID, testResultId: response.data.id });
        return response.data;
       }
       return false;
@@ -150,6 +95,7 @@ export const updateTestAttempt = (testResultid: string, question: IQuestion, ind
         case 0:
           let choiceOptionIndex: number = question.answerOptions.findIndex((x: IAnswerOption) => x.selected === true);
           answerDto = {
+            $type: GetSingleChoiceAnswerForStudentDto,
             choiceOptionIndex: choiceOptionIndex
           };
           break;
@@ -161,12 +107,14 @@ export const updateTestAttempt = (testResultid: string, question: IQuestion, ind
             return indexes;
           }, []);
           answerDto = {
+            $type: GetMultipleChoiceAnswerForStudentDto,
             choiceOptionIndexes: selectedIndexes
           };
           break;
         case 2:
           answerDto = {
-            choiceOptionIndexes: question.answerOptions[0].text
+            $type: GetOpenAnswerForStudentDto,
+            text: question.answerOptions[0].text
           };
           break;
         }
@@ -201,6 +149,7 @@ export const submitTestAttempt = (testResultid: string, question: IQuestion, ind
         case 0:
           let choiceOptionIndex: number = question.answerOptions.findIndex((x: IAnswerOption) => x.selected === true);
           answerDto = {
+            $type: GetSingleChoiceAnswerForStudentDto,
             choiceOptionIndex: choiceOptionIndex
           };
           break;
@@ -212,12 +161,14 @@ export const submitTestAttempt = (testResultid: string, question: IQuestion, ind
             return indexes;
           }, []);
           answerDto = {
+            $type: GetMultipleChoiceAnswerForStudentDto,
             choiceOptionIndexes: selectedIndexes
           };
           break;
         case 2:
           answerDto = {
-            choiceOptionIndexes: question.answerOptions[0].text
+            $type: GetOpenAnswerForStudentDto,
+            text: question.answerOptions[0].text
           };
           break;
         }
@@ -242,3 +193,78 @@ export const submitTestAttempt = (testResultid: string, question: IQuestion, ind
     }
   };
 };
+
+const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined)[] => {
+  return questions.map((element: any, idx: number) => {
+    switch (element.question.$type) {
+      case TestAttemptSingleChoiceQuestionForStudentDto:
+        let options: IAnswerOption[] = element.question.options.map(
+          (x: any, idx: number) => {
+            return {
+              id: idx,
+              text: x.text,
+              isCorrect: false,
+              selected: false,
+            };
+          }
+        );
+        let single: IQuestion = {
+          id: idx,
+          title: element.question.text,
+          comment: element.question.defaultComment,
+          maxPoints: element.question.maxPoints,
+          type: getQuestionTypeStudent(element.question.$type),
+          selected: false,
+          answerOptions: options,
+        };
+        return single;
+      case TestAttemptMultipleChoiceQuestionForStudentDto:
+        let answerOptions: IAnswerOption[] = element.question.options.map(
+          (x: any, idx: number) => {
+            return {
+              id: idx,
+              text: x.option.text,
+              isCorrect: false,
+              selected: false,
+            };
+          }
+        );
+        let multiple: IQuestion = {
+          id: idx,
+          title: element.question.text,
+          comment: element.question.defaultComment,
+          maxPoints: element.question.pointsPerCorrectAnswer,
+          type: getQuestionTypeStudent(element.question.$type),
+          selected: false,
+          answerOptions: answerOptions,
+        };
+        return multiple;
+      case TestAttemptOpenQuestionForStudentDto:
+        let open: IQuestion = {
+          id: idx,
+          title: element.question.text,
+          comment: element.question.defaultComment,
+          maxPoints: element.question.maxPoints,
+          type: getQuestionTypeStudent(element.question.$type),
+          selected: false,
+          answerOptions: [{id: 0, text: ""}],
+        };
+        return open;
+        default:
+          return undefined;
+    }
+  });
+}
+
+const getQuestionTypeStudent = (backendType: string): number => {
+  switch (backendType) {
+      case TestAttemptSingleChoiceQuestionForStudentDto:
+          return 0; 
+      case TestAttemptMultipleChoiceQuestionForStudentDto:
+          return 1; 
+      case TestAttemptOpenQuestionForStudentDto:
+          return 2; 
+      default:
+          return -1; 
+  }
+} 

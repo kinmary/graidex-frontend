@@ -1,0 +1,7 @@
+export const TestAttemptSingleChoiceQuestionForStudentDto = "TestAttemptSingleChoiceQuestionForStudentDto";
+export const TestAttemptMultipleChoiceQuestionForStudentDto = "TestAttemptMultipleChoiceQuestionForStudentDto";
+export const TestAttemptOpenQuestionForStudentDto = "TestAttemptOpenQuestionForStudentDto";
+
+export const GetSingleChoiceAnswerForStudentDto = "GetSingleChoiceAnswerForStudentDto";
+export const GetMultipleChoiceAnswerForStudentDto = "GetMultipleChoiceAnswerForStudentDto";
+export const GetOpenAnswerForStudentDto = "GetOpenAnswerForStudentDto";

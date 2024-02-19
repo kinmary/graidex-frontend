@@ -3,10 +3,12 @@ import IAnswerOption from "../../../interfaces/AnswerOption";
 import { IQuestion } from "../../../interfaces/Questions";
 interface TakeTestState {
   questions?: IQuestion[] | undefined;
+  testResultId?: string | number | undefined;
 
 }
 export const initialState: TakeTestState = {
   questions: takeTestExample,
+  testResultId: 0,
 };
 
 export interface Action {
@@ -14,11 +16,13 @@ export interface Action {
     | typeof RESET_STUD_STATE
     | typeof INPUT_STUD_CHANGE
     | typeof CHANGE_STUD_QUESTIONS
-    | typeof CHANGE_STUD_ANSWERS;
+    | typeof CHANGE_STUD_ANSWERS
+    | typeof SET_TEST_RESULT_ID;
   questions?: IQuestion[];
   id?: number;
   text?: string;
   answerOptions?: IAnswerOption[];
+  testResultId?: string | number; 
 }
 
   
@@ -57,6 +61,12 @@ export interface Action {
       case RESET_STUD_STATE:
         state = initialState;
         break;
+      case SET_TEST_RESULT_ID:
+        state = {
+          ...state,
+          testResultId: action.testResultId,
+        };
+        break;
       default:
         break;
     }
@@ -68,4 +78,5 @@ export interface Action {
   export const INPUT_STUD_CHANGE = "INPUT_STUD_CHANGE";
   export const CHANGE_STUD_QUESTIONS = "CHANGE_STUD_QUESTIONS";
   export const CHANGE_STUD_ANSWERS = "CHANGE_STUD_ANSWERS";
+  export const SET_TEST_RESULT_ID = "SET_TEST_RESULT_ID";
   

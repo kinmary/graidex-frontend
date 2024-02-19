@@ -4,17 +4,17 @@ import {
   ListGroup,
   Row,
   Col,
-  Image,
   Pagination,
   Alert,
+  Button,
 } from "react-bootstrap";
-import profilePic from "../../images/blank-profile-picture.jpg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { IStudent } from "../../interfaces/Student";
 import { getStudentsList } from "./SubjectActions";
 import { SetOpen } from "../MainAction";
 import { useAppDispatch } from "../../app/hooks";
+import { addStudentsToTest } from "./TestActions";
 
 type StudentListArg = {
   subjectId: string;
@@ -51,18 +51,34 @@ const StudentsList = ({ subjectId }: StudentListArg) => {
     indexOfLastStudent
   );
   const handleManageStudents = () => {
-    dispatch(getStudentsList(subjectId));
-    dispatch(SetOpen("addStudentsToTestModal", true));
+    dispatch(getStudentsList(subjectId)).then(() =>
+      dispatch(SetOpen("addStudentsToTestModal", true))
+    );
+  };
+  const handleAddAllStudents = () => {
+    dispatch(getStudentsList(subjectId)).then(() => {
+      const { studentsList } = main;
+      const students = studentsList.map((student: any) => student.email);
+      dispatch(addStudentsToTest(currentTestDraft.id, students));
+    });
   };
 
   return (
-    <Form.Group style={{ marginTop: 20 }}>
+    <Form.Group style={{ marginTop: 20, marginBottom: 20 }}>
       {currentStudents.length === 0 && (
         <Alert variant="danger">
           Note! This test has no students. Add them below
         </Alert>
       )}
       <Form.Label>Students List</Form.Label>
+      <Button
+        variant="outline-primary"
+        className="d-flex justify-content-center mb-2 w-100"
+        onClick={handleAddAllStudents}
+      >
+        <i className="bi bi-plus-lg me-2"></i>
+        Add all students of subject
+      </Button>
       <ListGroup>
         <ListGroup.Item
           variant="primary"

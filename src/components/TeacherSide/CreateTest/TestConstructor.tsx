@@ -16,12 +16,6 @@ import {
   SetSelectedQ,
   ChangeQuestions,
 } from "./CreateTestActions";
-import {
-  Grammarly,
-  GrammarlyButton,
-  GrammarlyEditorPlugin,
-} from "@grammarly/editor-sdk-react";
-import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
 import { useAppDispatch } from "../../../app/hooks";
 import { RootState } from "../../../app/store";
 import { useSelector } from "react-redux";
@@ -278,15 +272,8 @@ const TestConstructor = () => {
 
   return (
     <div>
-      <Grammarly
-        clientId={GRAMMARLY_CLIENT_ID}
-        config={{
-          documentDialect: "british",
-          activation: "immediate",
-        }}
-      >
-        {selectedQuestion ? (
-          <Form>
+     {selectedQuestion ? (
+          <Form key ={"form"}>
             {/* {selectedQuestion.type === 2 && ( */}
             {/* <Navbar
                 bg="light"
@@ -308,18 +295,14 @@ const TestConstructor = () => {
               </Navbar> */}
             {/* )}  */}
             <div className="d-flex align-items-center mb-2">
-              <GrammarlyButton
-                className="d-block ms-1 me-1"
-                menuPosition="right"
-              />
               <Dropdown drop="down-centered" className="me-3">
-                <Dropdown.Toggle variant="light" id="status-dropdown">
+                <Dropdown.Toggle variant="light" id="status-dropdown" key={1}>
                   <i
                     className={
                       questionTypes[selectedQuestion.type].iconClass + " me-2"
                     }
                   ></i>
-                  <span className="me-1">
+                  <span className="me-1" key={questionTypes[selectedQuestion.type].label}>
                     {questionTypes[selectedQuestion.type].label}
                   </span>
                 </Dropdown.Toggle>
@@ -327,6 +310,7 @@ const TestConstructor = () => {
                 <Dropdown.Menu>
                   {questionTypes.map((type: any) => (
                     <Dropdown.Item
+                      key={type.value}
                       value={type.value}
                       disabled={selectedQuestion.type === type.value}
                       onClick={() => {
@@ -382,7 +366,6 @@ const TestConstructor = () => {
               </Button>
             </div>
 
-            <GrammarlyEditorPlugin>
               <Form.Control
                 as="textarea"
                 rows={selectedQuestion.type !== 2 ? 3 : 5}
@@ -396,7 +379,6 @@ const TestConstructor = () => {
                   fontWeight: "bold",
                 }}
               />
-            </GrammarlyEditorPlugin>
             {/* {state.addFile && (
               <>
                 <Navbar
@@ -422,24 +404,25 @@ const TestConstructor = () => {
             {(selectedQuestion.type === 0 || selectedQuestion.type === 1) && (
               <>
                 <DragDropContext onDragEnd={onDragEnd}>
-                  <Row xs={1} md={1} className="g-2 ms-2">
+                  {/* <Row xs={1} md={1} className="g-2 ms-2"> */}
                     <Droppable droppableId="answerOptions">
                       {(provided) => (
-                        <div
+                        <Row
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
                           {answerOptions.map((answer, _idx) => (
                             <Draggable
-                              key={answer.id + _idx}
+                              key={answer.id}
                               draggableId={answer.id.toString()}
                               index={_idx}
                             >
                               {(provided) => (
-                                <Col>
+                                // <Col>
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
                                     className="mb-3"
                                   >
                                     <InputGroup
@@ -462,7 +445,6 @@ const TestConstructor = () => {
                                         checked={answer.isCorrect}
                                         onChange={handleCheck}
                                       />
-                                      <GrammarlyEditorPlugin className="flex-grow-1">
                                         <Form.Control
                                           placeholder={
                                             "Answer option " + (answer.id + 1)
@@ -474,7 +456,6 @@ const TestConstructor = () => {
                                           value={answer.text}
                                           onChange={handleAnswerOptionChange}
                                         />
-                                      </GrammarlyEditorPlugin>
                                       <i
                                         className="bi bi-x-lg ms-2 me-1"
                                         color="black"
@@ -484,15 +465,15 @@ const TestConstructor = () => {
                                       ></i>
                                     </InputGroup>
                                   </div>
-                                </Col>
+                                // </Col>
                               )}
                             </Draggable>
                           ))}
                           {provided.placeholder}
-                        </div>
+                        </Row>
                       )}
                     </Droppable>
-                  </Row>
+                  {/* </Row> */}
                 </DragDropContext>
                 <Button
                   color="primary"
@@ -504,7 +485,6 @@ const TestConstructor = () => {
                 </Button>
               </>
             )}
-            <GrammarlyEditorPlugin>
               <Form.Control
                 as="textarea"
                 rows={5}
@@ -514,7 +494,6 @@ const TestConstructor = () => {
                 onChange={onInputChange}
                 style={{ marginTop: 40 }}
               />
-            </GrammarlyEditorPlugin>
             <Navbar>
               {indexOfSelected > 0 && (
                 <Navbar.Brand>
@@ -578,7 +557,6 @@ const TestConstructor = () => {
             <QuestionsDraggableList />
           </div>
         )}
-      </Grammarly>
     </div>
   );
 };

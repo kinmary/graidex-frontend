@@ -6,19 +6,36 @@ import { useAppDispatch } from "../../app/hooks";
 import { RootState } from "../../app/store";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { submitTestAttempt } from "../StudentSide/TakeTest/TakeTestActions";
 
 const StartTestConfirmModal = () => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
+  const takeTest = useSelector((state: RootState) => state.takeTest);
+  const { questions, testResultId } = takeTest;
+
   const navigate = useNavigate();
   const closeModal = () => {
     dispatch(SetOpen("sendTestModal", false));
   }
   const onConfirm = () => {
-    //TODO: send data to backend
-    dispatch(SetOpen("sendTestModal", false));
-    navigate(-1);
-    //TODO: dispatch(ResetTakeTestState());
+    if (questions) {
+      const question = questions.find(
+        (question: any) => question.selected === true
+      ); 
+      let questionIndex = questions.indexOf(questions.length - 1); //last question ??
+      if (question) {
+        questionIndex = questions.indexOf(question);
+      } 
+      dispatch(
+        submitTestAttempt(testResultId, question, questionIndex)
+      ).then(() => {
+        //TODO: show success/error messages
+        dispatch(SetOpen("sendTestModal", false));
+        navigate(-1);
+      
+      });
+    }
   }
 
     const {sendTestModal} = main;

@@ -105,16 +105,16 @@ const Settings = () => {
         hours: Number(currentTestDraft.timeLimit.split(":")[0]),
         minutes: Number(currentTestDraft.timeLimit.split(":")[1]),
       });
+      const timeDifference =
+        dates.endDate.getTime() - dates.startDate.getTime();
+      const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+      if (timeLimit.hours !== hours && timeLimit.minutes !== minutes) {
+        setIsCustomTimeLimit(true);
+      }
     }
   }, [currentTestDraft]);
-  useEffect(() => {
-    const timeDifference = dates.endDate.getTime() - dates.startDate.getTime();
-    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-    if (timeLimit.hours !== hours && timeLimit.minutes !== minutes) {
-      setIsCustomTimeLimit(true);
-    }
-  }, [dates.endDate, dates.startDate, timeLimit.hours, timeLimit.minutes]);
+
   // useEffect(() => {
   //   if (!isCustomTimeLimit) {
   //     const timeDifference =
@@ -225,16 +225,16 @@ const Settings = () => {
     newDate.setDate(Number(event.target.value.substring(8)));
     if (event.target.name === "startDate") {
       // if (newDate < dates.endDate) {
-        setDates({ ...dates, [event.target.name]: newDate });
+      setDates({ ...dates, [event.target.name]: newDate });
       // } else {
-        // alert(`Start date can not be later than end date ${dates.endDate}`);
+      // alert(`Start date can not be later than end date ${dates.endDate}`);
       // }
     }
     if (event.target.name === "endDate") {
       // if (newDate > dates.startDate) {
-        setDates({ ...dates, [event.target.name]: newDate });
+      setDates({ ...dates, [event.target.name]: newDate });
       // } else {
-        // alert(`End date can not be earlier than start date ${dates.startDate}`);
+      // alert(`End date can not be earlier than start date ${dates.startDate}`);
       // }
     }
   };
@@ -250,18 +250,18 @@ const Settings = () => {
       // newDate.setMinutes(Number(minutes));
       if (event.target.name === "startDate") {
         // if (newDate < dates.endDate) {
-          setDates({ ...dates, [event.target.name]: newDate });
+        setDates({ ...dates, [event.target.name]: newDate });
         // } else {
-          // alert(`Start date can not be later than end date ${dates.endDate}`);
+        // alert(`Start date can not be later than end date ${dates.endDate}`);
         // }
       }
       if (event.target.name === "endDate") {
         // if (newDate > dates.startDate) {
-          setDates({ ...dates, [event.target.name]: newDate });
+        setDates({ ...dates, [event.target.name]: newDate });
         // } else {
-          // alert(
-            // `End date can not be earlier than start date ${dates.startDate}`
-          // );
+        // alert(
+        // `End date can not be earlier than start date ${dates.startDate}`
+        // );
         // }
       }
     }
@@ -475,6 +475,11 @@ const Settings = () => {
                         value={timeLimit.hours}
                         name="hours"
                         type="number"
+                        style={{
+                          color: timeLimit.hours < 0 ? "#dc3545" : "black",
+                          borderColor: "#dee2e6",
+                        }}
+                        isInvalid={timeLimit.hours < 0}
                         min={0}
                         disabled={
                           !isCustomTimeLimit ||
@@ -501,6 +506,11 @@ const Settings = () => {
                             dates.endDate.getTime() < new Date().getTime())
                         }
                         value={timeLimit.minutes}
+                        style={{
+                          color: timeLimit.minutes < 0 ? "#dc3545" : "black",
+                          borderColor: "#dee2e6",
+                        }}
+                        isInvalid={timeLimit.hours < 0}
                         name="minutes"
                         type="number"
                         min={0}
@@ -670,7 +680,7 @@ const Settings = () => {
                       style={{ marginTop: 10, width: "100%" }}
                       onClick={handleTestDraftDuplicate}
                     >
-                      Duplicate test
+                      Duplicate test to draft
                     </Button>
 
                     <Button

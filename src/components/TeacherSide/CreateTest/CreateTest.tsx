@@ -7,12 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
-import { ISingleChoiceQuestion } from "../../../interfaces/SingleChoiceQuestion";
-import { IMultipleChoiceQuestion } from "../../../interfaces/MutipleChoiceQuestion";
-import { IMultipleChoiceOption } from "../../../interfaces/MutipleChoiceOptions";
-import { IOption } from "../../../interfaces/Option";
-import { IOpenQuestion } from "../../../interfaces/OpenQuestion";
-import { updateTestDraftQuestions, updateTestQuestions } from "../../Dashboard/TestActions";
+import { mapToBackendQuestions, updateTestDraftQuestions, updateTestQuestions } from "../../Dashboard/TestActions";
 
 const CreateTest = () => {
   const [isChanged, setIsChanged] = useState(false);
@@ -26,53 +21,7 @@ const CreateTest = () => {
   );
   const handleSaveChanges = () => {
     setIsChanged(false);
-    let updateQuestionsDto: any = [];
-    questions.forEach((question: any) => {
-      switch (question.type) {
-        case 0:
-          let single: ISingleChoiceQuestion = {
-            $type: "TestBaseSingleChoiceQuestionDto",
-            correctOptionIndex: question.answerOptions.findIndex(
-              (x: any) => x.isCorrect === true
-            ),
-            maxPoints: question.maxPoints,
-            options: question.answerOptions.map((x: any) => {
-              let answer: IOption = {
-                text: x.text,
-              };
-              return answer;
-            }),
-            text: question.title,
-          };
-          updateQuestionsDto.push(single);
-          break;
-        case 1:
-          let multiple: IMultipleChoiceQuestion = {
-            $type: "TestBaseMultipleChoiceQuestionDto",
-            options: question.answerOptions.map((x: any) => {
-              let answer: IMultipleChoiceOption = {
-                option: {
-                  text: x.text,
-                },
-                isCorrect: x.isCorrect,
-              };
-              return answer;
-            }),
-            text: question.title,
-            pointsPerCorrectAnswer: question.maxPoints,
-          };
-          updateQuestionsDto.push(multiple);
-          break;
-        case 2:
-          let open: IOpenQuestion = {
-            $type: "TestBaseOpenQuestionDto",
-            maxPoints: question.maxPoints,
-            text: question.title,
-          };
-          updateQuestionsDto.push(open);
-          break;
-      }
-    });
+    let updateQuestionsDto: any = mapToBackendQuestions(questions);
     if (currentTestDraft.itemType === "Test" && updateQuestionsDto) {
       dispatch(updateTestQuestions(currentTestDraft.id, updateQuestionsDto))
     }

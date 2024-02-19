@@ -149,7 +149,7 @@ const SubjectPage = () => {
             {auth.userRole === 0 && (
               <>
                 <Button onClick={OnCreateTestClick}>
-                  <i className="bi bi-plus-lg me-2"></i>Create test
+                  <i className="bi bi-plus-lg me-2"></i>Create draft
                 </Button>
                 <Dropdown>
                   <Dropdown.Toggle variant="light" id="dropdown-basic">
@@ -162,12 +162,14 @@ const SubjectPage = () => {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       value={true}
+                      key={1}
                       onClick={() => onPreviewDDClick(true)}
                     >
                       <i className="bi bi-eye"></i> Preview
                     </Dropdown.Item>
                     <Dropdown.Item
                       value={false}
+                      key={2}
                       onClick={() => onPreviewDDClick(false)}
                     >
                       <i className="bi bi-eye-slash"></i> Constructor
@@ -235,6 +237,7 @@ const SubjectPage = () => {
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
                               <Dropdown.Item
+                              key={idx + "-visible"}
                                 value={true}
                                 onClick={() =>
                                   onChangeVisible(test.id, true, test.subjectId)
@@ -243,6 +246,7 @@ const SubjectPage = () => {
                                 Shown
                               </Dropdown.Item>
                               <Dropdown.Item
+                              key={idx + "-hidden"}
                                 value={false}
                                 onClick={() =>
                                   onChangeVisible(

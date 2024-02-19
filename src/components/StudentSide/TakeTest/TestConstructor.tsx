@@ -1,10 +1,9 @@
 import { Button, Card, Form, Navbar } from "react-bootstrap";
-import { Grammarly, GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
-import { GRAMMARLY_CLIENT_ID } from "../../../constants/config";
 import {
   ChangeAnswers,
   InputChange,
   SetSelectedQ,
+  getAllQuestionsWithAnswers,
   updateTestAttempt,
 } from "./TakeTestActions";
 import { SetOpen } from "../../MainAction";
@@ -12,6 +11,8 @@ import { useAppDispatch } from "../../../app/hooks";
 import { RootState } from "../../../app/store";
 import { useSelector } from "react-redux";
 import QuestionsList from "./QuestionsList";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,12 @@ const TestConstructor = () => {
     (state: RootState) => state.main.currentTestDraft
   );
   const takeTest = useSelector((state: RootState) => state.takeTest);
-
+  const params = useParams();
+  useEffect(() => {
+    if (params.testResultId) {
+      dispatch(getAllQuestionsWithAnswers(params.testResultId));
+    }
+  },[])
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { questions } = takeTest;
     if (questions) {
@@ -96,16 +102,16 @@ const TestConstructor = () => {
     dispatch(SetOpen("sendTestModal", true));
   };
 
-  const updateAnswer = () => {
-    const { questions } = takeTest;
+  const updateAnswer = async () => {
+    const { questions, testResultId } = takeTest;
     if (questions) {
       const question = questions.find(
         (question: any) => question.selected === true
       );
-      if (question) {
+      if (question ) {
         let questionIndex = questions.indexOf(question);
         dispatch(
-          updateTestAttempt(currentTestDraft.id, question, questionIndex)
+          updateTestAttempt(testResultId, question, questionIndex)
         );
       }
     }
@@ -122,13 +128,7 @@ const TestConstructor = () => {
     answerOptions = selectedQuestion.answerOptions;
   }
   return (
-    <Grammarly
-      clientId={GRAMMARLY_CLIENT_ID}
-      config={{
-        documentDialect: "british",
-        autocomplete: "on",
-      }}
-    >
+    <>
       {selectedQuestion ? (
         <Form>
           {/* {selectedQuestion.type === 2 && ( */}
@@ -146,7 +146,6 @@ const TestConstructor = () => {
           </h4>
           {selectedQuestion.answerOptions.map((answer: any, idx: any) =>
             selectedQuestion.type === 2 ? (
-              <GrammarlyEditorPlugin>
                 <Form.Control
                   as="textarea"
                   rows={7}
@@ -156,7 +155,6 @@ const TestConstructor = () => {
                   onChange={onInputChange}
                   style={{ marginTop: 20 }}
                 />
-              </GrammarlyEditorPlugin>
             ) : (
               <div
                 key={idx + "d"}
@@ -238,8 +236,8 @@ const TestConstructor = () => {
           </h5>
           <QuestionsList />
         </div>
-      )}{" "}
-    </Grammarly>
+      )}
+      </>
   );
 };
 

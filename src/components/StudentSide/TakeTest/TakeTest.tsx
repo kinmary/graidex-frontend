@@ -18,15 +18,15 @@ const TakeTest = () => {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if(questions.length === 0){
-      navigate(-1);
-      // alert("Error occured in getting questions");
-    } else {
+    // if(questions.length === 0){
+    //   navigate(-1);
+    //   // alert("Error occured in getting questions");
+    // } else {
       setTimeout(() => {
         setIsLoaded(true);
         setStartTime(Date.now());
       }, 1000); // Delay of 1 second
-    }
+    // }
   }, []);
   const handleSubmitAttempt = () => {
     dispatch(SetOpen("sendTestModal", true))
