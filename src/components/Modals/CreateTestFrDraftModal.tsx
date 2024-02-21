@@ -30,6 +30,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
   const [autoCheck, setAutoCheck] = useState<boolean>(false);
   const [addAllStudents, setAddAllStudents] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(true);
+  const [title, setTitle] = useState<string>("");
   //TODO: check if shuffleQuestions needed
   // const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
   const [reviewResult, setReviewResult] = useState<number | undefined>(
@@ -72,17 +73,26 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     });
     dispatch(SetOpen("createTestFromDraft", false));
   };
+
+  const handleInputsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value);
+  };
+
   const handleCreateTest = async () => {
-    let updateTDraft: IUpdateTestDraftDto = {
+    const updateTDraft: IUpdateTestDraftDto = {
       title: inputs.title,
       description: inputs.description,
       gradeToPass: inputs.gradeToPass,
       isVisible: currentTestDraft.isVisible,
       orderIndex: currentTestDraft.orderIndex,
     };
-    let createTestDto: ICreateTestDto = {
-      startDateTime: dates.startDate,
-      endDateTime: dates.endDate,
+
+    const startDateTime = new Date(dates.startDate.setSeconds(0,0));
+    const endDateTime = new Date(dates.endDate.setSeconds(0,0));
+    const createTestDto: ICreateTestDto = {
+      // title: title || inputs.title,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
       timeLimit: `${String(timeLimit.hours).padStart(2, "0")}:${String(
         timeLimit.minutes
       ).padStart(2, "0")}:00`,
@@ -95,7 +105,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     await dispatch(
       createTest(currentTestDraft.id, updateTDraft, createTestDto, subjectId!)
     ).then((response: any) => {
-      if(addAllStudents && subjectId && response.id) {
+      if(response && addAllStudents && subjectId && response.id) {
         dispatch(getStudentsList(subjectId)).then(() => {
           const  {studentsList} = main;
           const  students = studentsList.map((student: any) => student.email);
@@ -128,7 +138,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const oldDate =
       event.target.name === "startDate" ? dates.startDate : dates.endDate;
-    const newDate = new Date(oldDate);
+    const newDate = new Date(oldDate.setSeconds(0,0));
     newDate.setFullYear(Number(event.target.value.substring(0, 4)));
     newDate.setMonth(Number(event.target.value.substring(5, 7)) - 1);
     newDate.setDate(Number(event.target.value.substring(8)));
@@ -153,7 +163,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
       event.target.name === "startDate" ? dates.startDate : dates.endDate;
     const { value } = event.target;
     if (value !== "") {
-      const newDate = new Date(oldDate);
+      const newDate = new Date(oldDate.setSeconds(0,0));
       const [hours, minutes] = value.split(":");
       newDate.setHours(Number(hours), Number(minutes));
       // newDate.setMinutes(Number(minutes));
@@ -181,10 +191,20 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     <>
       <Modal show={createTestFromDraft} onHide={closeModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Create new test draft</Modal.Title>
+          <Modal.Title>Create new test</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
+          <Form.Group style={{ marginTop: 5 }}>
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="title"
+                  placeholder="Enter title"
+                  value={inputs.title}
+                  onChange={handleInputsChange}
+                />
+              </Form.Group>
             <Form.Group style={{ marginTop: 5 }}>
               <Form.Label>Start date and time</Form.Label>
               <InputGroup>
@@ -331,7 +351,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
               <InputGroup.Text>
                 <Form.Check
                   type="switch"
-                  id="custom-switch"
+                  id="check-after-submission-switch"
                   label="Auto check after submission"
                   // disabled={
                   //   currentTestDraft.itemType === "Test" &&
@@ -348,7 +368,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
               <InputGroup.Text>
                 <Form.Check
                   type="switch"
-                  id="custom-switch"
+                  id="all-students-switch"
                   label="Add all students of subject"
                   // disabled={
                   //   currentTestDraft.itemType === "Test" &&
@@ -365,7 +385,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
               <InputGroup.Text>
                 <Form.Check
                   type="switch"
-                  id="custom-switch"
+                  id="set-visible-switch"
                   label="Set visible to all assigned students"
                   // disabled={
                   //   currentTestDraft.itemType === "Test" &&

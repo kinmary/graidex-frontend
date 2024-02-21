@@ -144,8 +144,9 @@ const Settings = () => {
   };
   const handleSaveChanges = () => {
     if (currentTestDraft.itemType === "Test" && params.selectedSubjectId) {
-      const timeDifference =
-        dates.endDate.getTime() - dates.startDate.getTime();
+      const startDateTime = new Date(dates.startDate.setSeconds(0,0));
+      const endDateTime = new Date(dates.endDate.setSeconds(0,0));
+      const timeDifference = startDateTime.getTime() - endDateTime.getTime();
       let milliseconds = 0;
       milliseconds = (timeLimit.hours * 60 + timeLimit.minutes) * 60 * 1000;
       if (milliseconds > timeDifference) {
@@ -162,8 +163,8 @@ const Settings = () => {
           description: inputs.description,
           gradeToPass: inputs.gradeToPass,
           isVisible: currentTestDraft.isVisible,
-          startDateTime: dates.startDate,
-          endDateTime: dates.endDate,
+          startDateTime: startDateTime,
+          endDateTime: endDateTime,
           timeLimit: `${String(timeLimit.hours).padStart(2, "0")}:${String(
             timeLimit.minutes
           ).padStart(2, "0")}:00`,
@@ -219,7 +220,7 @@ const Settings = () => {
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const oldDate =
       event.target.name === "startDate" ? dates.startDate : dates.endDate;
-    const newDate = new Date(oldDate);
+    const newDate = new Date(oldDate.setSeconds(0,0));
     newDate.setFullYear(Number(event.target.value.substring(0, 4)));
     newDate.setMonth(Number(event.target.value.substring(5, 7)) - 1);
     newDate.setDate(Number(event.target.value.substring(8)));
@@ -244,7 +245,7 @@ const Settings = () => {
       event.target.name === "startDate" ? dates.startDate : dates.endDate;
     const { value } = event.target;
     if (value !== "") {
-      const newDate = new Date(oldDate);
+      const newDate = new Date(oldDate.setSeconds(0,0));
       const [hours, minutes] = value.split(":");
       newDate.setHours(Number(hours), Number(minutes));
       // newDate.setMinutes(Number(minutes));
@@ -551,7 +552,7 @@ const Settings = () => {
                     <InputGroup.Text>
                       <Form.Check
                         type="switch"
-                        id="custom-switch"
+                        id="check-sub-switch"
                         label="Auto check after submission"
                         disabled={
                           currentTestDraft.itemType === "Test" &&

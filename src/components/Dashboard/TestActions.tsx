@@ -6,7 +6,7 @@ import { getSubjectContent } from "./SubjectActions";
 import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
 import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
 import { ICreateTestDto } from "../../interfaces/CreateTestDto";
-import { SET_CURRENT_TEST_DRAFT } from "../MainReducer";
+import { SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT } from "../MainReducer";
 import { CHANGE_QUESTIONS, RESET_STATE } from "../TeacherSide/CreateTest/CreateTestReducer";
 import { IQuestion } from "../../interfaces/Questions";
 import IAnswerOption from "../../interfaces/AnswerOption";
@@ -263,6 +263,30 @@ export const getVisibleTestStudent = (testid: string | number) => {
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
+      }
+    }
+  };
+};
+
+export const getAttemptsDescription = (testid: string | number) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/TestResult/get-student-attempts-description/` + testid
+      );
+      if (response.status === 200) {
+        dispatch({
+          type: SET_ATTEMPTS_INFO,
+          attemptsInfo: response.data,
+        });
+      }
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        //Bad Request
+        // alert("Error");
+      } else {
+        //   dispatch(CheckAuthorization(error.response.status));
+        // alert(error.message);
       }
     }
   };

@@ -17,7 +17,7 @@ import AddStudentModal from "../Modals/AddStudentModal";
 import { useNavigate, useParams } from "react-router-dom";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import AddTestModal from "../Modals/AddTestModal";
-import { getDraft, getTest, getVisibleTestStudent } from "./TestActions";
+import { getAttemptsDescription, getDraft, getTest, getVisibleTestStudent } from "./TestActions";
 import { getSubjectContent, getVisibleSubjectContent, updateContentVisibility } from "./SubjectActions";
 import logoDark from '../../images/GraidexLogoDarkJPG.jpg';
 
@@ -71,7 +71,9 @@ const SubjectPage = () => {
 
   const onRowClickByStudent = async (testid: string | number) => {
     await dispatch(getVisibleTestStudent(testid)).then(()=> {
-      navigate(`${testid}`);
+      dispatch(getAttemptsDescription(testid)).then(() => {
+        navigate(`${testid}`);
+      })
     });
 
   };
@@ -205,11 +207,10 @@ const SubjectPage = () => {
                   (test: ISubjectContent, idx: number) =>
                     test && (
                       <div
-                        key={idx + "test"}
+                        key={idx}
                         className="d-flex justify-content-between"
                       >
                         <Card
-                          key={idx + "-test-card"}
                           className="mb-2"
                           style={{ flexGrow: 4 }}
                           onClick={() => onTestClick(test.id, test.itemType)}
@@ -231,13 +232,12 @@ const SubjectPage = () => {
                           <Dropdown>
                             <Dropdown.Toggle
                               variant="light"
-                              id="dropdown-basic"
                             >
                               {!test.isVisible ? "Hidden" : "Shown"}
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
                               <Dropdown.Item
-                              key={idx + "-visible"}
+                              key={`dropdown-1-${idx}`}
                                 value={true}
                                 onClick={() =>
                                   onChangeVisible(test.id, true, test.subjectId)
@@ -246,7 +246,7 @@ const SubjectPage = () => {
                                 Shown
                               </Dropdown.Item>
                               <Dropdown.Item
-                              key={idx + "-hidden"}
+                              key={`dropdown-2-${idx}`}
                                 value={false}
                                 onClick={() =>
                                   onChangeVisible(
@@ -272,39 +272,37 @@ const SubjectPage = () => {
                 {drafts.map(
                   (test: any, idx: number) =>
                     test && (
-                      <>
-                        <div
-                          key={idx + "-draft"}
-                          className="d-flex justify-content-between"
+                      <div
+                        key={idx + "-draft"}
+                        className="d-flex justify-content-between"
+                      >
+                        <Card
+                          key={idx + "-draft-card"}
+                          className="mb-2"
+                          style={{ flexGrow: 4 }}
+                          onClick={() => onTestClick(test.id, test.itemType)}
                         >
-                          <Card
-                            key={idx + "-draft-card"}
-                            className="mb-2"
-                            style={{ flexGrow: 4 }}
-                            onClick={() => onTestClick(test.id, test.itemType)}
-                          >
-                            <Card.Body>
-                              <Card.Title className="d-flex justify-content-between mb-0 h6">
-                                <div>{test.title}</div>
-                              </Card.Title>
-                            </Card.Body>
-                          </Card>
-                          <div
-                            className="d-flex justify-content-center mt-1"
-                            style={{ width: "100px" }}
-                          >
-                            <Dropdown>
-                              <Dropdown.Toggle
-                                disabled
-                                variant="light"
-                                id="dropdown-basic"
-                              >
-                                Hidden
-                              </Dropdown.Toggle>
-                            </Dropdown>
-                          </div>
+                          <Card.Body>
+                            <Card.Title className="d-flex justify-content-between mb-0 h6">
+                              <div>{test.title}</div>
+                            </Card.Title>
+                          </Card.Body>
+                        </Card>
+                        <div
+                          className="d-flex justify-content-center mt-1"
+                          style={{ width: "100px" }}
+                        >
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              disabled
+                              variant="light"
+                              id="dropdown-basic"
+                            >
+                              Hidden
+                            </Dropdown.Toggle>
+                          </Dropdown>
                         </div>
-                      </>
+                      </div>
                     )
                 )}
               </>

@@ -3,19 +3,34 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { useAppDispatch } from "../../../app/hooks";
 import { IQuestion } from "../../../interfaces/Questions";
-import { SetSelectedQ } from "./TakeTestActions";
+import { SetSelectedQ, updateTestAttempt } from "./TakeTestActions";
 
 const QuestionsGrid = () => {
   const dispatch = useAppDispatch();
   const takeTest = useSelector((state: RootState) => state.takeTest);
 
-  const { questions } = takeTest;
+  const { questions, testResultId } = takeTest;
 
   const selectedQuestion = questions?.find(
     (question: IQuestion) => question.selected === true
   );
 
+  const updateAnswer = async () => {
+    if (questions) {
+      const question = questions.find(
+        (question: any) => question.selected === true
+      );
+      if (question ) {
+        let questionIndex = questions.indexOf(question);
+        dispatch(
+          updateTestAttempt(testResultId, question, questionIndex)
+        );
+      }
+    }
+  };
+
   const handleCardClick = (event: any) => {
+    updateAnswer();
     dispatch(SetSelectedQ(event.currentTarget.id));
   };
 

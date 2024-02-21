@@ -1,16 +1,8 @@
-import React, { Component, useState } from "react";
-import { connect } from "react-redux";
-import { SetOpen } from "../../MainAction";
-import SidebarMenu from "react-bootstrap-sidebar-menu";
-import { Button, Card, Col, Row, Nav, Badge, Form } from "react-bootstrap";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {
-  SetSelectedQ,
-} from "./TakeTestActions";
+import { Card, Col, Row, Badge } from "react-bootstrap";
+import { SetSelectedQ } from "./TakeTestActions";
 import { useAppDispatch } from "../../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
-import { IQuestion } from "../../../interfaces/Questions";
 
 const QuestionsList = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +18,7 @@ const QuestionsList = () => {
       <Row xs={1} md={1} className="g-2">
         {questions &&
           questions.map((question: any, index: any) => (
-            <Col style={{ marginBottom: 5 }}>
+            <Col key={index} style={{ marginBottom: 5 }}>
               <Card>
                 <Card.Body
                   style={{ fontWeight: "bold", padding: 10 }}

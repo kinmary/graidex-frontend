@@ -3,6 +3,7 @@ import { ISubject } from "../interfaces/Subject";
 import { IIncomingSubjectRequest } from "../interfaces/SubjectRequests";
 import ISubjectContent from "../interfaces/SubjectContent";
 import { ITestDto } from "../interfaces/TestDto";
+import { GetAttemptsDescDto } from "../interfaces/GetAttemptsDescDto";
 
 interface MainState {
   editPage: boolean;
@@ -11,7 +12,7 @@ interface MainState {
   openSubjectModal: boolean;
   selectedSubjectId: string;
   allSubjects: ISubject[];
-  subjectRequests: IIncomingSubjectRequest[] | undefined; 
+  subjectRequests: IIncomingSubjectRequest[] | undefined;
   pendingSubjRequests: IOutgoingSubjectRequest[] | undefined;
   studentsList: any[];
   studentsListWithImages: any[];
@@ -34,8 +35,8 @@ interface MainState {
   selectedTest: ISubjectContent | undefined;
   showLoader?: boolean;
   currentTestDraft?: ITestDto;
-  createTestFromDraft?: boolean
-
+  createTestFromDraft?: boolean;
+  attemptsInfo?: GetAttemptsDescDto | undefined;
 }
 
 const initialState: MainState = {
@@ -68,8 +69,8 @@ const initialState: MainState = {
   tests: Array<ISubjectContent>(),
   showLoader: false,
   currentTestDraft: undefined,
-  createTestFromDraft: false
-
+  createTestFromDraft: false,
+  attemptsInfo: undefined,
 };
 
 interface MainAction {
@@ -80,9 +81,10 @@ interface MainAction {
     | typeof GET_ALL_SUBJECTS
     | typeof GET_SUBJECT_REQUESTS
     | typeof GET_PENDING_SUBJECT_REQUESTS
-    | typeof GET_SUBJECT_CONTENT 
+    | typeof GET_SUBJECT_CONTENT
     | typeof SHOW_LOADER
-    | typeof SET_CURRENT_TEST_DRAFT;
+    | typeof SET_CURRENT_TEST_DRAFT
+    | typeof SET_ATTEMPTS_INFO;
   name?: string;
   value?: any;
   mode?: boolean;
@@ -93,9 +95,13 @@ interface MainAction {
   pendingSubjectRequests?: IOutgoingSubjectRequest[];
   showLoader?: boolean;
   currentTestDraft?: ITestDto;
+  attemptsInfo?: GetAttemptsDescDto;
 }
 
-export const MainReducer = (state: MainState = initialState, action: MainAction) => {
+export const MainReducer = (
+  state: MainState = initialState,
+  action: MainAction
+) => {
   switch (action.type) {
     case SET_OPEN:
       state = {
@@ -116,37 +122,42 @@ export const MainReducer = (state: MainState = initialState, action: MainAction)
         allSubjects: action.allSubjects!,
       };
       break;
-    case GET_SUBJECT_REQUESTS: 
+    case GET_SUBJECT_REQUESTS:
       state = {
         ...state,
-        subjectRequests: action.subjectRequests
-      }
+        subjectRequests: action.subjectRequests,
+      };
       break;
-      case GET_SUBJECT_CONTENT: 
+    case GET_SUBJECT_CONTENT:
       state = {
         ...state,
-        tests: action.tests
-      }
+        tests: action.tests,
+      };
       break;
-    case GET_PENDING_SUBJECT_REQUESTS: 
+    case GET_PENDING_SUBJECT_REQUESTS:
       state = {
         ...state,
-        pendingSubjRequests: action.pendingSubjectRequests
-      }
+        pendingSubjRequests: action.pendingSubjectRequests,
+      };
       break;
     case SET_LOGOUT:
       state = initialState;
       break;
-      case SHOW_LOADER:
-        return {
-          ...state,
-          showLoader: action.showLoader,
-        }; 
-        case SET_CURRENT_TEST_DRAFT:
-          return {
-            ...state,
-            currentTestDraft: action.currentTestDraft,
-          }; 
+    case SHOW_LOADER:
+      return {
+        ...state,
+        showLoader: action.showLoader,
+      };
+    case SET_CURRENT_TEST_DRAFT:
+      return {
+        ...state,
+        currentTestDraft: action.currentTestDraft,
+      };
+      case SET_ATTEMPTS_INFO:
+      return {
+        ...state,
+        attemptsInfo: action.attemptsInfo,
+      };
     default:
       break;
   }
@@ -162,3 +173,4 @@ export const GET_PENDING_SUBJECT_REQUESTS = "GET_PENDING_SUBJECT_REQUESTS";
 export const GET_SUBJECT_CONTENT = "GET_SUBJECT_CONTENT";
 export const SHOW_LOADER = "SHOW_LOADER";
 export const SET_CURRENT_TEST_DRAFT = "SET_CURRENT_TEST_DRAFT";
+export const SET_ATTEMPTS_INFO = "SET_ATTEMPTS_INFO";

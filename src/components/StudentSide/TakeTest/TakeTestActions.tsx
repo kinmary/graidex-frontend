@@ -203,8 +203,8 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
             return {
               id: idx,
               text: x.text,
-              isCorrect: false,
-              selected: false,
+              isCorrect: element.answer.choiceOptionIndex === idx,
+              selected: element.answer.choiceOptionIndex === idx,
             };
           }
         );
@@ -224,8 +224,8 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
             return {
               id: idx,
               text: x.option.text,
-              isCorrect: false,
-              selected: false,
+              isCorrect: element.answer.choiceOptionIndexes.includes(idx),
+              selected: element.answer.choiceOptionIndexes.includes(idx),
             };
           }
         );
@@ -247,7 +247,7 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
           maxPoints: element.question.maxPoints,
           type: getQuestionTypeStudent(element.question.$type),
           selected: false,
-          answerOptions: [{id: 0, text: ""}],
+          answerOptions: [{id: 0, text: element.answer.text}],
         };
         return open;
         default:

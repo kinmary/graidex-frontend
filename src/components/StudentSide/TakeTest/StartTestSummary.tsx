@@ -11,15 +11,19 @@ import { useAppDispatch } from "../../../app/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { getVisibleSubjectContent } from "../../Dashboard/SubjectActions";
 import ISubjectContent from "../../../interfaces/SubjectContent";
-import { getVisibleTestStudent } from "../../Dashboard/TestActions";
-import { getAllQuestionsWithAnswers, startTestAttempt } from "./TakeTestActions";
+import {
+  getAttemptsDescription,
+  getVisibleTestStudent,
+} from "../../Dashboard/TestActions";
+import {
+  getAllQuestionsWithAnswers,
+  startTestAttempt,
+} from "./TakeTestActions";
 
 const StartTestSummary = () => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
-  const currentTestDraft = useSelector(
-    (state: RootState) => state.main.currentTestDraft
-  );
+  const { attemptsInfo, currentTestDraft } = main;
   const navigate = useNavigate();
   const params = useParams();
   const selectedSubject = main.allSubjects.find(
@@ -36,7 +40,9 @@ const StartTestSummary = () => {
         );
         if (selectedTest) {
           dispatch(getVisibleTestStudent(selectedTest.id)).then(() =>
-            setDataLoaded(true)
+            dispatch(getAttemptsDescription(selectedTest.id)).then(() => {
+              setDataLoaded(true);
+            })
           );
         }
       }
@@ -44,20 +50,48 @@ const StartTestSummary = () => {
   }, [dataLoaded]);
 
   const onStartClick = async () => {
-    await dispatch(startTestAttempt(currentTestDraft.id)).then((response: any) =>{
-      // if(response.id !== undefined && response.id !== null && response.id !== 0){
+    await dispatch(startTestAttempt(currentTestDraft.id)).then(
+      (response: any) => {
+        // if(response.id !== undefined && response.id !== null && response.id !== 0){
         // dispatch(getAllQuestionsWithAnswers(response.id)).then((success: any) => {
-          if(response !== undefined && response !== null && response !== 0){
-            navigate("/" + params.selectedSubjectId + "/" + params.test+ "/" +response.id);
-          } else {
-            alert("Error occured in getting questions");
-            navigate(-1);
-          }
-        });
-      // } else {
-      //   alert("No attempts available. Error occured in starting test");
-      //   // navigate(-1);
-      // }
+        if (response !== undefined && response !== null && response !== 0) {
+          navigate(
+            "/" +
+              params.selectedSubjectId +
+              "/" +
+              params.test +
+              "/" +
+              response.id
+          );
+        } else {
+          alert("Error occured in getting questions");
+          navigate(-1);
+        }
+      }
+    );
+  };
+  const onContinueClick = async () => {
+    await dispatch(
+      getAllQuestionsWithAnswers(attemptsInfo.currentTestResultId)
+    ).then((response: any) => {
+      if (response) {
+        navigate(
+          "/" +
+            params.selectedSubjectId +
+            "/" +
+            params.test +
+            "/" +
+            attemptsInfo.currentTestResultId
+        );
+      } else {
+        alert("Error occured");
+        navigate(-1);
+      }
+    });
+    // } else {
+    //   alert("No attempts available. Error occured in starting test");
+    //   // navigate(-1);
+    // }
   };
   return (
     <>
@@ -109,17 +143,35 @@ const StartTestSummary = () => {
                 {endDate.getTime() < new Date().getTime() && (
                   <Alert variant="danger">This test has already ended</Alert>
                 )}
-                <Button
-                  variant="primary"
-                  style={{ marginTop: 10, width: "100%" }}
-                  onClick={onStartClick}
-                  disabled={
-                    startDate.getTime() > new Date().getTime() ||
-                    endDate.getTime() < new Date().getTime()
-                  }
-                >
-                  Start test
-                </Button>
+                {attemptsInfo.currentTestResultId !== undefined &&
+                attemptsInfo.currentTestResultId !== null &&
+                attemptsInfo.currentTestResultId > 0 ? (
+                  <Button
+                    variant="outline-primary"
+                    style={{ marginTop: 10, width: "100%" }}
+                    onClick={onContinueClick}
+                    disabled={
+                      startDate.getTime() > new Date().getTime() ||
+                      endDate.getTime() < new Date().getTime()
+                    }
+                  >
+                    Continue test attempt
+                  </Button>
+                ) : attemptsInfo.numberOfAvailableTestAttempts > 0 ? (
+                  <Button
+                    variant="primary"
+                    style={{ marginTop: 10, width: "100%" }}
+                    onClick={onStartClick}
+                    disabled={
+                      startDate.getTime() > new Date().getTime() ||
+                      endDate.getTime() < new Date().getTime()
+                    }
+                  >
+                    Start test
+                  </Button>
+                ) : (
+                  <Alert variant="secondary">No more available attempts</Alert>
+                )}
               </div>
             </div>
           )}
@@ -130,5 +182,3 @@ const StartTestSummary = () => {
 };
 
 export default StartTestSummary;
-
-

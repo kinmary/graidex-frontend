@@ -141,19 +141,20 @@ const TestConstructor = () => {
             }}
           ></Navbar>
           {/* )}  */}
-          <h4 style={{ fontWeight: "bold", width: "87%" }}>
+          <h5 style={{ fontWeight: "bold", width: "87%", marginBottom: 20 }}>
             {selectedQuestion.title}
-          </h4>
+          </h5>
           {selectedQuestion.answerOptions.map((answer: any, idx: any) =>
             selectedQuestion.type === 2 ? (
                 <Form.Control
+                  key = {idx + "open-question"}
                   as="textarea"
                   rows={7}
                   placeholder="Enter your answer here"
                   name="text"
                   value={answer.text}
                   onChange={onInputChange}
-                  style={{ marginTop: 20 }}
+                  // style={{ marginTop: 20 }}
                 />
             ) : (
               <div
