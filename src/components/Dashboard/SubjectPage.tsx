@@ -4,6 +4,8 @@ import {
   Button,
   Card,
   Dropdown,
+  Form,
+  InputGroup,
 } from "react-bootstrap";
 import { SetOpen } from "../MainAction";
 import { useAppDispatch } from "../../app/hooks";
@@ -153,31 +155,17 @@ const SubjectPage = () => {
                 <Button onClick={OnCreateTestClick}>
                   <i className="bi bi-plus-lg me-2"></i>Create draft
                 </Button>
-                <Dropdown>
-                  <Dropdown.Toggle variant="light" id="dropdown-basic">
-                    {isPreview ? (
-                      <i className="bi bi-eye"></i>
-                    ) : (
-                      <i className="bi bi-eye-slash"></i>
-                    )}
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      value={true}
-                      key={1}
-                      onClick={() => onPreviewDDClick(true)}
-                    >
-                      <i className="bi bi-eye"></i> Preview
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      value={false}
-                      key={2}
-                      onClick={() => onPreviewDDClick(false)}
-                    >
-                      <i className="bi bi-eye-slash"></i> Constructor
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                <InputGroup.Text>
+                  <Form.Check
+                    className="user-select-none"
+                    type="switch"
+                    id="preview-switch"
+                    label="Preview"
+                    reverse
+                    checked={isPreview}
+                    onChange={() => onPreviewDDClick(!isPreview)}
+                  />
+                </InputGroup.Text>
               </>
             )}
           </div>
