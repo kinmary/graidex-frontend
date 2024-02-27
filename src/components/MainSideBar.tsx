@@ -38,6 +38,7 @@ const MainSidebar = ({ children }: LayoutProps) => {
     <Row>
       <Col style={{
          paddingLeft: 0, 
+         paddingRight: 0,
          position: "sticky", 
          top: "46.67px", 
          height: "fit-content",

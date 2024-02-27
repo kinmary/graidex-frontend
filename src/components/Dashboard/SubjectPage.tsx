@@ -147,7 +147,7 @@ const SubjectPage = () => {
             )}
           </h5>
 
-          <div style={{ marginLeft: "auto", display: "flex" }}>
+          <div className="gap-2" style={{ marginLeft: "auto", display: "flex" }}>
             {auth.userRole === 0 && (
               <>
                 <Button onClick={OnCreateTestClick}>

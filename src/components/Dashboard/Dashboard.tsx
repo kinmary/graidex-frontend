@@ -32,7 +32,7 @@ const Dashboard = () => {
   return (
     <>
       <AddSubjectModal />
-      <div style={{ marginTop: "10px" }}>
+      <div className="mb-3" style={{ marginTop: "10px" }}>
         <div
           style={{
             display: "flex",
