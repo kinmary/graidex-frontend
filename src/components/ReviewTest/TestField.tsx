@@ -3,15 +3,9 @@ import { ChangeQuestionAttr, SetSelectedQ } from "./TestOfStudentActions";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { GetResultAnswerForTeacherDto } from "../../interfaces/GetResultAnswerForTeacherDto";
-import {
-  GetResultMultipleChoiceAnswerDto,
-  GetResultOpenAnswerDto,
-  GetResultSingleChoiceAnswerDto,
-} from "../../interfaces/ResultAnswerDto";
 import { ITestResultForTeacher } from "../../interfaces/TestResultForTeacherDto";
-import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import QuestionsList from "./QuestionsList";
+import { IQuestion } from "../../interfaces/Questions";
 
 const TestField = () => {
   const dispatch = useAppDispatch();
@@ -23,15 +17,15 @@ const TestField = () => {
     (state: RootState) => state.main.currentTestDraft
   );
   const ChangePoints = (event: any) => {
-    const selectedQuestion: GetResultAnswerForTeacherDto | undefined =
-      test.resultAnswers.find(
-        (resultAnswer: GetResultAnswerForTeacherDto) =>
-          resultAnswer.question.selected === true
+    const selectedQuestion: IQuestion | undefined =
+      test.resultAnswers?.find(
+        (resultAnswer: IQuestion) =>
+          resultAnswer.selected === true
       );
     if (selectedQuestion) {
       dispatch(
         ChangeQuestionAttr(
-          selectedQuestion.question.id,
+          selectedQuestion.id,
           "points",
           parseInt(event.target.value)
         )
@@ -40,59 +34,60 @@ const TestField = () => {
   };
 
   const ChangeFeedback = (event: any) => {
-    const selectedQuestion: GetResultAnswerForTeacherDto | undefined =
-      test.resultAnswers.find(
-        (resultAnswer: GetResultAnswerForTeacherDto) =>
-          resultAnswer.question.selected === true
+    const selectedQuestion: IQuestion | undefined =
+      test.resultAnswers?.find(
+        (resultAnswer: IQuestion) =>
+          resultAnswer.selected === true
       );
     if (selectedQuestion) {
       dispatch(
         ChangeQuestionAttr(
-          selectedQuestion.question.id,
+          selectedQuestion.id,
           "feedback",
-          parseInt(event.target.value)
+          event.target.value
         )
       );
     }
   };
   const handleBackClick = () => {
-    const selectedQuestion: GetResultAnswerForTeacherDto | undefined =
-      test.resultAnswers.find(
-        (resultAnswer: GetResultAnswerForTeacherDto) =>
-          resultAnswer.question.selected === true
+    const selectedQuestion: IQuestion | undefined =
+      test.resultAnswers?.find(
+        (resultAnswer: IQuestion) =>
+          resultAnswer.selected === true
       );
-    if (selectedQuestion) {
-      indexOfSelected = test?.resultAnswers.findIndex(
-        (resultAnswer: any) => resultAnswer.question.selected
+    if (selectedQuestion && test.resultAnswers) {
+      indexOfSelected = test.resultAnswers?.findIndex(
+        (resultAnswer: any) => resultAnswer.selected
       );
       let setSelected = test.resultAnswers[indexOfSelected! - 1];
-      dispatch(SetSelectedQ(setSelected.question.id));
+      dispatch(SetSelectedQ(setSelected.id));
     }
   };
   const handleNextClick = () => {
-    const selectedQuestion: GetResultAnswerForTeacherDto | undefined =
-      test.resultAnswers.find(
-        (resultAnswer: GetResultAnswerForTeacherDto) =>
-          resultAnswer.question.selected === true
+    const selectedQuestion: IQuestion | undefined =
+      test.resultAnswers?.find(
+        (resultAnswer: IQuestion) =>
+          resultAnswer.selected === true
       );
-    if (selectedQuestion) {
-      indexOfSelected = test?.resultAnswers.findIndex(
-        (resultAnswer: any) => resultAnswer.question.selected
+    if (selectedQuestion && test.resultAnswers) {
+      indexOfSelected = test.resultAnswers?.findIndex(
+        (resultAnswer: any) => resultAnswer.selected
       );
       let setSelected = test.resultAnswers[indexOfSelected! + 1];
-      dispatch(SetSelectedQ(setSelected.question.id));
+      dispatch(SetSelectedQ(setSelected.id));
     }
   };
 
-  const selectedQuestion: GetResultAnswerForTeacherDto =
-    test.resultAnswers.find(
-      (resultAnswer: GetResultAnswerForTeacherDto) =>
-        resultAnswer.question.selected === true
-    )!;
+  const selectedQuestion: IQuestion | undefined =
+  test && test.resultAnswers && test.resultAnswers.find(
+    (resultAnswer: IQuestion) =>
+      resultAnswer.selected === true
+  );
+
   let indexOfSelected = 0;
-  if (selectedQuestion) {
-    indexOfSelected = test?.resultAnswers.findIndex(
-      (resultAnswer: any) => resultAnswer.question.selected
+  if (selectedQuestion && test.resultAnswers) {
+    indexOfSelected = test.resultAnswers?.findIndex(
+      (resultAnswer: any) => resultAnswer.selected
     );
   }
   return (
@@ -102,34 +97,34 @@ const TestField = () => {
           <div
             style={{
               display: "flex",
-              alignItems: "flex-start",
-              marginBottom: 30,
+              alignItems: "center",
+              marginBottom: 20,
             }}
           >
-            <h4 style={{ fontWeight: "bold", width: "87%" }}>
-              {selectedQuestion?.question.title}
-            </h4>
+            <h5 style={{ fontWeight: "bold", width: "87%" }}>
+              {selectedQuestion?.title}
+            </h5>
             <InputGroup style={{ width: "13%" }}>
               <Form.Control
                 type="number"
-                value={selectedQuestion?.answer.points || 0}
+                value={selectedQuestion?.points || 0}
                 min={0}
                 onChange={ChangePoints}
                 readOnly={userRole === 1}
               />
               <InputGroup.Text>
-                /{selectedQuestion?.question.maxPoints || 0}
+                /{selectedQuestion?.maxPoints || 0}
               </InputGroup.Text>
             </InputGroup>
           </div>
-          {selectedQuestion?.question.type === 2 ? (
-            <Card key={selectedQuestion.question.id}>
+          {selectedQuestion?.type === 2 ? (
+            <Card key={selectedQuestion.id}>
               <Card.Body>
-                {(selectedQuestion.answer as GetResultOpenAnswerDto).text}
+                {(selectedQuestion.answerOptions[0]).text}
               </Card.Body>
             </Card>
           ) : (
-            selectedQuestion?.question.answerOptions.map(
+            selectedQuestion?.answerOptions.map(
               (answer: any, idx: any) => (
                 <div
                   key={idx + "d"}
@@ -142,26 +137,17 @@ const TestField = () => {
                   <Form.Check
                     key={idx + "c"}
                     type={
-                      selectedQuestion.question.type === 0
+                      selectedQuestion.type === 0
                         ? "radio"
                         : "checkbox"
                     }
                     readOnly
                     disabled
-                    // isValid={selectedQuestion.question.type === 0 ? (selectedQuestion?.answer as GetResultSingleChoiceAnswerDto).choiceOptionIndex === idx
-                    //   : (selectedQuestion?.answer as GetResultMultipleChoiceAnswerDto).choiceOptionIndexes.includes(idx)}
-                    // isInvalid={answer.isCorrect === false && answer.selected === true}
-                    style={{ marginRight: 10, color: "red" }}
+                    isValid={answer.isCorrect === true && answer.selected === false}
+                    isInvalid={answer.isCorrect === false && answer.selected === true}
+                    style={{ marginRight: 10}}
                     name={answer.id.toString()}
-                    checked={
-                      selectedQuestion.question.type === 0
-                        ? (
-                            selectedQuestion?.answer as GetResultSingleChoiceAnswerDto
-                          ).choiceOptionIndex === idx
-                        : (
-                            selectedQuestion?.answer as GetResultMultipleChoiceAnswerDto
-                          ).choiceOptionIndexes.includes(idx)
-                    }
+                    checked={answer.selected}
                   />
                   <Card
                     key={idx + "t"}
@@ -189,7 +175,6 @@ const TestField = () => {
             )
           )}
 
-          <GrammarlyEditorPlugin>
             <h5 style={{ marginTop: 30, fontWeight: "bold" }}>Feedback</h5>
             <Form.Control
               as="textarea"
@@ -197,18 +182,16 @@ const TestField = () => {
               placeholder="Enter feedback here"
               name="text"
               value={
-                selectedQuestion.answer !== undefined
-                  ? selectedQuestion.answer.feedback
+                selectedQuestion.feedback !== undefined
+                  ? selectedQuestion.feedback
                   : ""
               }
               onChange={ChangeFeedback}
             />
-          </GrammarlyEditorPlugin>
 
           <Navbar style={{ marginTop: 50 }}>
             {indexOfSelected > 0 && (
               <Navbar.Brand>
-                {/* //TODO: add on hover text */}
                 <Button
                   variant="outline-dark"
                   className="rounded-circle"
@@ -237,9 +220,10 @@ const TestField = () => {
         <div>
           <h5
             className="ms-1"
-            style={{ fontWeight: "bold", textAlign: "left", marginBottom: 5 }}
+            style={{ fontWeight: "bold", textAlign: "left", marginBottom: 10 }}
           >
-            {currentTestDraft && currentTestDraft.title} of {test && test.studentEmail}
+            {currentTestDraft && currentTestDraft.title} 
+            {/* of {test && test.studentEmail} */}
           </h5>
           <QuestionsList />
         </div>

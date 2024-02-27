@@ -30,12 +30,10 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
   const [autoCheck, setAutoCheck] = useState<boolean>(false);
   const [addAllStudents, setAddAllStudents] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(true);
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string>(inputs.title);
   //TODO: check if shuffleQuestions needed
   // const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
-  const [reviewResult, setReviewResult] = useState<number | undefined>(
-    0
-  );
+  const [reviewResult, setReviewResult] = useState<number | undefined>(0);
   const [isCustomTimeLimit, setIsCustomTimeLimit] = useState<boolean>(false);
   const [timeLimit, setTimeLimit] = useState<ITimeLimit>({
     hours: 0,
@@ -90,7 +88,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
     const startDateTime = new Date(dates.startDate.setSeconds(0,0));
     const endDateTime = new Date(dates.endDate.setSeconds(0,0));
     const createTestDto: ICreateTestDto = {
-      // title: title || inputs.title,
+      title: title || inputs.title,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
       timeLimit: `${String(timeLimit.hours).padStart(2, "0")}:${String(
@@ -201,7 +199,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
                   type="text"
                   name="title"
                   placeholder="Enter title"
-                  value={inputs.title}
+                  value={title}
                   onChange={handleInputsChange}
                 />
               </Form.Group>

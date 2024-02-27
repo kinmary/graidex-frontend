@@ -1,6 +1,6 @@
 
 export interface ICreateTestDto {
-    // title: string;
+    title: string;
     startDateTime: Date;
     endDateTime: Date;
     timeLimit: string | undefined;

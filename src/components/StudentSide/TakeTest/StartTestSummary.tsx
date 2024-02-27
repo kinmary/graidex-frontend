@@ -93,6 +93,10 @@ const StartTestSummary = () => {
     //   // navigate(-1);
     // }
   };
+
+  const onReviewClick = async () => {
+
+  }
   return (
     <>
       {dataLoaded && (
@@ -170,7 +174,19 @@ const StartTestSummary = () => {
                     Start test
                   </Button>
                 ) : (
-                  <Alert variant="secondary">No more available attempts</Alert>
+                  <>
+                    <Alert variant="secondary">No more available attempts</Alert>
+                    <Button
+                    variant="outline-primary"
+                    style={{ width: "100%" }}
+                    onClick={onReviewClick}
+                    // disabled={
+                    // TODO: can review test after it ends?
+                    // }
+                  >
+                    Review test result
+                  </Button>
+                  </>
                 )}
               </div>
             </div>

@@ -56,6 +56,7 @@ function App() {
           {auth.userRole === 1 && <Route path=":selectedSubjectId/:test/:testResultId" element={<TakeTest />} />}
           {auth.userRole === 0 &&<Route path=":selectedSubjectId/:test/edit-test" element={<CreateTest />} />}
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/review/:studentName" element={<TestOfStudent />} />}
+          {auth.userRole === 1 && <Route path=":selectedSubjectId/:test/review" element={<TestOfStudent />} />}
           {auth.userRole === 0 && <Route path=":selectedSubjectId/:newTest" element={<CreateTest />} />}
           <Route path="*" element={<Dashboard />} />
         </Routes>

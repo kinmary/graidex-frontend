@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, Dropdown, Form } from "react-bootstrap";
 import "../../index.css";
 import { answersGrid } from "../../constants/TestExample";
+import { GetTestResultForTeacher } from "../ReviewTest/TestOfStudentActions";
 
 const AnswersGrid = () => {
   const dispatch = useAppDispatch();
@@ -32,12 +33,13 @@ const AnswersGrid = () => {
 
   const onRowDoubleClicked = useCallback(
     (param: any) => {
-      const selectedStudent = param.data.student.email;
-      if (selectedStudent) {
-        // console.log(1);
-        // dispatch(SetOpen("studentName", selectedStudent));
-        // dispatch(SetOpen("testOfStudentPage", true));
-        navigate(`review/${selectedStudent}`);
+      //TODO: Add get testResultId from grid
+      const testResultId = "8";
+      if (testResultId) {
+        dispatch(GetTestResultForTeacher(testResultId)).then((res: any) => {
+          if(!res) {alert("Error occured"); return;}
+          navigate(`review/${testResultId}`);
+        })
       }
     },
     [gridRef]

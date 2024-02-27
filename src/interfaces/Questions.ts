@@ -15,4 +15,5 @@ export interface IQuestion {
         allowFiles?: boolean
         files?: any[];
         previews?: any[];
+        feedback?: string;
 }

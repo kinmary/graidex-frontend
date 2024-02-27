@@ -544,6 +544,7 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
             return answer;
           }),
           text: question.title,
+          defaultComment: question.comment || "",
         };
         return single;
       case 1:
@@ -560,6 +561,7 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
           }),
           text: question.title,
           pointsPerCorrectAnswer: question.maxPoints,
+          defaultComment: question.comment || "",
         };
         return multiple;
       case 2:
@@ -567,6 +569,7 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
           $type: TestBaseOpenQuestionDto,
           maxPoints: question.maxPoints,
           text: question.title,
+          defaultComment: question.comment || "",
         };
         return open;
       default:

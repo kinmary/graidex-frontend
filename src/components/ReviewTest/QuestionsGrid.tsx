@@ -3,16 +3,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useAppDispatch } from "../../app/hooks";
 import { SetSelectedQ } from "./TestOfStudentActions";
-import { GetResultAnswerForTeacherDto } from "../../interfaces/GetResultAnswerForTeacherDto";
+import { IQuestion } from "../../interfaces/Questions";
 
 const QuestionsGrid = () => {
   const dispatch = useAppDispatch();
   const test = useSelector((state: RootState) => state.testOfStudent.testResult);
 
-  const { resultAnswers } = test;
-
-  const selectedQuestion = resultAnswers?.find(
-    (result: GetResultAnswerForTeacherDto) => result.question.selected === true
+  const selectedQuestion = test && test.resultAnswers && test.resultAnswers?.find(
+    (result: IQuestion) => result.selected === true
   );
 
   const handleCardClick = (event: any) => {
@@ -27,7 +25,7 @@ const QuestionsGrid = () => {
             onClick={handleCardClick}
             key={-1}
             className={`text-center py-2 ${
-              !selectedQuestion || selectedQuestion.question.id === -1
+              !selectedQuestion || selectedQuestion.id === -1
                 ? "bg-primary-subtle border-primary"
                 : ""
             }`}
@@ -43,17 +41,17 @@ const QuestionsGrid = () => {
         className="m-0"
         style={{ paddingLeft: "6px", paddingRight: "6px" }}
       >
-        {resultAnswers?.map((result: any, idx: number) => (
+        {test && test.resultAnswers && test.resultAnswers?.map((result: any, idx: number) => (
           <Col key={idx} style={{ padding: "2px" }}>
             <Card
               onClick={handleCardClick}
               key={idx}
               className={`text-center py-2 ${
-                selectedQuestion && selectedQuestion.question.id === result.question.id
+                selectedQuestion && selectedQuestion.id === result.id
                   ? "bg-primary-subtle border-primary"
                   : ""
               }`}
-              id={result.question.id.toString()}
+              id={result.id.toString()}
             >
               {idx + 1}
             </Card>

@@ -8,21 +8,21 @@ interface CreateTestState {
 const initialState: CreateTestState = {
   testTitle: "",
   questions: [
-    {
-      id: 0,
-      title: "Question 1",
-      comment: "",
-      maxPoints: 1,
-      shuffleOptions: true,
-      aiCheck: true,
-      plagiarismCheck: true,
-      allowFiles: false,
-      type: 0,
-      selected: false,
-      files: [],
-      previews: [],
-      answerOptions: [{ id: 0, text: "", isCorrect: false }],
-    },
+    // {
+    //   id: 0,
+    //   title: "Question 1",
+    //   comment: "",
+    //   maxPoints: 1,
+    //   shuffleOptions: true,
+    //   aiCheck: true,
+    //   plagiarismCheck: true,
+    //   allowFiles: false,
+    //   type: 0,
+    //   selected: false,
+    //   files: [],
+    //   previews: [],
+    //   answerOptions: [{ id: 0, text: "", isCorrect: false }],
+    // },
   ],
 };
 export interface Action {

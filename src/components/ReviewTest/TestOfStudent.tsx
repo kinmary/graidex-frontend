@@ -6,17 +6,34 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import QuestionsGrid from "./QuestionsGrid";
+import { useAppDispatch } from "../../app/hooks";
+import { IQuestion } from "../../interfaces/Questions";
+import { LeaveFeedbackOnAnswer } from "./TestOfStudentActions";
 
 const TestOfStudent = () => {
   const userRole = useSelector((state: RootState) => state.auth.userRole);
   const [isChanged, setIsChanged] = useState(false);
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  let {testResult} = useSelector((state: RootState) => state.testOfStudent);
+
   const handleDiscardAndFinish = () => {
     navigate(-1);
   };
   const handleSaveChanges = () => {
-    navigate(-1);
+    //TODO: add test result id of student
+    let success = true
+    if(testResult.resultAnswers === undefined) return;
+    testResult.resultAnswers.forEach((result: IQuestion) => {
+      if(result.points === undefined) result.points = 0;
+      if(result.feedback === undefined) result.feedback = "";
+      dispatch(LeaveFeedbackOnAnswer("8", result.id.toString(), result.points, result.feedback)).then((res: any) => {
+        if(!res) success = false;
+      }) 
+      if(!success) return;
+    });
+    if(success) setIsChanged(false);
+    if(!success) alert("Error occured while saving changes");
   };
   const handleQuestionChange = () => {
     setIsChanged(true);

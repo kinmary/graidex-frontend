@@ -1,4 +1,3 @@
-import { takeTestExample } from "../../../constants/TakeTestExample";
 import IAnswerOption from "../../../interfaces/AnswerOption";
 import { IQuestion } from "../../../interfaces/Questions";
 interface TakeTestState {
@@ -7,7 +6,7 @@ interface TakeTestState {
 
 }
 export const initialState: TakeTestState = {
-  questions: takeTestExample,
+  questions: undefined,
   testResultId: 0,
 };
 

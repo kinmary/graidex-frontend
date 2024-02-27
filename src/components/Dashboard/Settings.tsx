@@ -144,8 +144,8 @@ const Settings = () => {
   };
   const handleSaveChanges = () => {
     if (currentTestDraft.itemType === "Test" && params.selectedSubjectId) {
-      const startDateTime = new Date(dates.startDate.setSeconds(0,0));
-      const endDateTime = new Date(dates.endDate.setSeconds(0,0));
+      const startDateTime = new Date(dates.startDate.setSeconds(0, 0));
+      const endDateTime = new Date(dates.endDate.setSeconds(0, 0));
       const timeDifference = startDateTime.getTime() - endDateTime.getTime();
       let milliseconds = 0;
       milliseconds = (timeLimit.hours * 60 + timeLimit.minutes) * 60 * 1000;
@@ -220,7 +220,7 @@ const Settings = () => {
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const oldDate =
       event.target.name === "startDate" ? dates.startDate : dates.endDate;
-    const newDate = new Date(oldDate.setSeconds(0,0));
+    const newDate = new Date(oldDate.setSeconds(0, 0));
     newDate.setFullYear(Number(event.target.value.substring(0, 4)));
     newDate.setMonth(Number(event.target.value.substring(5, 7)) - 1);
     newDate.setDate(Number(event.target.value.substring(8)));
@@ -245,7 +245,7 @@ const Settings = () => {
       event.target.name === "startDate" ? dates.startDate : dates.endDate;
     const { value } = event.target;
     if (value !== "") {
-      const newDate = new Date(oldDate.setSeconds(0,0));
+      const newDate = new Date(oldDate.setSeconds(0, 0));
       const [hours, minutes] = value.split(":");
       newDate.setHours(Number(hours), Number(minutes));
       // newDate.setMinutes(Number(minutes));
@@ -290,10 +290,15 @@ const Settings = () => {
     navigate(`/${params.selectedSubjectId}`);
   };
   const onEditTestClick = () => {
-    if (main.currentTestDraft.itemType === "TestDraft") {
-      dispatch(getTestDraftQuestions(main.currentTestDraft.id));
-    }
-    navigate("edit-test");
+    if (currentTestDraft.itemType === "TestDraft"){
+      dispatch(getTestDraftQuestions(currentTestDraft.id));
+      navigate("edit-test");
+    } 
+    // else if(currentTestDraft.itemType === "Test" && dates.startDate.getTime() > new Date().getTime()) {
+    //   dispatch(getTestQuestionsOfTeacher(currentTestDraft.id));
+    //   navigate(-1);
+    //   navigate("edit-test");
+    // }
   };
 
   if (!dataLoaded) {
@@ -676,6 +681,16 @@ const Settings = () => {
                 <>
                   <StudentsList subjectId={params.selectedSubjectId!} />
                   <Form.Group>
+                    {/* {dates.startDate.getTime() > new Date().getTime() && (
+                      <Button
+                        style={{ marginTop: 10, width: "100%" }}
+                        variant="primary"
+                        onClick={onEditTestClick}
+                      >
+                        <i className="bi bi-pencil-square"></i> Edit draft
+                        questions
+                      </Button>
+                    )} */}
                     <Button
                       variant="outline-primary"
                       style={{ marginTop: 10, width: "100%" }}
