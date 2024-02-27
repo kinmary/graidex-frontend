@@ -34,6 +34,11 @@ const MainSidebar = ({ children }: LayoutProps) => {
 
   const subjectRegEx = /^\/[0-9]+/;
 
+  const checkSubjectRegEx = (subjectId : number) : boolean  =>{
+    var regex = new RegExp(`^\/${subjectId}(\/.*)?$`);
+    return regex.test(location.pathname);
+  }
+
   return (
     <Row>
       <Col style={{
@@ -70,9 +75,12 @@ const MainSidebar = ({ children }: LayoutProps) => {
                   if (active) {
                     return {
                       height: "35px",
-                      backgroundColor: "#e1e1e1",
-                      fontWeight: "bold",
+                      backgroundColor: "#e2e3e5",
+                      fontWeight: 550,
                       paddingLeft: collapsed ? "" : "3.7px",
+                      ":hover" : {
+                        backgroundColor: "#e2e3e5",
+                      }
                     };
                   }
                   return {
@@ -91,7 +99,11 @@ const MainSidebar = ({ children }: LayoutProps) => {
               }}
             >
               <MenuItem
-                style={{ ...mainMenuItemStyle, marginTop: "9px" }}
+                style={{ 
+                  ...mainMenuItemStyle, 
+                  marginTop: "9px",
+                  fontWeight: location.pathname === `/` ? "bold" : "normal",
+                }}
                 icon={
                   location.pathname === `/` ? (
                     <i className="bi bi-house-fill"></i>
@@ -106,7 +118,10 @@ const MainSidebar = ({ children }: LayoutProps) => {
               
             
               <SubMenu
-                style={mainMenuItemStyle}
+                style={{ 
+                  ...mainMenuItemStyle,
+                  fontWeight: subjectRegEx.test(location.pathname) ? "bold" : "normal",
+                }}
                 icon={
                   subjectRegEx.test(location.pathname) ? (
                     <i className="bi bi-book-half"></i>
@@ -121,13 +136,13 @@ const MainSidebar = ({ children }: LayoutProps) => {
                   main.allSubjects.map((subject: any, idx: number) => {
                     return (
                       <MenuItem
-                        style={{ 
+                        style={{
                           paddingLeft: "20px",
                           marginLeft: collapsed ? "" : "20px",
                           borderLeft: collapsed ? "" : "2px #212529 solid",
-                        }}
+                        }} 
                         key={idx}
-                        active={location.pathname === `/${subject.id}`}
+                        active={checkSubjectRegEx(subject.id)}
                         onClick={() => {
                           auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)) 
                           : dispatch(getVisibleSubjectContent(subject.id));
@@ -141,7 +156,10 @@ const MainSidebar = ({ children }: LayoutProps) => {
               </SubMenu>
 
               {auth.userRole === 1 &&  <MenuItem
-                style={mainMenuItemStyle}
+                style={{
+                  ...mainMenuItemStyle,
+                  fontWeight: location.pathname === `/subject-requests` ? "bold" : "normal",
+                }}
                 icon={
                   location.pathname === "/subject-requests" ? (
                     main.subjectRequests && main.subjectRequests.length > 0 ? <i className="bi bi-envelope-exclamation-fill"></i>  : <i className="bi bi-envelope-fill"></i> 
