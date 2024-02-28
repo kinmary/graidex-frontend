@@ -9,6 +9,7 @@ import { ICreateTestDto } from "../../interfaces/CreateTestDto";
 import { addStudentsToTest, createTest } from "../Dashboard/TestActions";
 import { SetOpen } from "../MainAction";
 import { getStudentsList } from "../Dashboard/SubjectActions";
+import { calcTimeLimit } from "../../utils/TimeLimitRecalculate";
 interface IProps {
   subjectId: string | undefined;
   inputs: { title: string; description: string; gradeToPass: number };
@@ -91,9 +92,7 @@ const CreateTestFromDraft = ({ subjectId, inputs }: IProps) => {
       title: title || inputs.title,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
-      timeLimit: `${String(timeLimit.hours).padStart(2, "0")}:${String(
-        timeLimit.minutes
-      ).padStart(2, "0")}:00`,
+      timeLimit: calcTimeLimit(timeLimit.hours, timeLimit.minutes),
       autoCheckAfterSubmission: autoCheck,
       reviewResult: 0,
       isVisible: visible,

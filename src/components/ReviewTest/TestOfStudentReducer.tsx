@@ -1,4 +1,3 @@
-import { GetResultAnswerForTeacherDto } from "../../interfaces/GetResultAnswerForTeacherDto";
 import { IQuestion } from "../../interfaces/Questions";
 import { ITestResultForTeacher } from "../../interfaces/TestResultForTeacherDto";
 

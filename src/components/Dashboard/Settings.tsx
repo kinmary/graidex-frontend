@@ -32,6 +32,7 @@ import { getSubjectContent } from "./SubjectActions";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import { SetOpen } from "../MainAction";
 import CreateTestFromDraft from "../Modals/CreateTestFrDraftModal";
+import { calcTimeLimit, parseTimeLimit } from "../../utils/TimeLimitRecalculate";
 
 interface ITimeLimit {
   hours: number;
@@ -94,6 +95,7 @@ const Settings = () => {
     });
 
     if (currentTestDraft.itemType === "Test") {
+      let timeLimit = parseTimeLimit(currentTestDraft.timeLimit);
       setAutoCheck(currentTestDraft.autoCheckAfterSubmission);
       // setShuffleQuestions(currentTestDraft.shuffleQuestions);
       setReviewResult(currentTestDraft.reviewResult);
@@ -102,8 +104,8 @@ const Settings = () => {
         endDate: new Date(currentTestDraft.endDateTime),
       });
       setTimeLimit({
-        hours: Number(currentTestDraft.timeLimit.split(":")[0]),
-        minutes: Number(currentTestDraft.timeLimit.split(":")[1]),
+        hours: Number(timeLimit.hours),
+        minutes: Number(timeLimit.minutes),
       });
       const timeDifference =
         dates.endDate.getTime() - dates.startDate.getTime();
@@ -126,6 +128,7 @@ const Settings = () => {
   // }, [dates.startDate, dates.endDate, isCustomTimeLimit]);
 
   const handleDiscardChanges = () => {
+    let timeLimit = parseTimeLimit(currentTestDraft.timeLimit);
     setInputs({
       title: currentTestDraft.title,
       description: currentTestDraft.description,
@@ -138,8 +141,8 @@ const Settings = () => {
     setAutoCheck(currentTestDraft.autoCheckAfterSubmission);
     setReviewResult(currentTestDraft.reviewResult);
     setTimeLimit({
-      hours: Number(currentTestDraft.timeLimit.split(":")[0]),
-      minutes: Number(currentTestDraft.timeLimit.split(":")[1]),
+      hours: Number(timeLimit.hours),
+      minutes: Number(timeLimit.minutes),
     });
   };
   const handleSaveChanges = () => {
@@ -165,9 +168,7 @@ const Settings = () => {
           isVisible: currentTestDraft.isVisible,
           startDateTime: startDateTime,
           endDateTime: endDateTime,
-          timeLimit: `${String(timeLimit.hours).padStart(2, "0")}:${String(
-            timeLimit.minutes
-          ).padStart(2, "0")}:00`,
+          timeLimit: calcTimeLimit(timeLimit.hours, timeLimit.minutes),
           autoCheckAfterSubmission: autoCheck,
           reviewResult: reviewResult,
           orderIndex: currentTestDraft.orderIndex,

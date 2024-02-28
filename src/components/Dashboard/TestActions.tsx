@@ -1,28 +1,23 @@
 import axios from "axios";
-import { AppDispatch } from "../../app/store";
-import { API_BASE_URL } from "../../constants/config";
-import { CheckAuthorization, SetOpen } from "../MainAction";
-import { getSubjectContent } from "./SubjectActions";
-import { IUpdateTestDto } from "../../interfaces/UpdateTestDto";
-import { IUpdateTestDraftDto } from "../../interfaces/UpdateTestDraftDto";
-import { ICreateTestDto } from "../../interfaces/CreateTestDto";
-import { SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT } from "../MainReducer";
-import { CHANGE_QUESTIONS, RESET_STATE } from "../TeacherSide/CreateTest/CreateTestReducer";
-import { IQuestion } from "../../interfaces/Questions";
+import {AppDispatch} from "../../app/store";
+import {API_BASE_URL} from "../../constants/config";
+import {CheckAuthorization, SetOpen} from "../MainAction";
+import {getSubjectContent} from "./SubjectActions";
+import {IUpdateTestDto} from "../../interfaces/UpdateTestDto";
+import {IUpdateTestDraftDto} from "../../interfaces/UpdateTestDraftDto";
+import {ICreateTestDto} from "../../interfaces/CreateTestDto";
+import {SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT} from "../MainReducer";
+import {CHANGE_QUESTIONS, RESET_STATE} from "../TeacherSide/CreateTest/CreateTestReducer";
+import {IQuestion} from "../../interfaces/Questions";
 import IAnswerOption from "../../interfaces/AnswerOption";
-import { TestBaseMultipleChoiceQuestionDto, TestBaseOpenQuestionDto, TestBaseSingleChoiceQuestionDto } from "../../constants/TestBackendTypes";
-import { IMultipleChoiceQuestion } from "../../interfaces/MutipleChoiceQuestion";
-import { IMultipleChoiceOption } from "../../interfaces/MutipleChoiceOptions";
-import { IOption } from "../../interfaces/Option";
-import { ISingleChoiceQuestion } from "../../interfaces/SingleChoiceQuestion";
-import { IOpenQuestion } from "../../interfaces/OpenQuestion";
+import {TestBaseMultipleChoiceQuestionDto, TestBaseOpenQuestionDto, TestBaseSingleChoiceQuestionDto} from "../../constants/TestBackendTypes";
+import {IMultipleChoiceQuestion} from "../../interfaces/MutipleChoiceQuestion";
+import {IMultipleChoiceOption} from "../../interfaces/MutipleChoiceOptions";
+import {IOption} from "../../interfaces/Option";
+import {ISingleChoiceQuestion} from "../../interfaces/SingleChoiceQuestion";
+import {IOpenQuestion} from "../../interfaces/OpenQuestion";
 
-export const createTestDraft = (
-  subjectId: string | number | undefined,
-  title: string,
-  description: string,
-  gradeToPass: number
-) => {
+export const createTestDraft = (subjectId: string | number | undefined, title: string, description: string, gradeToPass: number) => {
   return async (dispatch: AppDispatch) => {
     try {
       let createTestDraftDto = {
@@ -30,10 +25,7 @@ export const createTestDraft = (
         description: description,
         gradeToPass: gradeToPass,
       };
-      const response = await axios.post(
-        `${API_BASE_URL}/api/Test/create-draft/` + subjectId,
-        createTestDraftDto
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/Test/create-draft/` + subjectId, createTestDraftDto);
       if (response.status === 200) {
         dispatch(getSubjectContent(subjectId!));
         dispatch(SetOpen("openSubjectModal", false));
@@ -52,9 +44,7 @@ export const createTestDraft = (
 export const createDraftFromTest = (testid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/Test/create-draft-from-test/` + testid
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/Test/create-draft-from-test/` + testid);
       if (response.status === 200) {
         dispatch(getSubjectContent(response.data.subjectId));
       }
@@ -72,9 +62,7 @@ export const createDraftFromTest = (testid: string | number) => {
 export const duplicateDraft = (draftid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/Test/duplicate-draft/` + draftid
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/Test/duplicate-draft/` + draftid);
       if (response.status === 200) {
         dispatch(getSubjectContent(response.data.subjectId));
         // dispatch(SetOpen("openSubjectModal", false));
@@ -95,9 +83,7 @@ export const getDraft = (draftid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
       // dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
-      const response = await axios.get(
-        `${API_BASE_URL}/api/Test/get-draft/` + draftid
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/Test/get-draft/` + draftid);
       if (response.status === 200) {
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
@@ -107,9 +93,7 @@ export const getDraft = (draftid: string | number) => {
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -118,25 +102,17 @@ export const getDraft = (draftid: string | number) => {
   };
 };
 
-export const updateDraft = (
-  draftId: string | number,
-  updateTestDraftDto: IUpdateTestDraftDto
-) => {
+export const updateDraft = (draftId: string | number, updateTestDraftDto: IUpdateTestDraftDto) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Test/update-draft/` + draftId,
-        updateTestDraftDto
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Test/update-draft/` + draftId, updateTestDraftDto);
       if (response.status === 200) {
         dispatch(getDraft(draftId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
       } else {
         dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -145,24 +121,17 @@ export const updateDraft = (
   };
 };
 
-export const deleteDraft = (
-  draftid: string | number,
-  subjectId: string | number
-) => {
+export const deleteDraft = (draftid: string | number, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/Test/delete-draft/` + draftid
-      );
+      const response = await axios.delete(`${API_BASE_URL}/api/Test/delete-draft/` + draftid);
       if (response.status === 200) {
         dispatch(getSubjectContent(subjectId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -171,23 +140,12 @@ export const deleteDraft = (
   };
 };
 
-export const createTest = (
-  draftid: string | number,
-  updateTestDraftDto: IUpdateTestDraftDto,
-  createTestDto: ICreateTestDto,
-  subjectId: string | number
-) => {
+export const createTest = (draftid: string | number, updateTestDraftDto: IUpdateTestDraftDto, createTestDto: ICreateTestDto, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Test/update-draft/` + draftid,
-        updateTestDraftDto
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Test/update-draft/` + draftid, updateTestDraftDto);
       if (response.status === 200) {
-        const res = await axios.post(
-          `${API_BASE_URL}/api/Test/create-test/` + draftid,
-          createTestDto
-        );
+        const res = await axios.post(`${API_BASE_URL}/api/Test/create-test/` + draftid, createTestDto);
         if (res.status === 200) {
           dispatch(getSubjectContent(subjectId));
           return res.data;
@@ -197,9 +155,7 @@ export const createTest = (
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        alert(
-          "Error occurred while creating test! One or more fields didn't pass validation"
-        );
+        alert("Error occurred while creating test! One or more fields didn't pass validation");
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -212,9 +168,7 @@ export const getTest = (testid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
       // dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
-      const response = await axios.get(
-        `${API_BASE_URL}/api/Test/get-test/` + testid
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/Test/get-test/` + testid);
       if (response.status === 200) {
         // TODO: remove this when backend is fixed
         response.data.startDateTime += "Z";
@@ -228,9 +182,7 @@ export const getTest = (testid: string | number) => {
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
       } else {
         //   dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -244,9 +196,7 @@ export const getTest = (testid: string | number) => {
 export const getVisibleTestStudent = (testid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/Test/get-visible-test/` + testid
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/Test/get-visible-test/` + testid);
       if (response.status === 200) {
         response.data.startDateTime += "Z";
         response.data.endDateTime += "Z";
@@ -271,9 +221,7 @@ export const getVisibleTestStudent = (testid: string | number) => {
 export const getAttemptsDescription = (testid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/TestResult/get-student-attempts-description/` + testid
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/TestResult/get-student-attempts-description/` + testid);
       if (response.status === 200) {
         dispatch({
           type: SET_ATTEMPTS_INFO,
@@ -292,17 +240,10 @@ export const getAttemptsDescription = (testid: string | number) => {
   };
 };
 
-export const updateTest = (
-  testid: string | number,
-  updateTestDto: IUpdateTestDto,
-  subjectId: string | number
-) => {
+export const updateTest = (testid: string | number, updateTestDto: IUpdateTestDto, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Test/update-test/` + testid,
-        updateTestDto
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Test/update-test/` + testid, updateTestDto);
       if (response.status === 200) {
         dispatch(getSubjectContent(subjectId));
         dispatch(getTest(testid));
@@ -321,15 +262,10 @@ export const updateTest = (
   };
 };
 
-export const deleteTest = (
-  testid: string | number,
-  subjectId: string | number
-) => {
+export const deleteTest = (testid: string | number, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/Test/delete-test/` + testid
-      );
+      const response = await axios.delete(`${API_BASE_URL}/api/Test/delete-test/` + testid);
       if (response.status === 200) {
         dispatch(getSubjectContent(subjectId!));
         // dispatch(SetOpen("openSubjectModal", false));
@@ -348,16 +284,10 @@ export const deleteTest = (
   };
 };
 
-export const updateTestQuestions = (
-  testid: string | number,
-  updateQuestionsDto: any[]
-) => {
+export const updateTestQuestions = (testid: string | number, updateQuestionsDto: any[]) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Test/update-test-questions/` + testid,
-        updateQuestionsDto
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Test/update-test-questions/` + testid, updateQuestionsDto);
       if (response.status === 200) {
         // dispatch(getAllSubjects());
       }
@@ -379,13 +309,11 @@ export const updateTestQuestions = (
 export const getTestQuestionsOfTeacher = (testid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/Test/test-questions-of-teacher/` + testid
-      );
-      dispatch({ type: RESET_STATE });
+      const response = await axios.get(`${API_BASE_URL}/api/Test/test-questions-of-teacher/` + testid);
+      dispatch({type: RESET_STATE});
       if (response.data.length !== 0) {
-        const questions: IQuestion[] = mapToFrontendQuestions(response.data).filter(x => x !== undefined) as IQuestion[];
-        dispatch({ type: CHANGE_QUESTIONS, questions: questions });
+        const questions: IQuestion[] = mapToFrontendQuestions(response.data).filter((x) => x !== undefined) as IQuestion[];
+        dispatch({type: CHANGE_QUESTIONS, questions: questions});
         // dispatch({ type: CHANGE_QUESTIONS, questions: response.data });
       }
     } catch (error: any) {
@@ -397,13 +325,11 @@ export const getTestQuestionsOfTeacher = (testid: string | number) => {
 export const getTestDraftQuestions = (draftid: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/Test/test-draft-questions/` + draftid
-      );
-      dispatch({ type: RESET_STATE });
+      const response = await axios.get(`${API_BASE_URL}/api/Test/test-draft-questions/` + draftid);
+      dispatch({type: RESET_STATE});
       if (response.data.length !== 0) {
-        const questions: IQuestion[] = mapToFrontendQuestions(response.data).filter(x => x !== undefined) as IQuestion[];
-        dispatch({ type: CHANGE_QUESTIONS, questions: questions });
+        const questions: IQuestion[] = mapToFrontendQuestions(response.data).filter((x) => x !== undefined) as IQuestion[];
+        dispatch({type: CHANGE_QUESTIONS, questions: questions});
       }
     } catch (error: any) {
       alert(error.message);
@@ -411,16 +337,10 @@ export const getTestDraftQuestions = (draftid: string | number) => {
   };
 };
 
-export const updateTestDraftQuestions = (
-  draftid: string | number,
-  updateQuestionsDto: any[]
-) => {
+export const updateTestDraftQuestions = (draftid: string | number, updateQuestionsDto: any[]) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Test/update-test-draft-questions/` + draftid,
-        updateQuestionsDto
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Test/update-test-draft-questions/` + draftid, updateQuestionsDto);
       if (response.status === 200) {
         // dispatch(getAllSubjects());
       }
@@ -435,50 +355,58 @@ export const updateTestDraftQuestions = (
   };
 };
 
-export const addStudentsToTest = (
-  testid: string | number,
-  studentEmails: string[]
-) => {
+export const addStudentsToTest = (testid: string | number, studentEmails: string[]) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Test/add-students/` + testid,
-        studentEmails
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Test/add-students/` + testid, studentEmails);
       if (response.status === 200) {
         dispatch(getTest(testid));
       }
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
-      } else {
-        dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-      }
+      // if (error.response.status === 400) {
+      //   //Bad Request
+      //   error.response.data.map((obj: any) =>
+      //     alert(obj.attemptedValue + ": " + obj.errorMessage)
+      //   );
+      // } else {
+      //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      // }
     }
   };
 };
 
+export const removeStudentsFromTest = (testid: string | number, studentEmails: string[]) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/api/Test/remove-students/` + testid, {data: studentEmails});
+      if (response.status === 200) {
+        dispatch(getTest(testid));
+      }
+    } catch (error: any) {
+      // if (error.response.status === 400) {
+      //Bad Request
+      alert(error.response.data);
+      // } else {
+      //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      // }
+    }
+  };
+};
 
-export const  mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => {
+export const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => {
   return questions.map((question: any, idx: number) => {
     switch (question.$type) {
       case TestBaseSingleChoiceQuestionDto:
-        let options: IAnswerOption[] = question.options.map(
-          (x: any, idx: number) => {
-            return {
-              id: idx,
-              text: x.text,
-              isCorrect:
-                question.correctOptionIndex.toString() === idx.toString(),
-              selected:
-                question.correctOptionIndex.toString() === idx.toString(),
-            };
-          }
-        );
+        let options: IAnswerOption[] = question.options.map((x: any, idx: number) => {
+          return {
+            id: idx,
+            text: x.text,
+            isCorrect: question.correctOptionIndex.toString() === idx.toString(),
+            selected: question.correctOptionIndex.toString() === idx.toString(),
+          };
+        });
         let single: IQuestion = {
           id: idx,
           title: question.text,
@@ -490,16 +418,14 @@ export const  mapToFrontendQuestions = (questions: any[]): (IQuestion | undefine
         };
         return single;
       case TestBaseMultipleChoiceQuestionDto:
-        let answerOptions: IAnswerOption[] = question.options.map(
-          (x: any, idx: number) => {
-            return {
-              id: idx,
-              text: x.option.text,
-              isCorrect: x.isCorrect,
-              selected: x.isCorrect,
-            };
-          }
-        );
+        let answerOptions: IAnswerOption[] = question.options.map((x: any, idx: number) => {
+          return {
+            id: idx,
+            text: x.option.text,
+            isCorrect: x.isCorrect,
+            selected: x.isCorrect,
+          };
+        });
         let multiple: IQuestion = {
           id: idx,
           title: question.text,
@@ -525,7 +451,7 @@ export const  mapToFrontendQuestions = (questions: any[]): (IQuestion | undefine
         return undefined;
     }
   });
-}
+};
 
 export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
   return questions.map((question: IQuestion) => {
@@ -533,9 +459,7 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
       case 0:
         let single: ISingleChoiceQuestion = {
           $type: TestBaseSingleChoiceQuestionDto,
-          correctOptionIndex: question.answerOptions.findIndex(
-            (x: any) => x.isCorrect === true
-          ),
+          correctOptionIndex: question.answerOptions.findIndex((x: any) => x.isCorrect === true),
           maxPoints: question.maxPoints,
           options: question.answerOptions.map((x: any) => {
             let answer: IOption = {
@@ -577,27 +501,16 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
     }
   });
 };
-// export const  mapAnswerOptions = (options: any[]): IAnswerOption[] => {
-//   return options.map((option, index) => {
-//       // Logic to map each option to frontend format
-//       let answerOption: IAnswerOption = {
-//         id: index,
-//         text: option.text || option.option.text,
-//         isCorrect: option.isCorrect || false // Defaulting to false if not provided
-//       };
-//       return answerOption;
-//   });
-// }
 
 const getQuestionType = (backendType: string): number => {
   switch (backendType) {
-      case TestBaseSingleChoiceQuestionDto:
-          return 0; 
-      case TestBaseMultipleChoiceQuestionDto:
-          return 1; 
-      case TestBaseOpenQuestionDto:
-          return 2; 
-      default:
-          return -1; 
+    case TestBaseSingleChoiceQuestionDto:
+      return 0;
+    case TestBaseMultipleChoiceQuestionDto:
+      return 1;
+    case TestBaseOpenQuestionDto:
+      return 2;
+    default:
+      return -1;
   }
-} 
+};

@@ -5,6 +5,7 @@ import { RootState } from "../../../app/store";
 import { useAppDispatch } from "../../../app/hooks";
 import { submitTestAttempt } from "./TakeTestActions";
 import { useNavigate } from "react-router-dom";
+import { parseTimeLimit } from "../../../utils/TimeLimitRecalculate";
 
 type Props = {
   title?: string;
@@ -19,10 +20,15 @@ const RightSideMenu = ({ title, bottomControls, children, startTime }: Props) =>
   );
   const {testResultId, questions} = useSelector((state: RootState) => state.takeTest);
   const dispatch = useAppDispatch(); 
-  const parts = currentTestDraft.timeLimit.split(":");
-  const hours = parseInt(parts[0], 10);
-  const minutes = parseInt(parts[1], 10);
-  const seconds = parseInt(parts[2], 10);
+  const parts = parseTimeLimit(currentTestDraft?.timeLimit || "00:00:00");
+  let hours = 0
+  if(parts.hours > 24) {
+    hours = Number(parts.hours);
+  } else {
+    hours = parseInt(String(parts.hours), 10);
+  }
+  const minutes = parseInt(String(parts.minutes), 10);
+  const seconds = parseInt("00", 10);
   const milliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
   const navigate = useNavigate();
 
