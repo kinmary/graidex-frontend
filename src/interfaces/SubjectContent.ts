@@ -7,5 +7,6 @@ export default interface ISubjectContent {
     subjectId: number | string;
     itemType: string;
     orderIndex: number;
+    warningMessage: string | null;
 
 }
