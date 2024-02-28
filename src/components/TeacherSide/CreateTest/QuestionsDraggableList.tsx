@@ -21,7 +21,7 @@ const QuestionsDraggableList = () => {
     defaultQuestion: {
       id: 0,
       title: "Question",
-      comment: "",
+      feedback: "",
       maxPoints: 1,
       shuffleOptions: true,
       aiCheck: true,

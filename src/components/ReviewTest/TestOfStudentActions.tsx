@@ -112,13 +112,12 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
         let single: IQuestion = {
           id: idx,
           title: element.question.text,
-          comment: element.question.defaultComment,
           maxPoints: element.question.maxPoints,
           type: getQuestionType(element.question.$type),
           selected: false,
           answerOptions: options,
           points: element.answer.points,
-          feedback : element.answer.feedback  === null ? "" : element.answer.feedback || ""
+          feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return single;
       case TestBaseMultipleChoiceQuestionDto:
@@ -128,33 +127,31 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
               id: idx,
               text: x.option.text,
               isCorrect: x.isCorrect,
-              selected: element.answer.choiceOptionIndexes.includes(idx) || false,
+              selected: element.answer.choiceOptionIndexes?.includes(idx) || false,
             };
           }
         );
         let multiple: IQuestion = {
           id: idx,
           title: element.question.text,
-          comment: element.question.defaultComment,
           maxPoints: element.question.pointsPerCorrectAnswer,
           type: getQuestionType(element.question.$type),
           selected: false,
           answerOptions: answerOptions,
           points: element.answer.points,
-          feedback : element.answer.feedback  === null ? "" : element.answer.feedback || ""
+          feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return multiple;
       case TestBaseOpenQuestionDto:
         let open: IQuestion = {
           id: idx,
           title: element.question.text,
-          comment: element.question.defaultComment,
           maxPoints: element.question.maxPoints,
           type: getQuestionType(element.question.$type),
           selected: false,
           answerOptions: [{id: 0, text: element.answer.text || ""}],
           points: element.answer.points,
-          feedback : element.answer.feedback  === null ? "" : element.answer.feedback || ""
+          feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return open;
         default:

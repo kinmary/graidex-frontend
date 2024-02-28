@@ -37,7 +37,7 @@ const TestConstructor = () => {
     defaultQuestion: {
       id: 0,
       title: "Question",
-      comment: "",
+      feedback: "",
       maxPoints: 1,
       // shuffleOptions: true,
       // aiCheck: true,
@@ -488,9 +488,9 @@ const TestConstructor = () => {
               <Form.Control
                 as="textarea"
                 rows={5}
-                placeholder="Add default comment for the task solution"
-                name="comment"
-                value={selectedQuestion.comment}
+                placeholder="Add default feedback for the task solution"
+                name="feedback"
+                value={selectedQuestion.feedback}
                 onChange={onInputChange}
                 style={{ marginTop: 40 }}
               />

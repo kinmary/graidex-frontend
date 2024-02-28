@@ -12,7 +12,7 @@ import { RootState } from "../../app/store";
 import DeleteSubjectModal from "../Modals/DeleteSubjectModal";
 import ChangeImageModal from "../Modals/ChangeImageModal";
 import MessageModal from "../Modals/MessageModal";
-import StartTestConfirmModal from "../Modals/SendTestConfirmModal";
+import StartTestConfirmModal from "../StudentSide/TakeTest/SendTestConfirmModal";
 import AddStudentModal from "../Modals/AddStudentModal";
 import { useNavigate, useParams } from "react-router-dom";
 import ISubjectContent from "../../interfaces/SubjectContent";

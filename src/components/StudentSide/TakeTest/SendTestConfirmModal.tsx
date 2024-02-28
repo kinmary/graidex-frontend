@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Button,  Modal } from "react-bootstrap";
-import {  SetOpen } from "../MainAction";
+import {  SetOpen } from "../../MainAction";
 //import { ResetTakeTestState } from "../StudentSide/TakeTest/TakeTestActions";
-import { useAppDispatch } from "../../app/hooks";
-import { RootState } from "../../app/store";
+import { useAppDispatch } from "../../../app/hooks";
+import { RootState } from "../../../app/store";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { submitTestAttempt } from "../StudentSide/TakeTest/TakeTestActions";
+import { submitTestAttempt } from "./TakeTestActions";
 
 const StartTestConfirmModal = () => {
   const dispatch = useAppDispatch();

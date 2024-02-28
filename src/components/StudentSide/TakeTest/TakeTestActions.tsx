@@ -211,7 +211,7 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
         let single: IQuestion = {
           id: idx,
           title: element.question.text,
-          comment: element.question.defaultComment,
+          feedback: element.question.defaultFeedback,
           maxPoints: element.question.maxPoints,
           type: getQuestionTypeStudent(element.question.$type),
           selected: false,
@@ -232,7 +232,7 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
         let multiple: IQuestion = {
           id: idx,
           title: element.question.text,
-          comment: element.question.defaultComment,
+          feedback: element.question.defaultFeedback,
           maxPoints: element.question.pointsPerCorrectAnswer,
           type: getQuestionTypeStudent(element.question.$type),
           selected: false,
@@ -243,7 +243,7 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
         let open: IQuestion = {
           id: idx,
           title: element.question.text,
-          comment: element.question.defaultComment,
+          feedback: element.question.defaultFeedback,
           maxPoints: element.question.maxPoints,
           type: getQuestionTypeStudent(element.question.$type),
           selected: false,

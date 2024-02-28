@@ -410,7 +410,7 @@ export const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined
         let single: IQuestion = {
           id: idx,
           title: question.text,
-          comment: question.defaultComment,
+          feedback: question.defaultFeedback,
           maxPoints: question.maxPoints,
           type: getQuestionType(question.$type),
           selected: false,
@@ -429,7 +429,7 @@ export const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined
         let multiple: IQuestion = {
           id: idx,
           title: question.text,
-          comment: question.defaultComment,
+          feedback: question.defaultFeedback,
           maxPoints: question.pointsPerCorrectAnswer,
           type: getQuestionType(question.$type),
           selected: false,
@@ -440,7 +440,7 @@ export const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined
         let open: IQuestion = {
           id: idx,
           title: question.text,
-          comment: question.defaultComment,
+          feedback: question.defaultFeedback,
           maxPoints: question.maxPoints,
           type: getQuestionType(question.$type),
           selected: false,
@@ -468,7 +468,7 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
             return answer;
           }),
           text: question.title,
-          defaultComment: question.comment || "",
+          defaultFeedback: question.feedback || "",
         };
         return single;
       case 1:
@@ -485,7 +485,7 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
           }),
           text: question.title,
           pointsPerCorrectAnswer: question.maxPoints,
-          defaultComment: question.comment || "",
+          defaultFeedback: question.feedback || "",
         };
         return multiple;
       case 2:
@@ -493,7 +493,7 @@ export const mapToBackendQuestions = (questions: IQuestion[]): any[] => {
           $type: TestBaseOpenQuestionDto,
           maxPoints: question.maxPoints,
           text: question.title,
-          defaultComment: question.comment || "",
+          defaultFeedback: question.feedback || "",
         };
         return open;
       default:

@@ -4,7 +4,7 @@ export const takeTestExample: IQuestion[] =[
     {
       id: 0,
       title: "Question 1: What skills does a front-end developer need??",
-      comment: "",
+      feedback: "",
       points: 3,
       maxPoints: 1,
       type: 1,
@@ -19,7 +19,7 @@ export const takeTestExample: IQuestion[] =[
     {
       id: 1,
       title: "Question 2: What is React?",
-      comment: "",
+      feedback: "",
       points: 0,
       maxPoints: 3,
       type: 2,
@@ -29,7 +29,7 @@ export const takeTestExample: IQuestion[] =[
     {
       id: 2,
       title: "Question 3: What is React?",
-      comment: "",
+      feedback: "",
       points: 0,
       maxPoints: 1,
       type: 0,
@@ -43,7 +43,7 @@ export const takeTestExample: IQuestion[] =[
     {
       id: 3,
       title: "Question 4: How to align text to the left in CSS?",
-      comment: "",
+      feedback: "",
       points: 0,
       maxPoints: 1,
       type: 0,
@@ -58,7 +58,7 @@ export const takeTestExample: IQuestion[] =[
     {
       id: 4,
       title: "Question 5: Explain usage of useEffect() hook in React?",
-      comment: "",
+      feedback: "",
       points: 0,
       maxPoints: 1,
       type: 2,

@@ -3,7 +3,7 @@ import IAnswerOption from "./AnswerOption";
 export interface IQuestion {
         id: number;
         title: string;
-        comment: string;
+        feedback?: string;
         points?: number;
         maxPoints: number;
         type: number;
@@ -15,5 +15,4 @@ export interface IQuestion {
         allowFiles?: boolean
         files?: any[];
         previews?: any[];
-        feedback?: string;
 }

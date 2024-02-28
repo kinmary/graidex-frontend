@@ -1,5 +1,5 @@
 export interface ITestBaseQuestion {
     text: string;
-    defaultComment?: string;
+    defaultFeedback?: string;
     $type: string;
 }

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Button,  Modal } from "react-bootstrap";
 import { connect } from "react-redux";
-import {  SetOpen } from "../MainAction";
-import { useAppDispatch } from "../../app/hooks";
+import {  SetOpen } from "../../MainAction";
+import { useAppDispatch } from "../../../app/hooks";
 import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState } from "../../../app/store";
 import { useNavigate } from "react-router-dom";
 
 const StartTestConfirmModal = () => {

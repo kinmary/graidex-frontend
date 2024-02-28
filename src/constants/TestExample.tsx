@@ -2,7 +2,7 @@ export const testExample = [
   {
     id: 0,
     title: "Question 1: What is right?",
-    comment: "Right answer is at the moon",
+    feedback: "Right answer is at the moon",
     maxPoints: 1,
     type: 0,
     shuffleOptions: true,
@@ -25,7 +25,7 @@ export const testExample = [
   {
     id: 1,
     title: "Question 2: How are you today?",
-    comment: "",
+    feedback: "",
     maxPoints: 3,
     shuffleOptions: true,
     aiCheck: true,
@@ -40,7 +40,7 @@ export const testExample = [
   {
     id: 2,
     title: "Question 3: Lorem ipsum dolor?",
-    comment: "",
+    feedback: "",
     maxPoints: 3,
     type: 1,
     shuffleOptions: true,
@@ -59,7 +59,7 @@ export const testExample = [
   {
     id: 3,
     title: "Question 4: Lorem ipsum dolor?",
-    comment: "Provide explanation on lorem ipsum",
+    feedback: "Provide explanation on lorem ipsum",
     maxPoints: 3,
     type: 2,
     selected: false,
@@ -79,7 +79,7 @@ export const testExample = [
   {
     id: 4,
     title: "Question 5: What is right?",
-    comment: "Right answer is at the moon",
+    feedback: "Right answer is at the moon",
     points: 1,
     maxPoints: 1,
     type: 0,
@@ -99,7 +99,7 @@ export const testExample = [
   {
     id: 5,
     title: "Question 6: What is right?",
-    comment: "Right answer is at the moon",
+    feedback: "Right answer is at the moon",
     points: 0,
     maxPoints: 1,
     type: 0,
@@ -119,7 +119,7 @@ export const testExample = [
   {
     id: 6,
     title: "Question 7: What is right?",
-    comment: "Right answer is at the moon",
+    feedback: "Right answer is at the moon",
     points: 0,
     maxPoints: 1,
     type: 0,

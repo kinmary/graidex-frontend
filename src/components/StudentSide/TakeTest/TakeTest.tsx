@@ -1,18 +1,13 @@
 import { Button, Col, Row } from "react-bootstrap";
  import TestConstructor from "./TestConstructor";
-import SendTestConfirmModal from "../../Modals/SendTestConfirmModal";
+import SendTestConfirmModal from "./SendTestConfirmModal";
 import RightSideMenu from "./RightSideMenu";
 import QuestionsGrid from "./QuestionsGrid";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import { SetOpen } from "../../MainAction";
 
 const TakeTest = () => {
-  const questions = useSelector((state: RootState) => state.takeTest.questions);
-  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [startTime, setStartTime] = useState<number>(Date.now());
 

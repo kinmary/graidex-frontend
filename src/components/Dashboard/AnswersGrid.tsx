@@ -34,10 +34,10 @@ const AnswersGrid = () => {
   const onRowDoubleClicked = useCallback(
     (param: any) => {
       //TODO: Add get testResultId from grid
-      const testResultId = "8";
+      const testResultId = "4";
       if (testResultId) {
         dispatch(GetTestResultForTeacher(testResultId)).then((res: any) => {
-          if(!res) {alert("Error occured"); return;}
+          // if(!res) {alert("Error occured"); return;}
           navigate(`review/${testResultId}`);
         })
       }

@@ -149,16 +149,17 @@ const Settings = () => {
     if (currentTestDraft.itemType === "Test" && params.selectedSubjectId) {
       const startDateTime = new Date(dates.startDate.setSeconds(0, 0));
       const endDateTime = new Date(dates.endDate.setSeconds(0, 0));
-      const timeDifference = startDateTime.getTime() - endDateTime.getTime();
-      let milliseconds = 0;
-      milliseconds = (timeLimit.hours * 60 + timeLimit.minutes) * 60 * 1000;
-      if (milliseconds > timeDifference) {
-        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-        alert(
-          `Custom time limit can not exceed the default limit ${hours}:${minutes}`
-        );
-      } else if (timeLimit.hours === 0 && timeLimit.minutes === 0) {
+      // const timeDifference = startDateTime.getTime() - endDateTime.getTime();
+      // let milliseconds = 0;
+      // milliseconds = (timeLimit.hours * 60 + timeLimit.minutes) * 60 * 1000;
+      // if (milliseconds > timeDifference) {
+      //   const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+      //   const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+      //   alert(
+      //     `Custom time limit can not exceed the default limit ${hours}:${minutes}`
+      //   );
+      // } else 
+      if (timeLimit.hours === 0 && timeLimit.minutes === 0) {
         alert(`Time limit should be at least 1 minute (00:01:00)`);
       } else {
         let newTest: IUpdateTestDto = {
