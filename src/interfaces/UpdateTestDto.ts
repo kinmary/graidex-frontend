@@ -4,11 +4,18 @@ export interface IUpdateTestDto {
     description: string | undefined;
     gradeToPass: number;
     isVisible: boolean;
-    startDateTime: Date | undefined;
-    endDateTime: Date | undefined;
-    timeLimit: string | undefined;
+    // startDateTime: Date | undefined;
+    // endDateTime: Date | undefined;
+    // timeLimit: string | undefined;
     autoCheckAfterSubmission: boolean | undefined;
-    reviewResult: string | undefined;
+    reviewResult: number | undefined;
+    shuffleQuestions: boolean | undefined;
     orderIndex: number;
 
+}
+
+export interface IUpdateTestTimeDto {
+    startDateTime: Date;
+    endDateTime: Date;
+    timeLimit: string;
 }

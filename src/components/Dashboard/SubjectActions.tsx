@@ -1,18 +1,9 @@
 import axios from "axios";
-import { API_BASE_URL } from "../../constants/config";
-import {
-  GET_ALL_SUBJECTS,
-  GET_SUBJECT_CONTENT,
-  SET_OPEN,
-} from "../MainReducer";
-import {
-  CheckAuthorization,
-  SetOpen,
-  hideLoader,
-  showLoader,
-} from "../MainAction";
-import { AppDispatch } from "../../app/store";
-import { IStudent } from "../../interfaces/Student";
+import {API_BASE_URL} from "../../constants/config";
+import {GET_ALL_SUBJECTS, GET_SUBJECT_CONTENT, SET_OPEN} from "../MainReducer";
+import {CheckAuthorization, SetOpen, hideLoader, showLoader} from "../MainAction";
+import {AppDispatch} from "../../app/store";
+import {IStudent} from "../../interfaces/Student";
 import JSZip from "jszip";
 import profilePic from "../../images/blank-profile-picture.jpg";
 
@@ -33,11 +24,7 @@ export const getAllSubjects = () => {
   };
 };
 
-export const createNewSubject = (
-  subjectId: string | undefined,
-  title: string,
-  imageUrl: string
-) => {
+export const createNewSubject = (subjectId: string | undefined, title: string, imageUrl: string) => {
   return async (dispatch: AppDispatch) => {
     try {
       let createSubjectDto = {
@@ -45,10 +32,7 @@ export const createNewSubject = (
         customId: subjectId,
         ImageUrl: imageUrl,
       };
-      const response = await axios.post(
-        `${API_BASE_URL}/api/Subject/create`,
-        createSubjectDto
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/Subject/create`, createSubjectDto);
       if (response.status === 200) {
         dispatch(getAllSubjects());
         dispatch(SetOpen("openSubjectModal", false));
@@ -56,9 +40,7 @@ export const createNewSubject = (
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
       } else {
         dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -67,12 +49,7 @@ export const createNewSubject = (
   };
 };
 
-export const updateSubject = (
-  id: number,
-  subjectId: string,
-  title: string,
-  imageUrl: string
-) => {
+export const updateSubject = (id: number, subjectId: string, title: string, imageUrl: string) => {
   return async (dispatch: AppDispatch) => {
     try {
       let updateSubjectDto = {
@@ -80,19 +57,14 @@ export const updateSubject = (
         customId: subjectId,
         ImageUrl: imageUrl,
       };
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Subject/update/` + id,
-        updateSubjectDto
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Subject/update/` + id, updateSubjectDto);
       if (response.status === 200) {
         dispatch(getAllSubjects());
       }
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
-        error.response.data.map((obj: any) =>
-          alert(obj.attemptedValue + ": " + obj.errorMessage)
-        );
+        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
       } else {
         dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
@@ -104,9 +76,7 @@ export const updateSubject = (
 export const deleteSubject = (id: string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/Subject/delete/` + id
-      );
+      const response = await axios.delete(`${API_BASE_URL}/api/Subject/delete/` + id);
       if (response.status === 200) {
         dispatch(getAllSubjects());
         return true;
@@ -122,16 +92,14 @@ export const deleteSubject = (id: string) => {
 export const getStudentsList = (subjectId: number | string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/Student/all-of-subject/` + subjectId
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/Student/all-of-subject/` + subjectId);
       if (response.status === 200) {
         dispatch({
           type: SET_OPEN,
           name: "studentsList",
           value: response.data,
         });
-        dispatch(getStudentImages(subjectId, response.data));
+        // dispatch(getStudentImages(subjectId, response.data));
       }
       // return Promise.resolve();
     } catch (error: any) {
@@ -141,17 +109,10 @@ export const getStudentsList = (subjectId: number | string) => {
   };
 };
 
-export const getStudentImages = (
-  subjectId: number | string,
-  students: IStudent[]
-) => {
+export const getStudentImages = (subjectId: number | string, students: IStudent[]) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/Student/all-profile-images-of-subject/` +
-          subjectId,
-        { responseType: "arraybuffer" }
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/Student/all-profile-images-of-subject/` + subjectId, {responseType: "arraybuffer"});
       let studentsWithImages: IStudent[] = [];
       if (response.status === 200) {
         const zip = await JSZip.loadAsync(response.data);
@@ -166,9 +127,7 @@ export const getStudentImages = (
           };
 
           // Find the matching image in the zip archive based on email
-          const matchedImage = Object.keys(zip.files).find((filename) =>
-            filename.startsWith(student.email)
-          );
+          const matchedImage = Object.keys(zip.files).find((filename) => filename.startsWith(student.email));
 
           if (matchedImage) {
             const file = zip.files[matchedImage];
@@ -199,10 +158,7 @@ export const deleteStudent = (id: string, studentEmail: string) => {
   return async (dispatch: AppDispatch) => {
     try {
       let subjectId = parseInt(id);
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/Student/remove-from-subject/${subjectId}?studentEmail=` +
-          studentEmail
-      );
+      const response = await axios.delete(`${API_BASE_URL}/api/Student/remove-from-subject/${subjectId}?studentEmail=` + studentEmail);
       if (response.status === 200) {
         dispatch(getStudentsList(subjectId));
       }
@@ -241,8 +197,7 @@ export const getVisibleSubjectContent = (subjectId: number | string) => {
         type: GET_SUBJECT_CONTENT,
         tests: [],
       });
-      const url =
-        `${API_BASE_URL}/api/Subject/visible-subject-content/` + subjectId;
+      const url = `${API_BASE_URL}/api/Subject/visible-subject-content/` + subjectId;
       const response = await axios.get(url);
       if (response.status === 200) {
         dispatch({
@@ -257,18 +212,11 @@ export const getVisibleSubjectContent = (subjectId: number | string) => {
   };
 };
 
-export const updateContentVisibility = (
-  contentid: string | number,
-  visibility: boolean,
-  subjectId: string | number
-) => {
+export const updateContentVisibility = (contentid: string | number, visibility: boolean, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(showLoader());
-      const response = await axios.put(
-        `${API_BASE_URL}/api/Subject/set-subject-content-visibility/${contentid}?isVisible=` +
-          visibility
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/Subject/set-subject-content-visibility/${contentid}?isVisible=` + visibility);
       if (response.status === 200) {
         dispatch(getSubjectContent(subjectId));
       }

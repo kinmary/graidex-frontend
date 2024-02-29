@@ -3,7 +3,7 @@ import {AppDispatch} from "../../app/store";
 import {API_BASE_URL} from "../../constants/config";
 import {CheckAuthorization, SetOpen} from "../MainAction";
 import {getSubjectContent} from "./SubjectActions";
-import {IUpdateTestDto} from "../../interfaces/UpdateTestDto";
+import {IUpdateTestDto, IUpdateTestTimeDto} from "../../interfaces/UpdateTestDto";
 import {IUpdateTestDraftDto} from "../../interfaces/UpdateTestDraftDto";
 import {ICreateTestDto} from "../../interfaces/CreateTestDto";
 import {SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT} from "../MainReducer";
@@ -16,6 +16,7 @@ import {IMultipleChoiceOption} from "../../interfaces/MutipleChoiceOptions";
 import {IOption} from "../../interfaces/Option";
 import {ISingleChoiceQuestion} from "../../interfaces/SingleChoiceQuestion";
 import {IOpenQuestion} from "../../interfaces/OpenQuestion";
+import {parseReviewResultToFrontend} from "../../utils/GetReviewResult";
 
 export const createTestDraft = (subjectId: string | number | undefined, title: string, description: string, gradeToPass: number) => {
   return async (dispatch: AppDispatch) => {
@@ -174,6 +175,7 @@ export const getTest = (testid: string | number) => {
         response.data.startDateTime += "Z";
         response.data.endDateTime += "Z";
 
+        response.data.reviewResult = parseReviewResultToFrontend(response.data.reviewResult);
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
           currentTestDraft: response.data,
@@ -244,6 +246,28 @@ export const updateTest = (testid: string | number, updateTestDto: IUpdateTestDt
   return async (dispatch: AppDispatch) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/api/Test/update-test/` + testid, updateTestDto);
+      if (response.status === 200) {
+        dispatch(getSubjectContent(subjectId));
+        dispatch(getTest(testid));
+      }
+    } catch (error: any) {
+      if (error.response.status === 400 && error.response.data) {
+        //Bad Request
+        // error.response.data.map((obj: any) =>
+        alert(error.response.data);
+        // );
+      } else {
+        dispatch(CheckAuthorization(error.response.status));
+        alert(error.message);
+      }
+    }
+  };
+};
+
+export const updateTestTime = (testid: string | number, updateTestTimeDto: IUpdateTestTimeDto, subjectId: string | number) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/api/Test/update-test-time/` + testid, updateTestTimeDto);
       if (response.status === 200) {
         dispatch(getSubjectContent(subjectId));
         dispatch(getTest(testid));

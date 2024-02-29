@@ -7,5 +7,6 @@ export interface ICreateTestDto {
     autoCheckAfterSubmission: boolean;
     reviewResult: number | undefined;
     orderIndex: number;
+    shuffleQuestions: boolean;
     isVisible: boolean | undefined;
 }

@@ -53,7 +53,7 @@ const StudentsList = ({subjectId}: StudentListArg) => {
 
   const handleRemoveStudent = (email: string) => {
     dispatch(removeStudentsFromTest(currentTestDraft.id, [email]));
-  }
+  };
 
   return (
     <Form.Group style={{marginTop: 20, marginBottom: 20}}>
