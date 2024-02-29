@@ -270,7 +270,7 @@ export const updateContentVisibility = (
           visibility
       );
       if (response.status === 200) {
-        // dispatch(getSubjectContent(subjectId));
+        dispatch(getSubjectContent(subjectId));
       }
     } catch (error: any) {
       if (error.response.status === 400) {

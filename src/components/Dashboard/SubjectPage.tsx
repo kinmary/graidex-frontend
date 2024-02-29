@@ -4,6 +4,8 @@ import {
   Button,
   Card,
   Dropdown,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import { SetOpen } from "../MainAction";
 import { useAppDispatch } from "../../app/hooks";
@@ -222,6 +224,14 @@ const SubjectPage = () => {
                               {/* <div className="text-secondary">
                       {test.date}, {idx % 2 === 0 ? "10:00" : "12:00"} - {idx % 2 === 0 ? "14:00" : "13:00"}
                     </div> */}
+                            {test.warningMessage && (
+                              <OverlayTrigger
+                                overlay={
+                                  <Tooltip id="button-tooltip-2">{test.warningMessage}</Tooltip>
+                                }>
+                                <i className="bi bi-exclamation-triangle-fill ms-auto text-warning"></i>
+                              </OverlayTrigger>
+                            )}
                             </Card.Title>
                           </Card.Body>
                         </Card>
