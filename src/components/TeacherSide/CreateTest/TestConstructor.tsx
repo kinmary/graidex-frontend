@@ -22,12 +22,14 @@ import { useSelector } from "react-redux";
 import { IQuestion } from "../../../interfaces/Questions";
 import IAnswerOption from "../../../interfaces/AnswerOption";
 import QuestionsDraggableList from "./QuestionsDraggableList";
+import { themes } from "../../../constants/Themes";
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
   const createTest = useSelector((state: RootState) => state.createTest);
   const currentTestDraft = useSelector(
     (state: RootState) => state.main.currentTestDraft
   );
+  const theme = useSelector((state: RootState) => state.main.theme);
 
   const [state, setState] = useState({
     defaultAnswer: { id: 0, text: "", isCorrect: false },
@@ -296,7 +298,7 @@ const TestConstructor = () => {
             {/* )}  */}
             <div className="d-flex align-items-center mb-2">
               <Dropdown drop="down-centered" className="me-3">
-                <Dropdown.Toggle variant="light" id="status-dropdown" key={1}>
+                <Dropdown.Toggle variant={theme} id="status-dropdown" key={1}>
                   <i
                     className={
                       questionTypes[selectedQuestion.type].iconClass + " me-2"
@@ -503,7 +505,7 @@ const TestConstructor = () => {
                 <Navbar.Brand>
                   {/* //TODO: add on hover text */}
                   <Button
-                    variant="outline-dark"
+                    variant={theme === themes.light ? "outline-dark" : "outline-light"}
                     className="rounded-circle"
                     style={{ fontSize: "24px" }}
                     onClick={handleBackClick}
@@ -515,7 +517,7 @@ const TestConstructor = () => {
               {questions && indexOfSelected !== questions.length - 1 && (
                 <Navbar.Brand style={{ marginLeft: "auto", marginRight: 0 }}>
                   <Button
-                    variant="outline-dark"
+                    variant={theme === themes.light ? "outline-dark" : "outline-light"}
                     className="rounded-circle"
                     style={{ fontSize: "24px" }}
                     onClick={handleNextClick}

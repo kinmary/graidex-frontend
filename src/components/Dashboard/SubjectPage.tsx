@@ -15,6 +15,7 @@ import AddTestModal from "../Modals/AddTestModal";
 import {getAttemptsDescription, getDraft, getTest, getVisibleTestStudent} from "./TestActions";
 import {getSubjectContent, getVisibleSubjectContent, updateContentVisibility} from "./SubjectActions";
 import logoDark from "../../images/GraidexLogoDarkJPG.jpg";
+import { themes } from "../../constants/Themes";
 
 const SubjectPage = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -31,6 +32,7 @@ const SubjectPage = () => {
   useEffect(() => {
     auth.userRole === 0 ? dispatch(getSubjectContent(params.selectedSubjectId!)) : dispatch(getVisibleSubjectContent(params.selectedSubjectId!));
   }, []);
+
   useEffect(() => {
     //navigate("/");
     if (main.tests && main.tests.length > 0) {
@@ -121,7 +123,7 @@ const SubjectPage = () => {
                       <i className="bi bi-plus-lg me-2"></i>Create draft
                     </Button>
                     <Dropdown>
-                      <Dropdown.Toggle variant="light" id="dropdown-basic">
+                      <Dropdown.Toggle variant={main.theme} id="dropdown-basic">
                         {isPreview ? <i className="bi bi-eye"></i> : <i className="bi bi-eye-slash"></i>}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
@@ -173,7 +175,7 @@ const SubjectPage = () => {
                         </Card>
                         <div className="d-flex justify-content-center mt-1" style={{width: "100px"}}>
                           <Dropdown>
-                            <Dropdown.Toggle variant="light">{!test.isVisible ? "Hidden" : "Shown"}</Dropdown.Toggle>
+                            <Dropdown.Toggle variant={main.theme}>{!test.isVisible ? "Hidden" : "Shown"}</Dropdown.Toggle>
                             <Dropdown.Menu>
                               <Dropdown.Item key={`dropdown-1-${idx}`} value={true} onClick={() => onChangeVisible(test.id, true, test.subjectId)}>
                                 Shown
@@ -205,7 +207,7 @@ const SubjectPage = () => {
                         </Card>
                         <div className="d-flex justify-content-center mt-1" style={{width: "100px"}}>
                           <Dropdown>
-                            <Dropdown.Toggle disabled variant="light" id="dropdown-basic">
+                            <Dropdown.Toggle disabled variant={main.theme} id="dropdown-basic">
                               Hidden
                             </Dropdown.Toggle>
                           </Dropdown>

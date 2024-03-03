@@ -1,5 +1,6 @@
 import { Badge, Col, Row, Image, Navbar, NavDropdown } from "react-bootstrap";
 import logo from "../images/GraidexLogoLightSVG.svg";
+import logoDark from "../images/GraidexLogoDarkSVG.svg";
 import profilePic from "../images/blank-profile-picture.jpg";
 import "../styles/header.css";
 import { SetOpen } from "./MainAction";
@@ -11,10 +12,20 @@ import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { useNavigate } from "react-router-dom";
 import { Logout } from "./Auth/AuthAction";
+import { themes } from "../constants/Themes";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const auth = useSelector((state: RootState) => state.auth);
+  const theme = useSelector((state: RootState) => state.main.theme);
+
+  const handleThemeChange = () => {
+    const selectedTheme = theme === themes.light ? themes.dark : themes.light;
+    localStorage.setItem('theme', selectedTheme);
+    document.documentElement.setAttribute('data-bs-theme', selectedTheme);
+    dispatch(SetOpen("theme", selectedTheme));
+  };
+
   const navigate = useNavigate();
   const handleEditProfile = () => {
     dispatch(SetOpen("editPage", true));
@@ -37,22 +48,21 @@ const Header = () => {
     dispatch(Logout());
     navigate("/");
   };
-  // TODO: work on responsiveness of header
 
   return (
     <Navbar
       fixed="top"
-      bg="white"
+      // bg="white"
       style={{
         paddingLeft: 12,
         paddingRight: 12,
         display: "flex",
         alignItems: "center",
-        borderBottom: "1px #dde0e4 solid",
+        borderBottom: `1px ${ theme === themes.light ? "#dde0e4" : "#212529"} solid`,
       }}
     >
       <Image
-        src={logo}
+        src={theme === themes.light ? logo : logoDark}
         width="100"
         style={{ marginRight: 10 }}
         onClick={handleLogoClick}
@@ -119,9 +129,9 @@ const Header = () => {
             <i className="bi bi-translate me-2" style={{ marginRight: 5 }}></i>
             Language
           </NavDropdown.Item>
-          <NavDropdown.Item disabled>
-            <i className="bi bi-brightness-high me-2"></i>
-            Theme: Light
+          <NavDropdown.Item onClick={handleThemeChange}>
+            <i className={ theme === themes.light ? "bi bi-brightness-high me-2" : "bi bi-moon-stars me-2"}></i>
+            Theme: {theme === themes.light ? "Light" : "Dark"}
           </NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item onClick={handleLogOut}>

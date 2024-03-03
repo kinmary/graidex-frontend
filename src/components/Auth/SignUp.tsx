@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import "../../styles/auth.css";
 import logo from "../../images/GraidexLogoLightSVG.svg";
+import logoDark from "../../images/GraidexLogoDarkSVG.svg";
 import {
   SetNewUser,
   setError,
@@ -19,9 +20,11 @@ import {
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { themes } from "../../constants/Themes";
 
 
 const SignUp = () => {
+ const theme = localStorage.getItem('theme') || themes.light;
  const [teacher, setTeacher] = useState({
         email: "",
         name: "",
@@ -92,14 +95,14 @@ const SignUp = () => {
       <div className="container mb-3">
         <Card body className="card-auth">
           <div className="logo-container">
-            <Image src={logo} width="50%" />
+            <Image src={theme === themes.light ? logo : logoDark} width="50%" />
           </div>
           <ButtonGroup className="d-flex" style={{ marginTop: 10 }}>
             <ToggleButton
               size="sm"
               type="radio"
               name="Teacher"
-              variant="outline-dark"
+              variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={0}
               checked={auth.userRole === 0 ? true : false}
               onClick={(e) => dispatch(ChangeUserRole(0))}
@@ -110,7 +113,7 @@ const SignUp = () => {
               size="sm"
               type="radio"
               name="Student"
-              variant="outline-dark"
+              variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={1}
               checked={auth.userRole === 1 ? true : false}
               onClick={(e) => dispatch(ChangeUserRole( 1 ))}
