@@ -39,6 +39,7 @@ const AddStudentModal = () => {
             <Form.Group className="mb-3">
               <Form.Label>Student Email</Form.Label>
               <Form.Control
+              autoComplete="off"
                 placeholder="Enter student email"
                 required
                 value={email}

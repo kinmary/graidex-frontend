@@ -54,6 +54,7 @@ const AnswersGrid = () => {
       >
         <div className="d-flex mb-2">
           <Form.Control
+            autoComplete="off"
             size="sm"
             className="me-2 w-auto flex-grow-1"
             type="text"

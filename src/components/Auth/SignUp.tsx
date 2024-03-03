@@ -131,6 +131,7 @@ const SignUp = () => {
                     : student.email
                 }
                 onChange={handleInputChange}
+                autoComplete="off"
                 isInvalid={auth.errors!.email !== ""}
                 onInvalid={(e: any) => {
                   e.preventDefault();
@@ -152,6 +153,7 @@ const SignUp = () => {
                 <Form.Control
                   placeholder="Name"
                   name="name"
+                  autoComplete="off"
                   minLength={1}
                   maxLength={50}
                   value={
@@ -166,6 +168,7 @@ const SignUp = () => {
                 <Form.Control
                   placeholder="Surname"
                   name="surname"
+                  autoComplete="off"
                   minLength={1}
                   maxLength={50}
                   value={
@@ -184,6 +187,7 @@ const SignUp = () => {
                 <Form.Label>Student Id</Form.Label>
                 <Form.Control
                   placeholder="Student Id"
+                  autoComplete="off"
                   name="customId"
                   value={student.customId}
                   onChange={handleInputChange}

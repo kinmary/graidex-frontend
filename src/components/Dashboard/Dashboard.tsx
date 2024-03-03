@@ -7,8 +7,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
 import {useNavigate} from "react-router-dom";
 import {getSubjectContent, getVisibleSubjectContent} from "./SubjectActions";
-import {useEffect} from "react";
-import {CheckAuthentication} from "../Auth/AuthAction";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();

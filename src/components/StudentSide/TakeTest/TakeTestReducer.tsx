@@ -3,11 +3,15 @@ import { IQuestion } from "../../../interfaces/Questions";
 interface TakeTestState {
   questions?: IQuestion[] | undefined;
   testResultId?: string | number | undefined;
+  startTime?: Date | undefined;
+  endTime?:   Date | undefined;
 
 }
 export const initialState: TakeTestState = {
   questions: undefined,
   testResultId: 0,
+  startTime: undefined ,
+  endTime: undefined,
 };
 
 export interface Action {
@@ -16,12 +20,15 @@ export interface Action {
     | typeof INPUT_STUD_CHANGE
     | typeof CHANGE_STUD_QUESTIONS
     | typeof CHANGE_STUD_ANSWERS
-    | typeof SET_TEST_RESULT_ID;
+    | typeof SET_TEST_RESULT_ID
+    | typeof SET_START_AND_END_TIME;
   questions?: IQuestion[];
   id?: number;
   text?: string;
   answerOptions?: IAnswerOption[];
   testResultId?: string | number; 
+  startTime?: Date;
+  endTime?: Date;
 }
 
   
@@ -66,6 +73,13 @@ export interface Action {
           testResultId: action.testResultId,
         };
         break;
+      case SET_START_AND_END_TIME:
+        state = {
+          ...state,
+          startTime: action.startTime,
+          endTime: action.endTime,
+        };
+        break;
       default:
         break;
     }
@@ -78,4 +92,6 @@ export interface Action {
   export const CHANGE_STUD_QUESTIONS = "CHANGE_STUD_QUESTIONS";
   export const CHANGE_STUD_ANSWERS = "CHANGE_STUD_ANSWERS";
   export const SET_TEST_RESULT_ID = "SET_TEST_RESULT_ID";
+  export const SET_START_AND_END_TIME = "SET_START_AND_END_TIME";
+
   

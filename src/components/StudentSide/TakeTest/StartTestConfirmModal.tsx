@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { useNavigate } from "react-router-dom";
 
-const StartTestConfirmModal = () => {
+const StartTestConfirmModal = () => { //IS NOT USED ANYWHERE
   const dispatch = useAppDispatch();
   const main : any = useSelector((state: RootState) => state.main);
   const navigate = useNavigate();

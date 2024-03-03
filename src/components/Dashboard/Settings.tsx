@@ -153,8 +153,6 @@ const Settings = () => {
         } else {
           dispatch(updateTest(currentTestDraft.id, newTest, params.selectedSubjectId));
         }
-        
-        
       }
     }
     if (currentTestDraft.itemType === "TestDraft" && params.selectedSubjectId) {
@@ -248,9 +246,9 @@ const Settings = () => {
 
   const handleTestDraftDuplicate = () => {
     if (currentTestDraft.itemType === "Test") {
-      dispatch(createDraftFromTest(currentTestDraft.id));
+      dispatch(createDraftFromTest(currentTestDraft.id, currentTestDraft.title));
     } else if (currentTestDraft.itemType === "TestDraft") {
-      dispatch(duplicateDraft(currentTestDraft.id));
+      dispatch(duplicateDraft(currentTestDraft.id, currentTestDraft.title));
     }
     navigate(`/${params.selectedSubjectId!}`);
   };
@@ -314,16 +312,16 @@ const Settings = () => {
             <div style={{width: "80%"}}>
               <Form.Group key={1}>
                 <Form.Label>Title</Form.Label>
-                <Form.Control type="text" name="title" placeholder="Enter title" value={inputs.title} onChange={handleInputsChange} />
+                <Form.Control type="text" name="title" autoComplete="off" placeholder="Enter title" value={inputs.title} onChange={handleInputsChange} />
               </Form.Group>
 
               <Form.Group style={{marginTop: 5}}>
                 <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" rows={4} name="description" placeholder="Enter description" value={inputs.description} onChange={handleInputsChange} />
+                <Form.Control as="textarea" rows={4} name="description" autoComplete="off" placeholder="Enter description" value={inputs.description} onChange={handleInputsChange} />
               </Form.Group>
               <Form.Group style={{marginTop: 5}}>
                 <Form.Label>Grade to pass the test</Form.Label>
-                <Form.Control type="number" name="gradeToPass" min={0} max={10} disabled={currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()} value={inputs.gradeToPass} onChange={handleInputsChange} />
+                <Form.Control type="number" name="gradeToPass" autoComplete="off" min={0} max={10} disabled={currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()} value={inputs.gradeToPass} onChange={handleInputsChange} />
               </Form.Group>
 
               {currentTestDraft.itemType === "Test" && (
@@ -335,6 +333,7 @@ const Settings = () => {
                         disabled={currentTestDraft.itemType === "Test" && dates.startDate.getTime() < new Date().getTime()}
                         type="date"
                         placeholder="Enter date"
+                        autoComplete="off"
                         name="startDate"
                         value={dates.startDate && dates.startDate.toISOString().split("T")[0]}
                         onChange={handleDateChange}
@@ -343,6 +342,7 @@ const Settings = () => {
                         type="time"
                         placeholder="Enter time"
                         name="startDate"
+                        autoComplete="off"
                         disabled={currentTestDraft.itemType === "Test" && dates.startDate.getTime() < new Date().getTime()}
                         value={new Intl.DateTimeFormat("default", {
                           hour: "2-digit",
@@ -361,6 +361,7 @@ const Settings = () => {
                         type="date"
                         placeholder="Enter date"
                         name="endDate"
+                        autoComplete="off"
                         disabled={currentTestDraft.itemType === "Test" && dates.startDate.getTime() < new Date().getTime()}
                         value={dates.endDate && dates.endDate.toISOString().split("T")[0]}
                         onChange={handleDateChange}
@@ -369,6 +370,7 @@ const Settings = () => {
                         type="time"
                         placeholder="Enter time"
                         name="endDate"
+                        autoComplete="off"
                         disabled={currentTestDraft.itemType === "Test" && dates.startDate.getTime() < new Date().getTime()}
                         value={new Intl.DateTimeFormat("default", {
                           hour: "2-digit",
@@ -387,6 +389,7 @@ const Settings = () => {
                         value={timeLimit.hours}
                         name="hours"
                         type="number"
+                        autoComplete="off"
                         style={{
                           color: timeLimit.hours < 0 ? "#dc3545" : "black",
                           borderColor: "#dee2e6",
@@ -410,6 +413,7 @@ const Settings = () => {
                       <Form.Control
                         disabled={!isCustomTimeLimit || (currentTestDraft.itemType === "Test" && dates.startDate.getTime() < new Date().getTime())}
                         value={timeLimit.minutes}
+                        autoComplete="off"
                         style={{
                           color: timeLimit.minutes < 0 ? "#dc3545" : "black",
                           borderColor: "#dee2e6",

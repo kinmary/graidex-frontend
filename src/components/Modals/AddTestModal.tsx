@@ -51,6 +51,7 @@ const AddTestModal = ({subjectId}: IProps) => {
               <Form.Control
                 placeholder="Enter test title"
                 required
+                autoComplete="off"
                 name="title"
                 value={testDraft.title}
                 onChange={handleInputChange}
@@ -61,6 +62,7 @@ const AddTestModal = ({subjectId}: IProps) => {
               <Form.Control
                 name="description"
                 as="textarea" 
+                autoComplete="off"
                 rows={2}
                 placeholder="Enter description"
                 value={testDraft.description}
@@ -72,6 +74,7 @@ const AddTestModal = ({subjectId}: IProps) => {
               <Form.Control
                 type="number"
                 name="gradeToPass"
+                autoComplete="off"
                 max={10}
                 min={1}
                 value={testDraft.gradeToPass}

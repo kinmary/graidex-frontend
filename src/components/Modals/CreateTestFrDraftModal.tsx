@@ -188,16 +188,17 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
           <Form>
             <Form.Group style={{marginTop: 5}}>
               <Form.Label>Title</Form.Label>
-              <Form.Control type="text" name="title" placeholder="Enter title" value={title} onChange={handleInputsChange} />
+              <Form.Control type="text" name="title" autoComplete="off" placeholder="Enter title" value={title} onChange={handleInputsChange} />
             </Form.Group>
             <Form.Group style={{marginTop: 5}}>
               <Form.Label>Start date and time</Form.Label>
               <InputGroup>
-                <Form.Control type="date" placeholder="Enter date" name="startDate" value={dates.startDate && dates.startDate.toISOString().split("T")[0]} onChange={handleDateChange} />
+                <Form.Control type="date" placeholder="Enter date" autoComplete="off" name="startDate" value={dates.startDate && dates.startDate.toISOString().split("T")[0]} onChange={handleDateChange} />
                 <Form.Control
                   type="time"
                   placeholder="Enter time"
                   name="startDate"
+                  autoComplete="off"
                   value={new Intl.DateTimeFormat("default", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -216,6 +217,7 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
                   type="time"
                   placeholder="Enter time"
                   name="endDate"
+                  autoComplete="off"
                   value={new Intl.DateTimeFormat("default", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -235,6 +237,7 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
                   value={timeLimit.hours}
                   name="hours"
                   type="number"
+                  autoComplete="off"
                   min={0}
                   disabled={!isCustomTimeLimit || (currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime())}
                   className="border-end-0"
@@ -255,6 +258,7 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
                   value={timeLimit.minutes}
                   name="minutes"
                   type="number"
+                  autoComplete="off"
                   min={0}
                   max={59}
                   className="border-end-0"

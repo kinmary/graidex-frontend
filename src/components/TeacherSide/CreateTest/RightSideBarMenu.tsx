@@ -203,6 +203,7 @@ const RightSideBarMenu = () => {
                 </Form.Label>
                 <Form.Control
                   type="number"
+                  autoComplete="off"
                   min={1}
                   style={{
                     marginRight: "5px",

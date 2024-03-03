@@ -149,6 +149,7 @@ const ChangeImageModal = () => {
               <Form.Control
                 type="search"
                 placeholder="Search"
+                autoComplete="off"
                 aria-label="Search"
                 onChange={(event) => {setState({...state, search: event.target.value})}}
                 value={state.search}

@@ -80,7 +80,9 @@ const SubjectPage = () => {
   const onChangeVisible = (testid: string | number, visible: boolean, subjectid: string | number) => {
     dispatch(updateContentVisibility(testid, visible, subjectid));
   };
-
+  const renderTooltip = (warning: string, props: any) => (
+    <Tooltip id="button-tooltip-2" {...props}>{warning}</Tooltip>
+  );
   return (
     <>
       <DeleteSubjectModal />
@@ -161,12 +163,8 @@ const SubjectPage = () => {
                           <Card.Body>
                             <Card.Title className="d-flex justify-content-between mb-0 h6">
                               <div>{test.title}</div>
-                              {/* TODO: add date */}
-                              {/* <div className="text-secondary">
-                      {test.date}, {idx % 2 === 0 ? "10:00" : "12:00"} - {idx % 2 === 0 ? "14:00" : "13:00"}
-                    </div> */}
                               {test.warningMessage && (
-                                <OverlayTrigger overlay={<Tooltip id="button-tooltip-2">{test.warningMessage}</Tooltip>}>
+                                <OverlayTrigger overlay={(props) => renderTooltip(test.warningMessage || "", props)}>
                                   <i className="bi bi-exclamation-triangle-fill ms-auto text-warning"></i>
                                 </OverlayTrigger>
                               )}

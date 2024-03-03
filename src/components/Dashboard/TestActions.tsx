@@ -25,6 +25,7 @@ export const createTestDraft = (subjectId: string | number | undefined, title: s
         title: title,
         description: description,
         gradeToPass: gradeToPass,
+        orderIndex: 0,
       };
       const response = await axios.post(`${API_BASE_URL}/api/Test/create-draft/` + subjectId, createTestDraftDto);
       if (response.status === 200) {
@@ -42,10 +43,14 @@ export const createTestDraft = (subjectId: string | number | undefined, title: s
   };
 };
 
-export const createDraftFromTest = (testid: string | number) => {
+export const createDraftFromTest = (testid: string | number, title: string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/Test/create-draft-from-test/` + testid);
+      let createDraftFromTestDto = {
+        title: title,
+        orderIndex: 0,
+      }
+      const response = await axios.post(`${API_BASE_URL}/api/Test/create-draft-from-test/` + testid, createDraftFromTestDto);
       if (response.status === 200) {
         dispatch(getSubjectContent(response.data.subjectId));
       }
@@ -60,10 +65,14 @@ export const createDraftFromTest = (testid: string | number) => {
   };
 };
 
-export const duplicateDraft = (draftid: string | number) => {
+export const duplicateDraft = (draftid: string | number, title: string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/Test/duplicate-draft/` + draftid);
+      let duplicateDraftDto = {
+        title: title,
+        orderIndex: 0,
+      }
+      const response = await axios.post(`${API_BASE_URL}/api/Test/duplicate-draft/` + draftid, duplicateDraftDto);
       if (response.status === 200) {
         dispatch(getSubjectContent(response.data.subjectId));
         // dispatch(SetOpen("openSubjectModal", false));

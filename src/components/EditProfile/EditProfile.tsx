@@ -88,6 +88,7 @@ const EditProfile = () => {
             <Col className="mb-4 ms-2">
               <Form.Control
                 type="file"
+                autoComplete="off"
                 size="sm"
                 className="mb-1"
                 onChange={handleProfilePicChange}
@@ -115,7 +116,7 @@ const EditProfile = () => {
           </h5>
           <Form.Group className="mb-2" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" value={auth.email} required disabled />
+            <Form.Control type="email" autoComplete="off" value={auth.email} required disabled />
           </Form.Group>
           <Form.Group className="mb-2" controlId="formBasicFullName">
             <Form.Label>
@@ -128,6 +129,7 @@ const EditProfile = () => {
               <Form.Control
                 placeholder="Name"
                 name="name"
+                autoComplete="off"
                 minLength={1}
                 maxLength={50}
                 value={state.name}
@@ -138,6 +140,7 @@ const EditProfile = () => {
               <Form.Control
                 placeholder="Surname"
                 name="surname"
+                autoComplete="off"
                 minLength={1}
                 maxLength={50}
                 value={state.surname}
@@ -152,6 +155,7 @@ const EditProfile = () => {
               <Form.Label>Student Id</Form.Label>
               <Form.Control
                 value={state.studentId}
+                autoComplete="off"
                 placeholder="Student Id"
                 name="studentId"
                 onChange={HandleChange}

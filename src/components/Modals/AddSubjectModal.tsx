@@ -48,6 +48,7 @@ const AddSubjectModal = () => {
               <Form.Control
                 placeholder="Enter subject title"
                 required
+                autoComplete="off"
                 value={state.title}
                 name="title"
                 onChange={handleInputChange}
@@ -58,6 +59,7 @@ const AddSubjectModal = () => {
               <Form.Control
                 placeholder="Enter subject Id"
                 value={state.subjectId}
+                autoComplete="off"
                 name="subjectId"
                 onChange={handleInputChange}
               />

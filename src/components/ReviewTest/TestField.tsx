@@ -107,6 +107,7 @@ const TestField = () => {
             <InputGroup style={{ width: "13%" }}>
               <Form.Control
                 type="number"
+                autoComplete="off"
                 value={selectedQuestion?.points || 0}
                 min={0}
                 onChange={ChangePoints}
@@ -178,6 +179,7 @@ const TestField = () => {
             <h5 style={{ marginTop: 30, fontWeight: "bold" }}>Feedback</h5>
             <Form.Control
               as="textarea"
+              autoComplete="off"
               rows={6}
               placeholder="Enter feedback here"
               name="text"

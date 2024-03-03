@@ -1,91 +1,96 @@
 import axios from "axios";
-import { AppDispatch, RootState } from "../../../app/store";
+import {AppDispatch, RootState} from "../../../app/store";
 import IAnswerOption from "../../../interfaces/AnswerOption";
-import { API_BASE_URL } from "../../../constants/config";
-import { IQuestion } from "../../../interfaces/Questions";
-import { CHANGE_STUD_ANSWERS, CHANGE_STUD_QUESTIONS, INPUT_STUD_CHANGE, RESET_STUD_STATE, SET_TEST_RESULT_ID } from "./TakeTestReducer";
-import { GetMultipleChoiceAnswerForStudentDto, GetOpenAnswerForStudentDto, GetSingleChoiceAnswerForStudentDto, TestAttemptMultipleChoiceQuestionForStudentDto, TestAttemptOpenQuestionForStudentDto, TestAttemptSingleChoiceQuestionForStudentDto } from "../../../constants/StudentTestBackendTypes";
-
+import {API_BASE_URL} from "../../../constants/config";
+import {IQuestion} from "../../../interfaces/Questions";
+import {CHANGE_STUD_ANSWERS, CHANGE_STUD_QUESTIONS, INPUT_STUD_CHANGE, RESET_STUD_STATE, SET_START_AND_END_TIME, SET_TEST_RESULT_ID} from "./TakeTestReducer";
+import {
+  GetMultipleChoiceAnswerForStudentDto,
+  GetOpenAnswerForStudentDto,
+  GetSingleChoiceAnswerForStudentDto,
+  TestAttemptMultipleChoiceQuestionForStudentDto,
+  TestAttemptOpenQuestionForStudentDto,
+  TestAttemptSingleChoiceQuestionForStudentDto,
+} from "../../../constants/StudentTestBackendTypes";
 
 export const ResetTakeTestState = () => {
   return (dispatch: AppDispatch) => {
-    dispatch({ type: RESET_STUD_STATE });
+    dispatch({type: RESET_STUD_STATE});
   };
 };
 
 export const SetSelectedQ = (id: number) => {
   return (dispatch: AppDispatch, getState: () => RootState) => {
     let questions = getState().takeTest.questions;
-    let updated = questions?.map((question: any) =>
-      question.id.toString() === id.toString()
-        ? { ...question, selected: true }
-        : { ...question, selected: false }
-    );
-    dispatch({ type: CHANGE_STUD_QUESTIONS, questions: updated });
+    let updated = questions?.map((question: any) => (question.id.toString() === id.toString() ? {...question, selected: true} : {...question, selected: false}));
+    dispatch({type: CHANGE_STUD_QUESTIONS, questions: updated});
   };
 };
 
-export const InputChange = (id: number,  text: string) => {
+export const InputChange = (id: number, text: string) => {
   return (dispatch: AppDispatch, getState: () => RootState) => {
-        dispatch({ type: INPUT_STUD_CHANGE, id, text });
+    dispatch({type: INPUT_STUD_CHANGE, id, text});
   };
 };
 
 export const ChangeAnswers = (id: number, answerOptions: IAnswerOption[]) => {
   return (dispatch: AppDispatch, getState: () => RootState) => {
-        dispatch({ type: CHANGE_STUD_ANSWERS, id, answerOptions });
+    dispatch({type: CHANGE_STUD_ANSWERS, id, answerOptions});
   };
 };
 
-export const getAllQuestionsWithAnswers = (testResultid: string) => {    
-      return async (dispatch: AppDispatch) => {
-        try {
-          const response = await axios.get(
-            `${API_BASE_URL}/api/TestResult/get-all-questions-with-answers/` + testResultid
-          );
-          dispatch({ type: RESET_STUD_STATE });
-          if (response.data.length !== 0) {
-            let questions: IQuestion[] = mapToFrontendQuestionsStudent(response.data.answers).filter(x => x!==undefined) as IQuestion[];
-            dispatch({ type: CHANGE_STUD_QUESTIONS, questions: questions });
-            dispatch({ type: SET_TEST_RESULT_ID, testResultId: testResultid });
-            return true;
-          }
-        } catch (error: any) {
-          alert(error.message);
-          return false;
-        }
-      };
+export const getAllQuestionsWithAnswers = (testResultid: string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/TestResult/get-all-questions-with-answers/` + testResultid);
+      // dispatch({type: RESET_STUD_STATE});
+      if (response.data.length !== 0) {
+        response.data.startTime += "Z";
+        response.data.endTime += "Z";
+        dispatch({type: SET_TEST_RESULT_ID, testResultId: testResultid});
+        dispatch({type: SET_START_AND_END_TIME, startTime: new Date(response.data.startTime), endTime: new Date(response.data.endTime)});
+        let questions: IQuestion[] = mapToFrontendQuestionsStudent(response.data.answers).filter((x) => x !== undefined) as IQuestion[];
+        dispatch({type: CHANGE_STUD_QUESTIONS, questions: questions});
+        return true;
+      }
+    } catch (error: any) {
+      // alert(error.message);
+      return false;
+    }
+  };
 };
 
 export const startTestAttempt = (testid: string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/TestResult/start-test-attempt/` + testid
-      );
+      dispatch({type: RESET_STUD_STATE});
+      const response = await axios.post(`${API_BASE_URL}/api/TestResult/start-test-attempt/` + testid);
       if (response.status === 200) {
+        // todo: check why response dates are already returned with "Z"
+        // response.data.startTime += "Z";
+        // response.data.endTime += "Z";
+        dispatch({type: SET_TEST_RESULT_ID, testResultId: response.data.id});
+        dispatch({type: SET_START_AND_END_TIME, startTime: new Date(response.data.startTime), endTime: new Date(response.data.endTime)});
         if (response.data.length !== 0) {
-          let questions: IQuestion[] = mapToFrontendQuestionsStudent(response.data.answers).filter(x => x!==undefined) as IQuestion[];
-          dispatch({ type: CHANGE_STUD_QUESTIONS, questions: questions });
-        } 
-        dispatch({ type: SET_TEST_RESULT_ID, testResultId: response.data.id });
-       return response.data;
+          let questions: IQuestion[] = mapToFrontendQuestionsStudent(response.data.answers).filter((x) => x !== undefined) as IQuestion[];
+          dispatch({type: CHANGE_STUD_QUESTIONS, questions: questions});
+        }
+        return response.data;
       }
       return false;
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        // alert("Error");
-        return false;
-      } else {
-        //   dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-        return false;
-      }
+      // if (error.response.status === 400) {
+      //   //Bad Request
+      //   // alert("Error");
+      //   return false;
+      // } else {
+      //   //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      //   return false;
+      // }
     }
   };
 };
-
 
 export const updateTestAttempt = (testResultid: string, question: IQuestion, index: number) => {
   return async (dispatch: AppDispatch) => {
@@ -96,7 +101,7 @@ export const updateTestAttempt = (testResultid: string, question: IQuestion, ind
           let choiceOptionIndex: number = question.answerOptions.findIndex((x: IAnswerOption) => x.selected === true);
           answerDto = {
             $type: GetSingleChoiceAnswerForStudentDto,
-            choiceOptionIndex: choiceOptionIndex
+            choiceOptionIndex: choiceOptionIndex,
           };
           break;
         case 1:
@@ -108,88 +113,53 @@ export const updateTestAttempt = (testResultid: string, question: IQuestion, ind
           }, []);
           answerDto = {
             $type: GetMultipleChoiceAnswerForStudentDto,
-            choiceOptionIndexes: selectedIndexes
+            choiceOptionIndexes: selectedIndexes,
           };
           break;
         case 2:
           answerDto = {
             $type: GetOpenAnswerForStudentDto,
-            text: question.answerOptions[0].text
+            text: question.answerOptions[0].text,
           };
           break;
-        }
-      const response = await axios.put(
-        `${API_BASE_URL}/api/TestResult/update-test-attempt/` + testResultid +`?index=` +
-        index, answerDto
-      );
+      }
+      const response = await axios.put(`${API_BASE_URL}/api/TestResult/update-test-attempt/` + testResultid + `?index=` + index, answerDto);
       if (response.status === 200) {
-       return response.data;
+        return response.data;
       }
       return false;
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        // alert("Error");
-        return false;
-      } else {
-        //   dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-        return false;
-      }
+      // if (error.response.status === 400) {
+      //   //Bad Request
+      //   // alert("Error");
+      //   return false;
+      // } else {
+      //   //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      //   return false;
+      // }
     }
   };
 };
 
-
-export const submitTestAttempt = (testResultid: string, question: IQuestion, index: number) => {
+export const submitTestAttempt = (testResultid: string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      let answerDto = {};
-      switch (question.type) {
-        case 0:
-          let choiceOptionIndex: number = question.answerOptions.findIndex((x: IAnswerOption) => x.selected === true);
-          answerDto = {
-            $type: GetSingleChoiceAnswerForStudentDto,
-            choiceOptionIndex: choiceOptionIndex
-          };
-          break;
-        case 1:
-          let selectedIndexes: number[] = question.answerOptions.reduce((indexes: number[], option: IAnswerOption, index: number) => {
-            if (option.selected === true) {
-              indexes.push(index);
-            }
-            return indexes;
-          }, []);
-          answerDto = {
-            $type: GetMultipleChoiceAnswerForStudentDto,
-            choiceOptionIndexes: selectedIndexes
-          };
-          break;
-        case 2:
-          answerDto = {
-            $type: GetOpenAnswerForStudentDto,
-            text: question.answerOptions[0].text
-          };
-          break;
-        }
-      const response = await axios.put(
-        `${API_BASE_URL}/api/TestResult/submit-test-attempt/` + testResultid +`?index=` +
-        index, answerDto
-      );
+      const response = await axios.put(`${API_BASE_URL}/api/TestResult/submit-test-attempt/` + testResultid);
       if (response.status === 200) {
-       return response.data;
+        return response.data;
       }
       return false;
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        // alert("Error");
-        return false;
-      } else {
-        //   dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-        return false;
-      }
+      // if (error.response.status === 400) {
+      //   //Bad Request
+      //   // alert("Error");
+      //   return false;
+      // } else {
+      //   //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      //   return false;
+      // }
     }
   };
 };
@@ -198,16 +168,14 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
   return questions.map((element: any, idx: number) => {
     switch (element.question.$type) {
       case TestAttemptSingleChoiceQuestionForStudentDto:
-        let options: IAnswerOption[] = element.question.options.map(
-          (x: any, idx: number) => {
-            return {
-              id: idx,
-              text: x.text,
-              isCorrect: element.answer.choiceOptionIndex === idx,
-              selected: element.answer.choiceOptionIndex === idx,
-            };
-          }
-        );
+        let options: IAnswerOption[] = element.question.options.map((x: any, idx: number) => {
+          return {
+            id: idx,
+            text: x.text,
+            isCorrect: element.answer.choiceOptionIndex === idx,
+            selected: element.answer.choiceOptionIndex === idx,
+          };
+        });
         let single: IQuestion = {
           id: idx,
           title: element.question.text,
@@ -219,16 +187,14 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
         };
         return single;
       case TestAttemptMultipleChoiceQuestionForStudentDto:
-        let answerOptions: IAnswerOption[] = element.question.options.map(
-          (x: any, idx: number) => {
-            return {
-              id: idx,
-              text: x.option.text,
-              isCorrect: element.answer.choiceOptionIndexes.includes(idx),
-              selected: element.answer.choiceOptionIndexes.includes(idx),
-            };
-          }
-        );
+        let answerOptions: IAnswerOption[] = element.question.options.map((x: any, idx: number) => {
+          return {
+            id: idx,
+            text: x.option.text,
+            isCorrect: element.answer.choiceOptionIndexes.includes(idx),
+            selected: element.answer.choiceOptionIndexes.includes(idx),
+          };
+        });
         let multiple: IQuestion = {
           id: idx,
           title: element.question.text,
@@ -250,21 +216,21 @@ const mapToFrontendQuestionsStudent = (questions: any[]): (IQuestion | undefined
           answerOptions: [{id: 0, text: element.answer.text}],
         };
         return open;
-        default:
-          return undefined;
+      default:
+        return undefined;
     }
   });
-}
+};
 
 const getQuestionTypeStudent = (backendType: string): number => {
   switch (backendType) {
-      case TestAttemptSingleChoiceQuestionForStudentDto:
-          return 0; 
-      case TestAttemptMultipleChoiceQuestionForStudentDto:
-          return 1; 
-      case TestAttemptOpenQuestionForStudentDto:
-          return 2; 
-      default:
-          return -1; 
+    case TestAttemptSingleChoiceQuestionForStudentDto:
+      return 0;
+    case TestAttemptMultipleChoiceQuestionForStudentDto:
+      return 1;
+    case TestAttemptOpenQuestionForStudentDto:
+      return 2;
+    default:
+      return -1;
   }
-} 
+};

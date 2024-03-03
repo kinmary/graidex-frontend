@@ -107,11 +107,11 @@ const SubjectSettings = () => {
 
               <Form.Group style={{marginTop: 20}}>
                 <Form.Label>Subject name </Form.Label>
-                <Form.Control type="text" name="title" placeholder="Subject name" style={{width: "40%"}} value={subject.title} onChange={handleSubjectChange} />
+                <Form.Control type="text" name="title" autoComplete="off" placeholder="Subject name" style={{width: "40%"}} value={subject.title} onChange={handleSubjectChange} />
               </Form.Group>
               <Form.Group style={{marginTop: 20}}>
                 <Form.Label>Subject Id </Form.Label>
-                <Form.Control type="text" name="customId" placeholder="Subject id" style={{width: "40%"}} value={subject.customId} onChange={handleSubjectChange} />
+                <Form.Control type="text" name="customId" autoComplete="off" placeholder="Subject id" style={{width: "40%"}} value={subject.customId} onChange={handleSubjectChange} />
               </Form.Group>
 
               {/* <Form.Group style={{ marginTop: 20 }}>

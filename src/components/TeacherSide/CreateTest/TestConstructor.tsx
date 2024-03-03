@@ -346,6 +346,7 @@ const TestConstructor = () => {
                   : "Max points"}
               </span>
               <Form.Control
+              autoComplete="off"
                 size="sm"
                 style={{ width: "64px" }}
                 className="me-3"
@@ -367,6 +368,7 @@ const TestConstructor = () => {
             </div>
 
               <Form.Control
+              autoComplete="off"
                 as="textarea"
                 rows={selectedQuestion.type !== 2 ? 3 : 5}
                 name="title"
@@ -446,6 +448,7 @@ const TestConstructor = () => {
                                         onChange={handleCheck}
                                       />
                                         <Form.Control
+                                        autoComplete="off"
                                           placeholder={
                                             "Answer option " + (answer.id + 1)
                                           }
@@ -486,6 +489,7 @@ const TestConstructor = () => {
               </>
             )}
               <Form.Control
+              autoComplete="off"
                 as="textarea"
                 rows={5}
                 placeholder="Add default feedback for the task solution"
