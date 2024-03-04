@@ -53,6 +53,7 @@ const Header = () => {
     <Navbar
       fixed="top"
       // bg="white"
+      bg={theme === themes.light ? "white" : "dark"}
       style={{
         paddingLeft: 12,
         paddingRight: 12,
