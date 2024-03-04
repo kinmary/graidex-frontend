@@ -6,6 +6,7 @@ export interface ITestDto {
     title: string;
     description: string | undefined;
     gradeToPass: number;
+    maxPoints: number;
     itemType: string;
 
     isVisible: boolean;

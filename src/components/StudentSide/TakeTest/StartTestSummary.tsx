@@ -110,8 +110,6 @@ const StartTestSummary = () => {
 
   };
 
-  const maxPoints = 140; // TODO: get from the server
-
   const showTestDescriptionAtLeft =
     attemptsInfo.submittedTestResults.length > 0 ||
     attemptsInfo.currentTestAttempt !== null;
@@ -159,7 +157,7 @@ const StartTestSummary = () => {
               {selectedSubject.title}
             </Breadcrumb.Item>
             <Breadcrumb.Item
-              active={currentTestDraft.itemType === "TestDraft"}
+              active={currentTestDraft.itemType === "Test"}
               onClick={() =>
                 navigate("/" + params.selectedSubjectId + "/" + params.test)
               }
@@ -168,7 +166,7 @@ const StartTestSummary = () => {
             </Breadcrumb.Item>
           </Breadcrumb>
           {currentTestDraft !== undefined && (
-            <Row className="mt-2">
+            <Row className="mt-2 mb-2">
               <Col className="d-flex flex-column gap-3">
                 <ListGroup>
                   <ListGroup.Item action variant="light" as='div' className="d-flex align-items-center">
@@ -302,7 +300,7 @@ const StartTestSummary = () => {
                     Points
                     <div className="flex-fill"></div>
                     {attempt.totalPoints !== null ? (
-                      <strong>{attempt.totalPoints} / {maxPoints}</strong>
+                      <strong>{attempt.totalPoints} / {currentTestDraft.maxPoints}</strong>
                     ) : (
                       <span className="text-muted">Not graded yet</span>
                     )}
@@ -315,7 +313,7 @@ const StartTestSummary = () => {
                     {attempt.totalPoints !== null && (
                       <>
                         <span className="text-muted">
-                          {(attempt.totalPoints / maxPoints * 100).toFixed(2)}%
+                          {(attempt.totalPoints / currentTestDraft.maxPoints * 100).toFixed(2)}%
                         </span>
                         <i className="bi bi-arrow-right ms-2 me-3 text-muted"></i>
                       </>
