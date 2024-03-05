@@ -12,11 +12,13 @@ import { Button, ButtonGroup, Dropdown, Form } from "react-bootstrap";
 import "../../index.css";
 import { answersGrid } from "../../constants/TestExample";
 import { GetTestResultForTeacher } from "../ReviewTest/TestOfStudentActions";
+import { themes } from "../../constants/Themes";
 
 const AnswersGrid = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const gridRef = useRef<AgGridReact<IAnswerGrid>>(null);
+  const theme = useSelector((state: RootState) => state.main.theme);
   const [rowData, setRowData] = useState(answersGrid);
   const [columnDefs, setColumnDefs] = useState<ColDef[]>(AnswerGridCol);
   const getRowId = useCallback((params: GetRowIdParams) => {
@@ -122,7 +124,7 @@ const AnswersGrid = () => {
           </Dropdown>
         </div>
 
-        <div style={{ height: "95%" }}>
+        <div style={{ height: "95%" }} className={theme === themes.light ? "ag-theme-alpine" : "ag-theme-alpine-dark"}>
           <AgGridReact<IAnswerGrid>
             ref={gridRef}
             getRowId={getRowId}

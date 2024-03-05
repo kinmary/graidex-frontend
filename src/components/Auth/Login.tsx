@@ -9,15 +9,18 @@ import {
 } from "react-bootstrap";
 import "../../styles/auth.css";
 import logo from "../../images/GraidexLogoLightSVG.svg";
+import logoDark from "../../images/GraidexLogoDarkSVG.svg";
 import { ChangeUserRole, SetNewUser, loginStudent, loginTeacher, setError } from "./AuthAction";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { themes } from "../../constants/Themes";
 
 const Login = () => {
   const [state, setState] =  useState({user: { email: "", password: "" }});
   const dispatch = useAppDispatch();
   const auth = useSelector((state: RootState) => state.auth);
+  const theme = localStorage.getItem('theme') || themes.light;
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({
       user: {
@@ -38,7 +41,7 @@ const Login = () => {
       <div className="container mb-3">
         <Card body className="card-auth">
           <div className="logo-container">
-            <Image src={logo} width="50%" />
+            <Image src={theme === themes.light ? logo : logoDark} width="50%" />
           </div>
           {/* <h4>Login</h4> */}
           <ButtonGroup className="d-flex" style={{ marginTop: 10 }}>
@@ -46,7 +49,7 @@ const Login = () => {
               size="sm"
               type="radio"
               name="Teacher"
-              variant="outline-dark"
+              variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={0}
               checked={auth.userRole === 0 ? true : false}
               onClick={() => dispatch(ChangeUserRole(0))}
@@ -57,7 +60,7 @@ const Login = () => {
               size="sm"
               type="radio"
               name="Student"
-              variant="outline-dark"
+              variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={1}
               checked={auth.userRole === 1 ? true : false}
               onClick={() => dispatch(ChangeUserRole(1))}
