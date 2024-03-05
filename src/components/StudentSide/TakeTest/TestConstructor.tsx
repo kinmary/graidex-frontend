@@ -134,8 +134,8 @@ const TestConstructor = () => {
         <Form>
           {/* {selectedQuestion.type === 2 && ( */}
           <Navbar
-            bg="light"
-            variant="light"
+            bg={theme === themes.light ? "light" : "dark"}
+            variant={theme === themes.light ? "light" : "dark"}
             style={{
               borderRadius: "5px 5px 0px 0px",
               padding: "0px 0px",
