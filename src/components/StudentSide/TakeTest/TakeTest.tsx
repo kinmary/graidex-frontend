@@ -25,7 +25,7 @@ const TakeTest = () => {
   const handleSubmitAttempt = () => {
     dispatch(SetOpen("sendTestModal", true));
   };
-  if (!isLoaded || !end) {
+  if (!isLoaded || !end || !endTime) {
     return null;
   }
   return (
@@ -45,7 +45,7 @@ const TakeTest = () => {
                 </Button>
               </div>
             }
-            endTime={end}
+            endTime={endTime}
           >
             <QuestionsGrid />
           </RightSideMenu>
