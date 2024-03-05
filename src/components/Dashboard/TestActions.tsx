@@ -234,11 +234,28 @@ export const getAttemptsDescription = (testid: string | number) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/TestResult/get-student-attempts-description/` + testid);
       if (response.status === 200) {
+        
+        // TODO: fix this when backend is fixed
+        if (response.data.submittedTestResults){
+          for (let testResult of response.data.submittedTestResults) {
+            testResult.startTime = new Date(testResult.startTime + "Z");
+            testResult.endTime = new Date(testResult.endTime + "Z");
+          }
+        }
+
+        // TODO: fix this when backend is fixed
+        if (response.data.currentTestAttempt) {
+          response.data.currentTestAttempt.startTime = new Date(response.data.currentTestAttempt.startTime + "Z");
+          response.data.currentTestAttempt.endTime = new Date(response.data.currentTestAttempt.endTime + "Z");
+        }
+
         dispatch({
           type: SET_ATTEMPTS_INFO,
           attemptsInfo: response.data,
         });
+        return response.data;
       }
+      return null;
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
@@ -247,6 +264,7 @@ export const getAttemptsDescription = (testid: string | number) => {
         //   dispatch(CheckAuthorization(error.response.status));
         // alert(error.message);
       }
+      return null;
     }
   };
 };

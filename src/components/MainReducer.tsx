@@ -4,6 +4,7 @@ import { IIncomingSubjectRequest } from "../interfaces/SubjectRequests";
 import ISubjectContent from "../interfaces/SubjectContent";
 import { ITestDto } from "../interfaces/TestDto";
 import { GetAttemptsDescDto } from "../interfaces/GetAttemptsDescDto";
+import { themes } from "../constants/Themes";
 
 interface MainState {
   editPage: boolean;
@@ -37,6 +38,7 @@ interface MainState {
   currentTestDraft?: ITestDto;
   createTestFromDraft?: boolean;
   attemptsInfo?: GetAttemptsDescDto | undefined;
+  theme: string;
 }
 
 const initialState: MainState = {
@@ -71,6 +73,7 @@ const initialState: MainState = {
   currentTestDraft: undefined,
   createTestFromDraft: false,
   attemptsInfo: undefined,
+  theme: themes.light,
 };
 
 interface MainAction {
@@ -96,6 +99,7 @@ interface MainAction {
   showLoader?: boolean;
   currentTestDraft?: ITestDto;
   attemptsInfo?: GetAttemptsDescDto;
+  theme?: string;
 }
 
 export const MainReducer = (

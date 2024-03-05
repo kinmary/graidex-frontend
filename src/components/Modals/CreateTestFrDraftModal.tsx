@@ -232,7 +232,7 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
               <Form.Label>Time limit</Form.Label>
               <InputGroup>
                 <Form.Control
-                  style={{color: timeLimit.hours < 0 ? "#dc3545" : "black", borderColor: "#dee2e6"}}
+                  style={{color: timeLimit.hours < 0 ? "#dc3545" : ""}}
                   isInvalid={timeLimit.hours < 0}
                   value={timeLimit.hours}
                   name="hours"
@@ -253,7 +253,7 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
 
                 <Form.Control
                   disabled={!isCustomTimeLimit || (currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime())}
-                  style={{color: timeLimit.minutes < 0 ? "#dc3545" : "black", borderColor: "#dee2e6"}}
+                  style={{color: timeLimit.minutes < 0 ? "#dc3545" : ""}}
                   isInvalid={timeLimit.minutes < 0}
                   value={timeLimit.minutes}
                   name="minutes"

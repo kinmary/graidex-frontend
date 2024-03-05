@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background-color: #f5f7fa !important;
+  /* background-color: #f5f7fa !important; */
   padding-top: 46.67px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -39,6 +39,9 @@ code {
   border-radius: 0.375rem 
 }
 
+.ps-sidebar-root {
+  border: none !important;
+}
 
 .gradient {
 	background: linear-gradient(-45deg, #2376FF, #4082EA, #0D6EFD, #010155);

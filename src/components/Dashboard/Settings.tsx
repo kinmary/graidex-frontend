@@ -391,8 +391,8 @@ const Settings = () => {
                         type="number"
                         autoComplete="off"
                         style={{
-                          color: timeLimit.hours < 0 ? "#dc3545" : "black",
-                          borderColor: "#dee2e6",
+                          color: timeLimit.hours < 0 ? "#dc3545" : "",
+                          // borderColor: "#dee2e6",
                         }}
                         isInvalid={timeLimit.hours < 0}
                         min={0}
@@ -415,8 +415,8 @@ const Settings = () => {
                         value={timeLimit.minutes}
                         autoComplete="off"
                         style={{
-                          color: timeLimit.minutes < 0 ? "#dc3545" : "black",
-                          borderColor: "#dee2e6",
+                          color: timeLimit.minutes < 0 ? "#dc3545" : "",
+                          // borderColor: "#dee2e6",
                         }}
                         isInvalid={timeLimit.hours < 0}
                         name="minutes"

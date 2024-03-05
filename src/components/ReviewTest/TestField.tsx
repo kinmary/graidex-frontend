@@ -6,12 +6,14 @@ import { RootState } from "../../app/store";
 import { ITestResultForTeacher } from "../../interfaces/TestResultForTeacherDto";
 import QuestionsList from "./QuestionsList";
 import { IQuestion } from "../../interfaces/Questions";
+import { themes } from "../../constants/Themes";
 
 const TestField = () => {
   const dispatch = useAppDispatch();
   const test: ITestResultForTeacher = useSelector(
     (state: RootState) => state.testOfStudent.testResult
   );
+  const theme = useSelector((state: RootState) => state.main.theme);
   const userRole = useSelector((state: RootState) => state.auth).userRole;
   const currentTestDraft = useSelector(
     (state: RootState) => state.main.currentTestDraft
@@ -195,8 +197,8 @@ const TestField = () => {
             {indexOfSelected > 0 && (
               <Navbar.Brand>
                 <Button
-                  variant="outline-dark"
-                  className="rounded-circle"
+                variant={theme === themes.light ? "outline-dark" : "outline-light"}
+                className="rounded-circle"
                   style={{ fontSize: "24px" }}
                   onClick={handleBackClick}
                 >
@@ -207,7 +209,7 @@ const TestField = () => {
             {indexOfSelected !== test.resultAnswers!.length - 1 && (
               <Navbar.Brand style={{ marginLeft: "auto", marginRight: 0 }}>
                 <Button
-                  variant="outline-dark"
+                  variant={theme === themes.light ? "outline-dark" : "outline-light"}
                   className="rounded-circle"
                   style={{ fontSize: "24px" }}
                   onClick={handleNextClick}

@@ -217,7 +217,10 @@ export const Logout = () => {
   return (dispatch: AppDispatch) => {
     // localStorage.removeItem("token");
     // localStorage.removeItem("mainSidebarState");
+    const theme = localStorage.getItem("theme") || "light";
     localStorage.clear();
+    
+    localStorage.setItem("theme", theme);
     dispatch({ type: SET_AUTHENTICATION, isAuth: false });
     dispatch({type: SET_PROFILE_PIC, profilePic: blankProf});
   };

@@ -7,11 +7,13 @@ import {useSelector} from "react-redux";
 import QuestionsList from "./QuestionsList";
 import {useEffect} from "react";
 import {useParams} from "react-router-dom";
+import {themes} from "../../../constants/Themes";
 
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
   const currentTestDraft = useSelector((state: RootState) => state.main.currentTestDraft);
   const takeTest = useSelector((state: RootState) => state.takeTest);
+  const theme = useSelector((state: RootState) => state.main.theme);
   const params = useParams();
   useEffect(() => {
     if (params.testResultId) {
@@ -132,8 +134,8 @@ const TestConstructor = () => {
         <Form>
           {/* {selectedQuestion.type === 2 && ( */}
           <Navbar
-            bg="light"
-            variant="light"
+            bg={theme === themes.light ? "light" : "dark"}
+            variant={theme === themes.light ? "light" : "dark"}
             style={{
               borderRadius: "5px 5px 0px 0px",
               padding: "0px 0px",
@@ -186,21 +188,21 @@ const TestConstructor = () => {
             {indexOfSelected > 0 && (
               <Navbar.Brand>
                 {/* //TODO: add on hover text */}
-                <Button variant="outline-dark" className="rounded-circle" style={{fontSize: "24px"}} onClick={handleBackClick}>
+                <Button variant={theme === themes.light ? "outline-dark" : "outline-light"} className="rounded-circle" style={{fontSize: "24px"}} onClick={handleBackClick}>
                   <i className="bi bi-arrow-left"></i>
                 </Button>
               </Navbar.Brand>
             )}
             {indexOfSelected !== questions!.length - 1 && (
               <Navbar.Brand style={{marginLeft: "auto", marginRight: 0}}>
-                <Button variant="outline-dark" className="rounded-circle" style={{fontSize: "24px"}} onClick={handleNextClick}>
+                <Button variant={theme === themes.light ? "outline-dark" : "outline-light"} className="rounded-circle" style={{fontSize: "24px"}} onClick={handleNextClick}>
                   <i className="bi bi-arrow-right"></i>
                 </Button>
               </Navbar.Brand>
             )}
             {indexOfSelected === questions!.length - 1 && (
               <Navbar.Brand style={{marginLeft: "auto", marginRight: 0}}>
-                <Button variant="outline-dark" className="rounded-circle" style={{fontSize: "24px"}} onClick={handleSaveAndSendClick}>
+                <Button variant={theme === themes.light ? "outline-dark" : "outline-light"} className="rounded-circle" style={{fontSize: "24px"}} onClick={handleSaveAndSendClick}>
                   <i className="bi bi-arrow-right"></i>
                 </Button>
               </Navbar.Brand>

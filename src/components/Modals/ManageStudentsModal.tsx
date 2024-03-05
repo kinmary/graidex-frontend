@@ -39,7 +39,7 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
     },
     {
       field: "",
-      flex: 0.25,
+      flex: 0.3,
       headerName: "",
       cellRenderer: (params: any) => (
         <BtnCellRenderer

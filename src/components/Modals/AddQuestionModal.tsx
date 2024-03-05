@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { RootState } from "../../app/store";
 import { SetOpen } from "../MainAction";
 import { Button, Col, Modal } from "react-bootstrap";
+import { themes } from "../../constants/Themes";
 
 type Props = {
   addQuestionHandler: (type: number) => void;
@@ -29,21 +30,21 @@ const  AddQuestionModal = ({addQuestionHandler}: Props) => {
             Create new question
           </Modal.Header>
           <Modal.Body>
-            <Button variant="outline-dark" className="w-100 mb-2 text-start"
+            <Button variant={main.theme === themes.light ? "outline-dark" : "outline-light"} className="w-100 mb-2 text-start"
               onClick={() => handleAddQuestion(0)}
             >
               <i className="bi bi-record-circle me-2"></i>
               Single choice
             </Button>
 
-            <Button variant="outline-dark" className="w-100 mb-2 text-start"
+            <Button variant={main.theme === themes.light ? "outline-dark" : "outline-light"} className="w-100 mb-2 text-start"
               onClick={() => handleAddQuestion(1)}
             >
               <i className="bi bi-ui-checks-grid me-2"></i>
               Multiple choice
             </Button>
 
-            <Button variant="outline-dark" className="w-100 text-start"
+            <Button variant={main.theme === themes.light ? "outline-dark" : "outline-light"} className="w-100 text-start"
               onClick={() => handleAddQuestion(2)}
             >
               <i className="bi bi-file-text me-2"></i>
