@@ -54,11 +54,11 @@ const MainSidebar = ({children}: LayoutProps) => {
             [`.${menuClasses.menuItemRoot}>.${menuClasses.button}, ${menuClasses.subMenuContent}`]: {
               backgroundColor: main.theme === themes.light ? "#white" : "#212529",
               [`&:hover`]: {
-                backgroundColor: main.theme === themes.light ? "e1e1e1" : "#1a2025",
+                backgroundColor: main.theme === themes.light ? "white" : "#1a2025",
               },
             },
             [`.${menuClasses.subMenuContent}`]: {
-              backgroundColor: main.theme === themes.light ? "#e1e1e1" : "#212529",
+              backgroundColor: main.theme === themes.light ? "#white" : "#212529",
             },
           }}
         >
