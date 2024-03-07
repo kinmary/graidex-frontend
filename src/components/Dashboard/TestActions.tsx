@@ -180,10 +180,6 @@ export const getTest = (testid: string | number) => {
       // dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
       const response = await axios.get(`${API_BASE_URL}/api/Test/get-test/` + testid);
       if (response.status === 200) {
-        // TODO: remove this when backend is fixed
-        response.data.startDateTime += "Z";
-        response.data.endDateTime += "Z";
-
         response.data.reviewResult = parseReviewResultToFrontend(response.data.reviewResult);
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
@@ -209,8 +205,6 @@ export const getVisibleTestStudent = (testid: string | number) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/Test/get-visible-test/` + testid);
       if (response.status === 200) {
-        response.data.startDateTime += "Z";
-        response.data.endDateTime += "Z";
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
           currentTestDraft: response.data,
@@ -235,18 +229,16 @@ export const getAttemptsDescription = (testid: string | number) => {
       const response = await axios.get(`${API_BASE_URL}/api/TestResult/get-student-attempts-description/` + testid);
       if (response.status === 200) {
         
-        // TODO: fix this when backend is fixed
         if (response.data.submittedTestResults){
           for (let testResult of response.data.submittedTestResults) {
-            testResult.startTime = new Date(testResult.startTime + "Z");
-            testResult.endTime = new Date(testResult.endTime + "Z");
+            testResult.startTime = new Date(testResult.startTime);
+            testResult.endTime = new Date(testResult.endTime);
           }
         }
 
-        // TODO: fix this when backend is fixed
         if (response.data.currentTestAttempt) {
-          response.data.currentTestAttempt.startTime = new Date(response.data.currentTestAttempt.startTime + "Z");
-          response.data.currentTestAttempt.endTime = new Date(response.data.currentTestAttempt.endTime + "Z");
+          response.data.currentTestAttempt.startTime = new Date(response.data.currentTestAttempt.startTime);
+          response.data.currentTestAttempt.endTime = new Date(response.data.currentTestAttempt.endTime);
         }
 
         dispatch({

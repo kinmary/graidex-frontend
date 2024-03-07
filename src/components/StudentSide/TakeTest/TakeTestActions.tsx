@@ -45,8 +45,6 @@ export const getAllQuestionsWithAnswers = (testResultid: string) => {
       const response = await axios.get(`${API_BASE_URL}/api/TestResult/get-all-questions-with-answers/` + testResultid);
       // dispatch({type: RESET_STUD_STATE});
       if (response.data.length !== 0) {
-        response.data.startTime += "Z";
-        response.data.endTime += "Z";
         dispatch({type: SET_TEST_RESULT_ID, testResultId: testResultid});
         dispatch({type: SET_START_AND_END_TIME, startTime: new Date(response.data.startTime), endTime: new Date(response.data.endTime)});
         let questions: IQuestion[] = mapToFrontendQuestionsStudent(response.data.answers).filter((x) => x !== undefined) as IQuestion[];
@@ -66,9 +64,6 @@ export const startTestAttempt = (testid: string) => {
       dispatch({type: RESET_STUD_STATE});
       const response = await axios.post(`${API_BASE_URL}/api/TestResult/start-test-attempt/` + testid);
       if (response.status === 200) {
-        // todo: check why response dates are already returned with "Z"
-        // response.data.startTime += "Z";
-        // response.data.endTime += "Z";
         dispatch({type: SET_TEST_RESULT_ID, testResultId: response.data.id});
         dispatch({type: SET_START_AND_END_TIME, startTime: new Date(response.data.startTime), endTime: new Date(response.data.endTime)});
         if (response.data.length !== 0) {
