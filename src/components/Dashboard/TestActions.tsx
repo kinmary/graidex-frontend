@@ -253,9 +253,7 @@ export const getAttemptsDescription = (testid: string | number) => {
           type: SET_ATTEMPTS_INFO,
           attemptsInfo: response.data,
         });
-        return response.data;
       }
-      return null;
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
@@ -264,7 +262,6 @@ export const getAttemptsDescription = (testid: string | number) => {
         //   dispatch(CheckAuthorization(error.response.status));
         // alert(error.message);
       }
-      return null;
     }
   };
 };

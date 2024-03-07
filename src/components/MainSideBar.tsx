@@ -110,7 +110,7 @@ const MainSidebar = ({children}: LayoutProps) => {
                           borderLeft: collapsed ? "" : `2px ${main.theme === themes.light ? "#212529" : "white"} solid`,
                         }}
                         key={idx}
-                        active={location.pathname === `/${subject.id}`}
+                        active={location.pathname.startsWith(`/${subject.id}`)}
                         onClick={() => {
                           auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)).then(() => navigate("/" + subject.id)) : dispatch(getVisibleSubjectContent(subject.id)).then(() => navigate("/" + subject.id));
                         }}

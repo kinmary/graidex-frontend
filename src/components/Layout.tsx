@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import { Col, Container, Row } from "react-bootstrap";
 import MainSidebar from "./MainSideBar";
+import { Outlet } from "react-router-dom";
+import { getAllSubjects } from "./Dashboard/SubjectActions";
+import { useAppDispatch } from "../app/hooks";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout = () => {
+  const dispatch = useAppDispatch();
+  useEffect(()=>{
+    dispatch(getAllSubjects());
+  }, [])
   return (
     <Container
       fluid 
@@ -15,9 +18,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Header />
     </Row >
           <MainSidebar >
-          {children}
+          <Outlet />
           </MainSidebar>
-     
     </Container>
   );
 };

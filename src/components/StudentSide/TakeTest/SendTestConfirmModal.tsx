@@ -7,6 +7,7 @@ import {RootState} from "../../../app/store";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {submitTestAttempt, updateTestAttempt} from "./TakeTestActions";
+import { getAttemptsDescription } from "../../Dashboard/TestActions";
 
 const StartTestConfirmModal = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ const StartTestConfirmModal = () => {
       dispatch(updateTestAttempt(testResultId, question, questionIndex)).then(() => {
         dispatch(submitTestAttempt(testResultId)).then(() => {
           //TODO: show success/error messages
+          // dispatch(getAttemptsDescription(testResultId));
           dispatch(SetOpen("sendTestModal", false));
           navigate(-1);
         });

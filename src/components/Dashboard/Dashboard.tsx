@@ -5,26 +5,28 @@ import {SetOpen} from "../MainAction";
 import {useAppDispatch} from "../../app/hooks";
 import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
-import {useNavigate} from "react-router-dom";
-import {getSubjectContent, getVisibleSubjectContent} from "./SubjectActions";
-import { themes } from "../../constants/Themes";
+import {Link, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const auth = useSelector((state: RootState) => state.auth);
   const main = useSelector((state: RootState) => state.main);
   const navigate = useNavigate();
-  let {allSubjects} = main;
+  const [allSubjects, setAllSubjects] = useState<any[]>([]);
+  useEffect(() => {
+    setAllSubjects(main.allSubjects);
+  }, [main.allSubjects]);
   const OpenModal = () => {
     dispatch(SetOpen("openSubjectModal", true));
   };
   const HandleCardClick = (e: any) => {
     const selectedSubjectId = e.currentTarget.id;
     dispatch(SetOpen("selectedSubjectId", selectedSubjectId));
-    auth.userRole === 0 ? dispatch(getSubjectContent(selectedSubjectId)) : dispatch(getVisibleSubjectContent(selectedSubjectId));
-    navigate(`${selectedSubjectId}`);
+    // auth.userRole === 0 ? dispatch(getSubjectContent(selectedSubjectId)) : dispatch(getVisibleSubjectContent(selectedSubjectId));
+    // navigate(`${selectedSubjectId}`);
   };
-
+  if (!main.allSubjects || main.allSubjects.length === 0) return null;
   return (
     <>
       <AddSubjectModal />
@@ -56,13 +58,15 @@ const Dashboard = () => {
           <Row xs={1} md={3} className="g-4">
             {allSubjects.map((subject: any, idx: number) => (
               <Col key={idx}>
-                <Card style={{textAlign: "left", width: "100%", height: 300}} id={subject.id} onClick={HandleCardClick}>
-                  <Card.Img variant="top" src={subject.imageUrl || logoDark} style={{height: "70%", objectFit: "cover"}} />
-                  <Card.Body>
-                    <Card.Subtitle className="mb-2 text-muted">{subject.customId}</Card.Subtitle>
-                    <Card.Title>{subject.title}</Card.Title>
-                  </Card.Body>
-                </Card>
+                <Link to={`/${subject.id}`} style={{color: "transparent", textDecoration: "none"}}>
+                  <Card style={{textAlign: "left", width: "100%", height: 300}} id={subject.id} onClick={HandleCardClick}>
+                    <Card.Img variant="top" src={subject.imageUrl || logoDark} style={{height: "70%", objectFit: "cover"}} />
+                    <Card.Body>
+                      <Card.Subtitle className="mb-2 text-muted">{subject.customId}</Card.Subtitle>
+                      <Card.Title>{subject.title}</Card.Title>
+                    </Card.Body>
+                  </Card>
+                </Link>
               </Col>
             ))}
           </Row>

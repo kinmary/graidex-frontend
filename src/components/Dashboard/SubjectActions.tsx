@@ -193,10 +193,10 @@ export const getSubjectContent = (subjectId: number | string) => {
 export const getVisibleSubjectContent = (subjectId: number | string) => {
   return async (dispatch: AppDispatch) => {
     try {
-      dispatch({
-        type: GET_SUBJECT_CONTENT,
-        tests: [],
-      });
+      // dispatch({
+      //   type: GET_SUBJECT_CONTENT,
+      //   tests: [],
+      // });
       const url = `${API_BASE_URL}/api/Subject/visible-subject-content/` + subjectId;
       const response = await axios.get(url);
       if (response.status === 200) {

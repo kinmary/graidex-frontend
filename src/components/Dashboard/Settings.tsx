@@ -16,6 +16,7 @@ import {SetOpen} from "../MainAction";
 import CreateTestFromDraft from "../Modals/CreateTestFrDraftModal";
 import {calcTimeLimit, parseTimeLimit} from "../../utils/TimeLimitRecalculate";
 import {getReviewResultName} from "../../utils/GetReviewResult";
+import { ITestDto } from "../../interfaces/TestDto";
 
 interface ITimeLimit {
   hours: number;
@@ -26,7 +27,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const params = useParams();
-  const {currentTestDraft} = main;
+  const [currentTestDraft, setCurrentTestDraft] = useState<ITestDto>();
   const [dataLoaded, setDataLoaded] = useState(false);
   const [inputs, setInputs] = useState({
     title: "",
@@ -48,39 +49,52 @@ const Settings = () => {
     hours: 0,
     minutes: 0,
   });
+  const [selectedSubject, setSelectedSubject] = useState<ISubjectContent>();
+  useEffect(() => {
+    dispatch(getSubjectContent(params.selectedSubjectId!));
+  }, []);
+  useEffect(()=> {
+    if(!main.allSubjects) return;
+    const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
+    setSelectedSubject(selectedSubject);
+  }, [params.selectedSubjectId!, main.allSubjects]);
 
   useEffect(() => {
-    dispatch(getSubjectContent(params.selectedSubjectId!)).then(() => {
-      if (main.tests) {
-        let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
-        if (selectedTest) {
-          if (selectedTest.itemType === "Test") {
-            dispatch(getTest(selectedTest.id)).then(() => setDataLoaded(true));
-          }
-          if (selectedTest.itemType === "TestDraft") {
-            dispatch(getDraft(selectedTest.id)).then(() => setDataLoaded(true));
-          }
+    if (main.tests) {
+      let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
+      if (selectedTest) {
+        if (selectedTest.itemType === "Test") {
+          dispatch(getTest(selectedTest.id)).then(() => setDataLoaded(true));
+        }
+        if (selectedTest.itemType === "TestDraft") {
+          dispatch(getDraft(selectedTest.id)).then(() => setDataLoaded(true));
         }
       }
-    });
-  }, []);
+    }
+  }, [main.tests])
+  useEffect(() => {
+    setCurrentTestDraft(main.currentTestDraft);
+  }, [main.currentTestDraft]);
 
   useEffect(() => {
+    if (!currentTestDraft) return;
     setInputs({
       title: currentTestDraft.title,
-      description: currentTestDraft.description,
+      description: currentTestDraft.description || "",
       gradeToPass: currentTestDraft.gradeToPass,
     });
 
     if (currentTestDraft.itemType === "Test") {
-      let timeLimit = parseTimeLimit(currentTestDraft.timeLimit);
+      let timeLimit = parseTimeLimit(currentTestDraft.timeLimit?.toString() || "00:00:00");
       setAutoCheck(currentTestDraft.autoCheckAfterSubmission);
       setShuffleQuestions(currentTestDraft.shuffleQuestions);
       setReviewResult(currentTestDraft.reviewResult);
-      setDates({
-        startDate: new Date(currentTestDraft.startDateTime),
-        endDate: new Date(currentTestDraft.endDateTime),
-      });
+      if(currentTestDraft.startDateTime && currentTestDraft.endDateTime){
+        setDates({
+          startDate: new Date(currentTestDraft.startDateTime),
+          endDate: new Date(currentTestDraft.endDateTime),
+        });
+      }
       setTimeLimit({
         hours: Number(timeLimit.hours),
         minutes: Number(timeLimit.minutes),
@@ -105,18 +119,21 @@ const Settings = () => {
   // }, [dates.startDate, dates.endDate, isCustomTimeLimit]);
 
   const handleDiscardChanges = () => {
-    let timeLimit = parseTimeLimit(currentTestDraft.timeLimit);
+    if (!currentTestDraft) return;
+    let timeLimit = parseTimeLimit(currentTestDraft.timeLimit?.toString() || "00:00:00");
     setInputs({
       title: currentTestDraft.title,
-      description: currentTestDraft.description,
+      description: currentTestDraft.description || "",
       gradeToPass: currentTestDraft.gradeToPass,
     });
+    if(currentTestDraft.startDateTime && currentTestDraft.endDateTime){
     setDates({
       startDate: new Date(currentTestDraft.startDateTime),
       endDate: new Date(currentTestDraft.endDateTime),
     });
+  }
     setAutoCheck(currentTestDraft.autoCheckAfterSubmission);
-    setShuffleQuestions(currentTestDraft.setShuffleQuestions);
+    setShuffleQuestions(currentTestDraft.shuffleQuestions);
     setReviewResult(currentTestDraft.reviewResult);
     setTimeLimit({
       hours: Number(timeLimit.hours),
@@ -124,6 +141,7 @@ const Settings = () => {
     });
   };
   const handleSaveChanges = () => {
+    if (!currentTestDraft) return;
     if (currentTestDraft.itemType === "Test" && params.selectedSubjectId) {
       const startDateTime = new Date(dates.startDate.setSeconds(0, 0));
       const endDateTime = new Date(dates.endDate.setSeconds(0, 0));
@@ -242,9 +260,9 @@ const Settings = () => {
     }
   };
 
-  const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
 
   const handleTestDraftDuplicate = () => {
+    if(!currentTestDraft) return;
     if (currentTestDraft.itemType === "Test") {
       dispatch(createDraftFromTest(currentTestDraft.id, currentTestDraft.title));
     } else if (currentTestDraft.itemType === "TestDraft") {
@@ -254,6 +272,7 @@ const Settings = () => {
   };
 
   const handleDelete = () => {
+    if(!currentTestDraft) return;
     if (currentTestDraft.itemType === "Test") {
       dispatch(deleteTest(currentTestDraft.id, params.selectedSubjectId!));
     } else if (currentTestDraft.itemType === "TestDraft") {
@@ -262,18 +281,14 @@ const Settings = () => {
     navigate(`/${params.selectedSubjectId}`);
   };
   const onEditTestClick = () => {
+    if(!currentTestDraft) return;
     if (currentTestDraft.itemType === "TestDraft") {
       dispatch(getTestDraftQuestions(currentTestDraft.id));
       navigate("edit-test");
     }
-    // else if(currentTestDraft.itemType === "Test" && dates.startDate.getTime() > new Date().getTime()) {
-    //   dispatch(getTestQuestionsOfTeacher(currentTestDraft.id));
-    //   navigate(-1);
-    //   navigate("edit-test");
-    // }
   };
 
-  if (!dataLoaded) {
+  if (!dataLoaded || !currentTestDraft || !selectedSubject) {
     return null; //TODO: loader
   }
   return (
@@ -281,7 +296,7 @@ const Settings = () => {
       <MessageModal />
       {currentTestDraft.itemType === "TestDraft" && <CreateTestFromDraft subjectId={params.selectedSubjectId} inputs={inputs} />}
 
-      <AddStudentsToTestModal testid={currentTestDraft.id} selectedSubjectId={params.selectedSubjectId!} />
+      <AddStudentsToTestModal testid={currentTestDraft.id.toString()} selectedSubjectId={params.selectedSubjectId!} />
       <Form style={{marginTop: 20}}>
         <h5
           style={{

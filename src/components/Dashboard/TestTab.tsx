@@ -17,26 +17,30 @@ const TestTab = () => {
   const auth = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const params = useParams();
-  const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
+  const [selectedSubject, setSelectedSubject] = useState<ISubjectContent>();
   const [dataLoaded, setDataLoaded] = useState(false);
-
   useEffect(() => {
-    if (auth.userRole === 0) {
-      dispatch(getSubjectContent(params.selectedSubjectId!)).then(() => {
-        if (main.tests) {
-          let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
-          if (selectedTest) {
-            if (selectedTest.itemType === "Test") {
-              dispatch(getTest(selectedTest.id)).then(() => setDataLoaded(true));
-            }
-            if (selectedTest.itemType === "TestDraft") {
-              dispatch(getDraft(selectedTest.id)).then(() => setDataLoaded(true));
-            }
-          }
-        }
-      });
-    }
+    if (!main.allSubjects) return;
+    const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
+    setSelectedSubject(selectedSubject);
+  }, [params.selectedSubjectId, main.allSubjects]);
+  useEffect(() => {
+    dispatch(getSubjectContent(params.selectedSubjectId!));
   }, []);
+  useEffect(() => {
+    if (main.tests) {
+      let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
+      if (selectedTest) {
+        if (selectedTest.itemType === "Test") {
+          dispatch(getTest(selectedTest.id)).then(() => setDataLoaded(true));
+        }
+        if (selectedTest.itemType === "TestDraft") {
+          dispatch(getDraft(selectedTest.id)).then(() => setDataLoaded(true));
+        }
+      }
+    }
+  }, [main.tests]);
+
   const onEditTestClick = () => {
     if (main.currentTestDraft.itemType === "Test") {
       dispatch(getTestQuestionsOfTeacher(main.currentTestDraft.id));
@@ -74,7 +78,7 @@ const TestTab = () => {
           </div>
           <Breadcrumb style={{fontSize: 14}}>
             <Breadcrumb.Item onClick={() => navigate("/")}>Dashboard</Breadcrumb.Item>
-            <Breadcrumb.Item onClick={() => navigate("/" + selectedSubject.id)}>{selectedSubject && selectedSubject.title}</Breadcrumb.Item>
+            {selectedSubject && <Breadcrumb.Item onClick={() => navigate("/" + selectedSubject.id)}>{selectedSubject && selectedSubject.title}</Breadcrumb.Item>}
             <Breadcrumb.Item active>{main.currentTestDraft && main.currentTestDraft.title}</Breadcrumb.Item>
           </Breadcrumb>
           <AnswersGrid />

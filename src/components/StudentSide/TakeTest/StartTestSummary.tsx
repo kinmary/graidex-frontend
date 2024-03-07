@@ -9,17 +9,20 @@ import ISubjectContent from "../../../interfaces/SubjectContent";
 import {getAttemptsDescription, getVisibleTestStudent} from "../../Dashboard/TestActions";
 import {getAllQuestionsWithAnswers, startTestAttempt} from "./TakeTestActions";
 import {GetAttemptsDescDto} from "../../../interfaces/GetAttemptsDescDto";
+import {ISubject} from "../../../interfaces/Subject";
+import { ITestDto } from "../../../interfaces/TestDto";
 const skippedTestEmailLink = "mailto:example@email.com?subject=Missed test&body=Hello%2C%0A%0ALooks%20like%20I%20missed%20a%20test%2C%20can%20we%20agree%20on%20a%20retake%20date%3F%0A";
 
 const StartTestSummary = () => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
-  const {attemptsInfo, currentTestDraft}: {attemptsInfo: GetAttemptsDescDto; currentTestDraft: any} = main;
+  const [currentTestDraft, setCurrentTestDraft] = useState<ITestDto>();
+  const [attemptsInfo, setAttemptsInfo] = useState<GetAttemptsDescDto | null>();
   const navigate = useNavigate();
   const params = useParams();
-  const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
-  const [startDate] = useState(new Date(currentTestDraft.startDateTime));
-  const [endDate] = useState(new Date(currentTestDraft.endDateTime));
+  const [selectedSubject, setSelectedSubject] = useState<ISubject>();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [showTestDescriptionAtLeft, setShowTestDescriptionAtLeft] = useState(false);
@@ -29,28 +32,48 @@ const StartTestSummary = () => {
   const [showStartTestButton, setShowStartTestButton] = useState(false);
 
   useEffect(() => {
-    dispatch(getVisibleSubjectContent(params.selectedSubjectId!)).then(() => {
-      if (main.tests) {
-        let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
-        if (selectedTest) {
-          dispatch(getVisibleTestStudent(selectedTest.id)).then(() =>
-            dispatch(getAttemptsDescription(selectedTest.id)).then((attemptsInfo: GetAttemptsDescDto | null) => {
-              if (attemptsInfo === null) return;
-              setShowTestDescriptionAtLeft(attemptsInfo.submittedTestResults.length > 0 || attemptsInfo.currentTestAttempt !== null);
-              setShowTestNotStartedAlert(startDate.getTime() > new Date().getTime());
-              setShowTestEndedAlert(endDate.getTime() < new Date().getTime());
-              setShowNoMoreAttemptsAlert(endDate.getTime() > new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts === 0 && attemptsInfo.currentTestAttempt === null);
-              setShowStartTestButton(endDate.getTime() > new Date().getTime() && startDate.getTime() < new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts > 0 && attemptsInfo.currentTestAttempt === null);
-              setDataLoaded(true);
-            })
-          );
-        }
+    if (!main.allSubjects) return;
+    const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
+    setSelectedSubject(selectedSubject);
+  }, [params.selectedSubjectId, main.allSubjects]);
+
+  useEffect(() => {
+    dispatch(getVisibleSubjectContent(params.selectedSubjectId!));
+  }, []);
+
+  useEffect(() => {
+    if (main.tests) {
+      let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
+      if (selectedTest) {
+        dispatch(getVisibleTestStudent(selectedTest.id));
+        dispatch(getAttemptsDescription(selectedTest.id));
       }
-    });
-  }, [dataLoaded]);
+    }
+  }, [main.tests]);
+
+  useEffect(() => {
+    if(!main.currentTestDraft || !main.attemptsInfo) return;
+    const attemptsInfo = main.attemptsInfo;
+    setCurrentTestDraft(main.currentTestDraft);
+    setStartDate(new Date(main.currentTestDraft.startDateTime));
+    setEndDate(new Date(main.currentTestDraft.endDateTime));
+    setAttemptsInfo(attemptsInfo);
+   
+  }, [main.currentTestDraft, main.attemptsInfo]);
+
+  useEffect(() => {
+    if(!attemptsInfo || !startDate || !endDate) return;
+    setShowTestDescriptionAtLeft(attemptsInfo.submittedTestResults.length > 0 || attemptsInfo.currentTestAttempt !== null);
+    setShowTestNotStartedAlert(startDate.getTime() > new Date().getTime());
+    setShowTestEndedAlert(endDate.getTime() < new Date().getTime());
+    setShowNoMoreAttemptsAlert(endDate.getTime() > new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts === 0 && attemptsInfo.currentTestAttempt === null);
+    setShowStartTestButton(endDate.getTime() > new Date().getTime() && startDate.getTime() < new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts > 0 && attemptsInfo.currentTestAttempt === null);
+    setTimeout(() => setDataLoaded(true), 200);
+  }, [attemptsInfo, startDate, endDate]);
 
   const onStartClick = async () => {
-    await dispatch(startTestAttempt(currentTestDraft.id)).then((response: any) => {
+    if (!currentTestDraft) return;
+    await dispatch(startTestAttempt(currentTestDraft.id.toString())).then((response: any) => {
       // if(response.id !== undefined && response.id !== null && response.id !== 0){
       // dispatch(getAllQuestionsWithAnswers(response.id)).then((success: any) => {
       if (response !== undefined && response !== null && response !== 0) {
@@ -62,7 +85,7 @@ const StartTestSummary = () => {
     });
   };
   const onContinueClick = async () => {
-    if (!attemptsInfo.currentTestAttempt) {
+    if (!attemptsInfo || !attemptsInfo.currentTestAttempt) {
       alert("Error occurred continuing test");
       return;
     }
@@ -85,7 +108,7 @@ const StartTestSummary = () => {
 
   const onReviewClick = async (testResultId: number) => {};
 
-  if (!dataLoaded) {
+  if (!dataLoaded || !currentTestDraft || !attemptsInfo || !selectedSubject || !startDate || !endDate) {
     return <></>;
   }
   return (
