@@ -49,7 +49,7 @@ const MainSidebar = ({children}: LayoutProps) => {
             [`.${sidebarClasses.container}`]: {
               height: "calc(100vh - 46.67px)",
               backgroundColor: main.theme === themes.light ? "white" : "#212529",
-              borderRight: main.theme === themes.light ? "1px #dde0e4 solid" : "1px solid #212529",
+              borderRight: main.theme === themes.light ? "1px #dde0e4 solid" : "1px solid #495057",
             },
             [`.${menuClasses.menuItemRoot}>.${menuClasses.button}, ${menuClasses.subMenuContent}`]: {
               backgroundColor: main.theme === themes.light ? "#white" : "#212529",
@@ -58,7 +58,8 @@ const MainSidebar = ({children}: LayoutProps) => {
               },
             },
             [`.${menuClasses.subMenuContent}`]: {
-              backgroundColor: main.theme === themes.light ? "#white" : "#212529",
+              backgroundColor: main.theme === themes.light ? "#white" : "#1a2025",
+              border: collapsed ? (main.theme === themes.light ? "1px #dde0e4 solid" : "1px solid #495057") : "",
             },
           }}
         >

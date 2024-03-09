@@ -90,10 +90,6 @@ export const getSubjRequestsOfTeacher = (id: string) => {
       let subjectId = parseInt(id);
       const response = await axios.get(`${API_BASE_URL}/api/SubjectRequest/of-teacher/${subjectId}`);
       if (response.status === 200) {
-        // TODO: remove this when backend is fixed
-        response.data.forEach((element: {date: string}) => {
-          element.date += "Z";
-        });
 
         dispatch({type: GET_PENDING_SUBJECT_REQUESTS, pendingSubjectRequests: response.data});
         //dispatch(getStudentsList(subjectId)); ?

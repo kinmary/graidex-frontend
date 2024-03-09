@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {getSubjectContent, getVisibleSubjectContent} from "./SubjectActions";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -55,7 +56,7 @@ const Dashboard = () => {
         </Breadcrumb>
         {/*//TODO: add filter button */}
         {allSubjects.length > 0 ? (
-          <Row xs={1} md={3} className="g-4">
+          <Row xs={1} md={3} className="mb-3 g-4">
             {allSubjects.map((subject: any, idx: number) => (
               <Col key={idx}>
                 <Link to={`/${subject.id}`} style={{color: "transparent", textDecoration: "none"}}>
