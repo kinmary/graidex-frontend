@@ -59,7 +59,7 @@ const Header = () => {
         paddingRight: 12,
         display: "flex",
         alignItems: "center",
-        borderBottom: `1px ${ theme === themes.light ? "#dde0e4" : "#212529"} solid`,
+        borderBottom: `1px ${ theme === themes.light ? "#dde0e4" : "#495057"} solid`,
       }}
     >
       <Image
