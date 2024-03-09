@@ -7,7 +7,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
 import {useNavigate} from "react-router-dom";
 import {getSubjectContent, getVisibleSubjectContent} from "./SubjectActions";
-import { themes } from "../../constants/Themes";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -53,7 +52,7 @@ const Dashboard = () => {
         </Breadcrumb>
         {/*//TODO: add filter button */}
         {allSubjects.length > 0 ? (
-          <Row xs={1} md={3} className="g-4">
+          <Row xs={1} md={3} className="mb-3 g-4">
             {allSubjects.map((subject: any, idx: number) => (
               <Col key={idx}>
                 <Card style={{textAlign: "left", width: "100%", height: 300}} id={subject.id} onClick={HandleCardClick}>
