@@ -20,7 +20,6 @@
   
   .user-profile .profile-image {
     border-radius: 50%;
-    margin-left: 10px;
     cursor: pointer;
     object-fit: cover;
   }

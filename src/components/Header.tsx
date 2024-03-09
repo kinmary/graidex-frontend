@@ -1,4 +1,4 @@
-import { Badge, Col, Row, Image, Navbar, NavDropdown } from "react-bootstrap";
+import { Badge, Col, Row, Image, Navbar, NavDropdown, Button } from "react-bootstrap";
 import logo from "../images/GraidexLogoLightSVG.svg";
 import logoDark from "../images/GraidexLogoDarkSVG.svg";
 import profilePic from "../images/blank-profile-picture.jpg";
@@ -13,6 +13,8 @@ import { RootState } from "../app/store";
 import { useNavigate } from "react-router-dom";
 import { Logout } from "./Auth/AuthAction";
 import { themes } from "../constants/Themes";
+import { useState } from "react";
+import TestSignalRModal from "./SignalR/TestSignalRModal";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -49,6 +51,8 @@ const Header = () => {
     navigate("/");
   };
 
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <Navbar
       fixed="top"
@@ -78,14 +82,17 @@ const Header = () => {
         </Badge>
       </div>
 
-      <div
-      className="d-flex align-items-center fs-5"
-      style={{
-        marginLeft: "auto",
-        marginRight: "10px",
-      }}>
-        {/* <i className="bi bi-bell text-muted"></i> */}
-      </div>
+      <div className="ms-auto"></div>
+
+      <Button 
+        active={showModal}
+        onClick={() => setShowModal(true)}
+        variant={theme}
+        className="rounded-circle d-flex align-items-center justify-content-center fs-6 me-2" 
+        style={{width: "30px", height: "30px", padding: 0, paddingBottom: "0.125rem"}}>
+        <i className="bi bi-bell"></i>
+      </Button>
+      <TestSignalRModal showModal={showModal} setShowModal={setShowModal} />
 
       <div
         className="user-profile"
