@@ -96,58 +96,58 @@ const MainSidebar = ({children}: LayoutProps) => {
                 },
               }}
             >
-              <Link to="/" style={{color: "inherit", textDecoration: "none"}}>
-              <MenuItem style={{...mainMenuItemStyle, marginTop: "9px"}} icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>} >
+              <MenuItem
+                component={<Link to="/" />}
+                style={{...mainMenuItemStyle, marginTop: "9px"}}
+                icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>}
+              >
                 Dashboard
               </MenuItem>
-              </Link>
 
               <SubMenu style={mainMenuItemStyle} icon={subjectRegEx.test(location.pathname) ? <i className="bi bi-book-half"></i> : <i className="bi bi-book"></i>} defaultOpen={true} label={<span>Subjects</span>}>
                 {main.allSubjects &&
                   main.allSubjects.map((subject: any, idx: number) => {
                     return (
-                      <Link to={`/${subject.id}`} style={{color: "inherit", textDecoration: "none"}} key={idx}>
-                        <MenuItem
-                          style={{
-                            marginLeft: collapsed ? "" : "20px",
-                            paddingLeft: collapsed ? "" : "20px",
-                            borderLeft: collapsed ? "" : `2px ${main.theme === themes.light ? "#212529" : "white"} solid`,
-                          }}
-                          key={idx}
-                          active={location.pathname.startsWith(`/${subject.id}`)}
-                          onClick={() => {
-                            auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)) : dispatch(getVisibleSubjectContent(subject.id));
-                          }}
-                        >
-                          {subject.title}
-                        </MenuItem>
-                      </Link>
+                      <MenuItem
+                        style={{
+                          marginLeft: collapsed ? "" : "20px",
+                          paddingLeft: collapsed ? "" : "20px",
+                          borderLeft: collapsed ? "" : `2px ${main.theme === themes.light ? "#212529" : "white"} solid`,
+                        }}
+                        component={<Link to={`/${subject.id}`} key={idx} />}
+                        key={idx}
+                        active={location.pathname.startsWith(`/${subject.id}`)}
+                        onClick={() => {
+                          auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)) : dispatch(getVisibleSubjectContent(subject.id));
+                        }}
+                      >
+                        {subject.title}
+                      </MenuItem>
                     );
                   })}
               </SubMenu>
 
               {auth.userRole === 1 && (
-                <Link to="/subject-requests" style={{color: "inherit", textDecoration: "none"}}>
-                  <MenuItem
-                    style={mainMenuItemStyle}
-                    icon={
-                      location.pathname === "/subject-requests" ? (
-                        main.subjectRequests && main.subjectRequests.length > 0 ? (
-                          <i className="bi bi-envelope-exclamation-fill"></i>
-                        ) : (
-                          <i className="bi bi-envelope-fill"></i>
-                        )
-                      ) : main.subjectRequests && main.subjectRequests.length > 0 ? (
-                        <i className="bi bi-envelope-exclamation"></i>
+                <MenuItem
+                  style={mainMenuItemStyle}
+                  component={<Link to="/subject-requests" />}
+                  icon={
+                    location.pathname === "/subject-requests" ? (
+                      main.subjectRequests && main.subjectRequests.length > 0 ? (
+                        <i className="bi bi-envelope-exclamation-fill"></i>
                       ) : (
-                        <i className="bi bi-envelope"></i>
+                        <i className="bi bi-envelope-fill"></i>
                       )
-                    }
-                    // onClick={() => navigate("/subject-requests")}
-                  >
+                    ) : main.subjectRequests && main.subjectRequests.length > 0 ? (
+                      <i className="bi bi-envelope-exclamation"></i>
+                    ) : (
+                      <i className="bi bi-envelope"></i>
+                    )
+                  }
+                  // onClick={() => navigate("/subject-requests")}
+                >
                     Requests
-                  </MenuItem>
-                </Link>
+                </MenuItem>
               )}
 
               {/* <MenuItem
