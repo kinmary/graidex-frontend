@@ -3,7 +3,7 @@ import {Button, Col, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {RootState} from "../app/store";
 import {Menu, MenuItem, Sidebar, SubMenu, menuClasses, sidebarClasses} from "react-pro-sidebar";
-import {useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {getSubjectContent, getVisibleSubjectContent} from "./Dashboard/SubjectActions";
 import {useAppDispatch} from "../app/hooks";
 import {themes} from "../constants/Themes";
@@ -96,52 +96,58 @@ const MainSidebar = ({children}: LayoutProps) => {
                 },
               }}
             >
-              <MenuItem style={{...mainMenuItemStyle, marginTop: "9px"}} icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>} onClick={() => navigate("/")}>
+              <Link to="/" style={{color: "inherit", textDecoration: "none"}}>
+              <MenuItem style={{...mainMenuItemStyle, marginTop: "9px"}} icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>} >
                 Dashboard
               </MenuItem>
+              </Link>
 
               <SubMenu style={mainMenuItemStyle} icon={subjectRegEx.test(location.pathname) ? <i className="bi bi-book-half"></i> : <i className="bi bi-book"></i>} defaultOpen={true} label={<span>Subjects</span>}>
                 {main.allSubjects &&
                   main.allSubjects.map((subject: any, idx: number) => {
                     return (
-                      <MenuItem
-                        style={{
-                          marginLeft: collapsed ? "" : "20px",
-                          paddingLeft: collapsed ? "" : "20px",
-                          borderLeft: collapsed ? "" : `2px ${main.theme === themes.light ? "#212529" : "white"} solid`,
-                        }}
-                        key={idx}
-                        active={location.pathname.startsWith(`/${subject.id}`)}
-                        onClick={() => {
-                          auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)).then(() => navigate("/" + subject.id)) : dispatch(getVisibleSubjectContent(subject.id)).then(() => navigate("/" + subject.id));
-                        }}
-                      >
-                        {subject.title}
-                      </MenuItem>
+                      <Link to={`/${subject.id}`} style={{color: "inherit", textDecoration: "none"}} key={idx}>
+                        <MenuItem
+                          style={{
+                            marginLeft: collapsed ? "" : "20px",
+                            paddingLeft: collapsed ? "" : "20px",
+                            borderLeft: collapsed ? "" : `2px ${main.theme === themes.light ? "#212529" : "white"} solid`,
+                          }}
+                          key={idx}
+                          active={location.pathname.startsWith(`/${subject.id}`)}
+                          onClick={() => {
+                            auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)) : dispatch(getVisibleSubjectContent(subject.id));
+                          }}
+                        >
+                          {subject.title}
+                        </MenuItem>
+                      </Link>
                     );
                   })}
               </SubMenu>
 
               {auth.userRole === 1 && (
-                <MenuItem
-                  style={mainMenuItemStyle}
-                  icon={
-                    location.pathname === "/subject-requests" ? (
-                      main.subjectRequests && main.subjectRequests.length > 0 ? (
-                        <i className="bi bi-envelope-exclamation-fill"></i>
+                <Link to="/subject-requests" style={{color: "inherit", textDecoration: "none"}}>
+                  <MenuItem
+                    style={mainMenuItemStyle}
+                    icon={
+                      location.pathname === "/subject-requests" ? (
+                        main.subjectRequests && main.subjectRequests.length > 0 ? (
+                          <i className="bi bi-envelope-exclamation-fill"></i>
+                        ) : (
+                          <i className="bi bi-envelope-fill"></i>
+                        )
+                      ) : main.subjectRequests && main.subjectRequests.length > 0 ? (
+                        <i className="bi bi-envelope-exclamation"></i>
                       ) : (
-                        <i className="bi bi-envelope-fill"></i>
+                        <i className="bi bi-envelope"></i>
                       )
-                    ) : main.subjectRequests && main.subjectRequests.length > 0 ? (
-                      <i className="bi bi-envelope-exclamation"></i>
-                    ) : (
-                      <i className="bi bi-envelope"></i>
-                    )
-                  }
-                  onClick={() => navigate("/subject-requests")}
-                >
-                  Requests
-                </MenuItem>
+                    }
+                    // onClick={() => navigate("/subject-requests")}
+                  >
+                    Requests
+                  </MenuItem>
+                </Link>
               )}
 
               {/* <MenuItem

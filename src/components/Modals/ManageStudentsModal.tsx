@@ -10,11 +10,12 @@ import { getSubjRequestsOfTeacher } from "../Dashboard/SubjectRequestActions";
 import { getStudentsList } from "../Dashboard/SubjectActions";
 import { ColumnState, GridReadyEvent } from "ag-grid-community";
 import profilePic from "../../images/blank-profile-picture.jpg";
+import { ISubject } from "../../interfaces/Subject";
 
 interface Props {
-  selectedSubjectId: string;
+  selectedSubject: ISubject;
 }
-const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
+const ManageStudentsModal = ({ selectedSubject }: Props) => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
 
@@ -43,7 +44,7 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
       headerName: "",
       cellRenderer: (params: any) => (
         <BtnCellRenderer
-          subjectId={selectedSubjectId}
+          subjectId={selectedSubject.id.toString()}
           pendingRequest={true}
           subjectRequestId={params.data.id}
           studentEmail={params.data.studentEmail}
@@ -64,7 +65,7 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
       headerName: "",
       cellRenderer: (params: any) => (
         <BtnCellRenderer
-          subjectId={selectedSubjectId!}
+          subjectId={selectedSubject.id.toString()}
           pendingRequest={false}
           studentEmail={params.data.email}
         />
@@ -73,8 +74,8 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
   ];
 
   useEffect(() => {
-    dispatch(getStudentsList(selectedSubjectId));
-    dispatch(getSubjRequestsOfTeacher(selectedSubjectId));
+    dispatch(getStudentsList(selectedSubject.id.toString()));
+    dispatch(getSubjRequestsOfTeacher(selectedSubject.id.toString()));
   }, []);
 
   const onGridReady = useCallback((params: GridReadyEvent) => {
@@ -88,9 +89,6 @@ const ManageStudentsModal = ({ selectedSubjectId }: Props) => {
     dispatch(SetOpen("manageStudentsModal", false));
   };
   const { manageStudentsModal } = main;
-  const selectedSubject = main.allSubjects.find(
-    (obj: any) => obj.id.toString() === selectedSubjectId!.toString()
-  );
   return (
     <>
       <Modal size="lg" show={manageStudentsModal} onHide={closeModal} centered>

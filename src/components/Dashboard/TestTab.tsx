@@ -4,7 +4,7 @@ import {useAppDispatch} from "../../app/hooks";
 import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
 import MessageModal from "../Modals/MessageModal";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getDraft, getTest, getTestDraftQuestions, getTestQuestionsOfTeacher} from "./TestActions";
 import {getSubjectContent} from "./SubjectActions";
@@ -66,7 +66,11 @@ const TestTab = () => {
           >
             <h5 style={{fontWeight: "bold", textAlign: "left", margin: 0}}>
               {main.currentTestDraft && main.currentTestDraft.title}
-              {auth.userRole === 0 && <i style={{marginLeft: 10}} className="bi bi-gear" onClick={() => navigate("settings")}></i>}
+              {auth.userRole === 0 && (
+                <Link to={`settings`} style={{color: "inherit", textDecoration: "none"}}>
+                  <i style={{marginLeft: 10}} className="bi bi-gear"></i>
+                </Link>
+              )}
             </h5>
             <div style={{marginLeft: "auto"}}>
               {auth.userRole === 0 && (

@@ -21,14 +21,17 @@ const SubjectSettings = () => {
   const params = useParams();
   const main = useSelector((state: RootState) => state.main);
   const [selectedSubject, setSelectedSubject] = useState<ISubject | undefined>();
+  const [selectedSubjectChanged, setSelectedSubjectChanged] = useState<ISubject | undefined>();
+
   useEffect(() => {
     const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
     setSelectedSubject(selectedSubject);
+    setSelectedSubjectChanged(selectedSubject);
   }, [main.allSubjects]);
 
   const handleSubjectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
-    setSelectedSubject((prevSubject: ISubject | undefined) => ({
+    setSelectedSubjectChanged((prevSubject: ISubject | undefined) => ({
       ...prevSubject as ISubject,
       [name]: value,
     }));
@@ -42,8 +45,8 @@ const SubjectSettings = () => {
     dispatch(SetOpen("changeImgModal", true));
   };
   const handleUpdateSubject = () => {
-    if(!selectedSubject) return;
-    let {id, customId, title, imageUrl} = selectedSubject;
+    if(!selectedSubjectChanged) return;
+    let {id, customId, title, imageUrl} = selectedSubjectChanged;
     dispatch(updateSubject(id, customId, title, imageUrl));
   };
 
@@ -53,14 +56,14 @@ const SubjectSettings = () => {
     dispatch(getSubjRequestsOfTeacher(selectedSubject.id.toString()));
     dispatch(SetOpen("manageStudentsModal", true));
   };
-if(!selectedSubject) return null;
+if(!selectedSubject || !selectedSubjectChanged) return null;
   return (
     <>
       <DeleteSubjectModal selectedSubject={selectedSubject} />
       <ChangeImageModal selectedSubject={selectedSubject} />
       <MessageModal />
-      <AddStudentModal />
-      <ManageStudentsModal selectedSubjectId={params.selectedSubjectId!} />
+      <AddStudentModal selectedSubject={selectedSubject} />
+      <ManageStudentsModal selectedSubject={selectedSubject} />
       <div style={{marginTop: "10px"}}>
         <div
           style={{
@@ -109,11 +112,11 @@ if(!selectedSubject) return null;
 
               <Form.Group style={{marginTop: 20}}>
                 <Form.Label>Subject name </Form.Label>
-                <Form.Control type="text" name="title" autoComplete="off" placeholder="Subject name" style={{width: "40%"}} value={selectedSubject.title} onChange={handleSubjectChange} />
+                <Form.Control type="text" name="title" autoComplete="off" placeholder="Subject name" style={{width: "40%"}} value={selectedSubjectChanged.title} onChange={handleSubjectChange} />
               </Form.Group>
               <Form.Group style={{marginTop: 20}}>
                 <Form.Label>Subject Id </Form.Label>
-                <Form.Control type="text" name="customId" autoComplete="off" placeholder="Subject id" style={{width: "40%"}} value={selectedSubject.customId} onChange={handleSubjectChange} />
+                <Form.Control type="text" name="customId" autoComplete="off" placeholder="Subject id" style={{width: "40%"}} value={selectedSubjectChanged.customId} onChange={handleSubjectChange} />
               </Form.Group>
 
               {/* <Form.Group style={{ marginTop: 20 }}>

@@ -64,7 +64,6 @@ function App() {
         {
           element: <ProtectedRoute role={0} />, //teacher
           children: [
-            
             {
               path: "/:selectedSubjectId/settings",
               element: <SubjectSettings />,
@@ -141,11 +140,13 @@ function App() {
   }
 
   return (
-    <div className="App" style={{height: "100%", backgroundColor: theme === themes.light ? "#f5f7fa" : "#12171c"}}>
+    <>
       {layout || (
-        auth.userRole === 0 ? <RouterProvider router={teacherRoutes} /> : <RouterProvider router={studentRoutes} />
+        <div className="App" style={{height: "100%", backgroundColor: theme === themes.light ? "#f5f7fa" : "#12171c"}}>
+          {auth.userRole === 0 ? <RouterProvider router={teacherRoutes} /> : <RouterProvider router={studentRoutes} />}
+        </div>
       )}
-    </div>
+    </>
   );
 }
 

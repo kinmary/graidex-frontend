@@ -7,7 +7,6 @@ import {RootState} from "../../app/store";
 import DeleteSubjectModal from "../Modals/DeleteSubjectModal";
 import ChangeImageModal from "../Modals/ChangeImageModal";
 import MessageModal from "../Modals/MessageModal";
-import StartTestConfirmModal from "../StudentSide/TakeTest/SendTestConfirmModal";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import AddTestModal from "../Modals/AddTestModal";
@@ -75,7 +74,6 @@ const SubjectPage = () => {
       <DeleteSubjectModal selectedSubject={selectedSubject} />
       <ChangeImageModal selectedSubject={selectedSubject} />
       <MessageModal />
-      <StartTestConfirmModal />
       <AddTestModal subjectId={params.selectedSubjectId} />
       <div style={{marginTop: "10px"}}>
         <div
@@ -97,7 +95,11 @@ const SubjectPage = () => {
             >
               <h5 style={{fontWeight: "bold", textAlign: "left", margin: 0}}>
                 {selectedSubject && selectedSubject.title}
-                {auth.userRole === 0 && <i style={{marginLeft: 10}} className="bi bi-gear" onClick={() => navigate("settings")}></i>}
+                {auth.userRole === 0 && (
+                  <Link to={`settings`} style={{color: "inherit", textDecoration: "none"}}>
+                    <i style={{marginLeft: 10}} className="bi bi-gear"></i>
+                  </Link>
+                )}
               </h5>
 
               <div style={{marginLeft: "auto", display: "flex"}}>

@@ -7,7 +7,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getSubjectContent, getVisibleSubjectContent} from "./SubjectActions";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -72,18 +71,19 @@ const Dashboard = () => {
             ))}
           </Row>
         ) : (
-          <Alert variant="primary" style={{textAlign: "center"}}>
-            {auth.userRole === 0 ? (
-              <>
-                <h6>You don't have any subjects yet. Create the first one here!</h6>
-                <Button onClick={OpenModal}>
-                  <i className="bi bi-plus-lg"></i>Add subject
-                </Button>
-              </>
-            ) : (
-              <h6>You don't have any subjects yet. Add subject by clicking invitation link from your teacher!</h6>
-            )}
-          </Alert>
+          <></>
+          // <Alert variant="primary" style={{textAlign: "center"}}>
+          //   {auth.userRole === 0 ? (
+          //     <>
+          //       <h6>You don't have any subjects yet. Create the first one here!</h6>
+          //       <Button onClick={OpenModal}>
+          //         <i className="bi bi-plus-lg"></i>Add subject
+          //       </Button>
+          //     </>
+          //   ) : (
+          //     <h6>You don't have any subjects yet. Add subject by clicking invitation link from your teacher!</h6>
+          //   )}
+          // </Alert>
         )}
       </div>
     </>

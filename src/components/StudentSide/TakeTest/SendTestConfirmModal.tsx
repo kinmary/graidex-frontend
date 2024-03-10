@@ -9,7 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {submitTestAttempt, updateTestAttempt} from "./TakeTestActions";
 import { getAttemptsDescription } from "../../Dashboard/TestActions";
 
-const StartTestConfirmModal = () => {
+const SendTestConfirmModal = () => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
   const takeTest = useSelector((state: RootState) => state.takeTest);
@@ -56,4 +56,4 @@ const StartTestConfirmModal = () => {
   );
 };
 
-export default StartTestConfirmModal;
+export default SendTestConfirmModal;
