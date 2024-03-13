@@ -93,6 +93,36 @@ export const GetTestResultForTeacher = (testResultid: string) => {
   };
 };
 
+export const GetTestResultForStudent = (testResultid: string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch({ type: RESET_REVIEW_STATE });
+      const response = await axios.get(
+        `${API_BASE_URL}/api/TestResult/get-test-result-for-student/` +
+          testResultid
+      );
+      if (response.data.length !== 0) {
+        let questions: IQuestion[] = mapToFrontendQuestions(response.data.resultAnswers).filter(x => x!==undefined) as IQuestion[];
+        let testResult : ITestResultForTeacher = {
+          resultAnswers: questions,
+          isAutoChecked: response.data.isAutoChecked,
+          canReview: response.data.canReview,
+          startTime: response.data.startTime, //FIX TIME
+          endTime: response.data.endTime, //FIX TIME
+          testId: response.data.testId,
+          studentEmail: response.data.studentEmail,
+          totalPoints: response.data.totalPoints,
+          grade: response.data.grade
+        }
+        dispatch({ type: SET_TEST_RESULT, testResult: testResult });
+        return true;
+      }
+    } catch (error: any) {
+      // alert(error.message);
+      return false;
+    }
+  };
+};
 
 
 const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => {
@@ -134,7 +164,7 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
         let multiple: IQuestion = {
           id: idx,
           title: element.question.text,
-          maxPoints: element.question.pointsPerCorrectAnswer,
+          maxPoints: element.question.pointsPerCorrectAnswer * element.answer.choiceOptionIndexes.length,
           type: getQuestionType(element.question.$type),
           selected: false,
           answerOptions: answerOptions,

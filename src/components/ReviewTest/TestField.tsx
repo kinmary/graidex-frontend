@@ -103,20 +103,21 @@ const TestField = () => {
               marginBottom: 20,
             }}
           >
-            <h5 style={{ fontWeight: "bold", width: "87%" }}>
+            <h5 style={{ fontWeight: "bold", width: "85%" }}>
               {selectedQuestion?.title}
             </h5>
-            <InputGroup style={{ width: "13%" }}>
+            <InputGroup style={{ width: "15%" }}>
               <Form.Control
                 type="number"
                 autoComplete="off"
                 value={selectedQuestion?.points || 0}
+                style={{fontWeight: "bold"}}
                 min={0}
                 onChange={ChangePoints}
                 readOnly={userRole === 1}
               />
               <InputGroup.Text>
-                /{selectedQuestion?.maxPoints || 0}
+                /{selectedQuestion?.maxPoints || 0} points
               </InputGroup.Text>
             </InputGroup>
           </div>
@@ -146,13 +147,14 @@ const TestField = () => {
                     }
                     readOnly
                     disabled
-                    isValid={answer.isCorrect === true && answer.selected === false}
-                    isInvalid={answer.isCorrect === false && answer.selected === true}
+                    isValid={answer.isCorrect}
+                    isInvalid={!answer.isCorrect && answer.selected}
                     style={{ marginRight: 10}}
                     name={answer.id.toString()}
                     checked={answer.selected}
                   />
                   <Card
+                    className={answer.isCorrect ? "correct-answer-card" : answer.selected ? "wrong-answer-card" : ""}
                     key={idx + "t"}
                     style={{
                       marginBottom: 5,
@@ -172,7 +174,7 @@ const TestField = () => {
                     >
                       {answer.text}
                     </Card.Text>
-                  </Card>
+                  </Card>                  
                 </div>
               )
             )
@@ -183,8 +185,9 @@ const TestField = () => {
               as="textarea"
               autoComplete="off"
               rows={6}
-              placeholder="Enter feedback here"
+              placeholder={ userRole === 1 ? "": "Enter feedback here"}
               name="text"
+              readOnly={userRole === 1}
               value={
                 selectedQuestion.feedback !== undefined
                   ? selectedQuestion.feedback

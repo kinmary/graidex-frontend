@@ -121,10 +121,10 @@ function App() {
               path: "/:selectedSubjectId/:test/:testResultId",
               element: <TakeTest />,
             },
-            // {
-            //   path: "/:selectedSubjectId/:test/review", //change it when review result is done
-            //   element: <TestOfStudent />,
-            // },
+            {
+              path: "/:selectedSubjectId/:test/review/:testResultId",
+              element: <TestOfStudent />,
+            },
           ],
         },
       ],

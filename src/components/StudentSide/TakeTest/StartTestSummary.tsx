@@ -11,6 +11,7 @@ import {getAllQuestionsWithAnswers, startTestAttempt} from "./TakeTestActions";
 import {GetAttemptsDescDto} from "../../../interfaces/GetAttemptsDescDto";
 import {ISubject} from "../../../interfaces/Subject";
 import { ITestDto } from "../../../interfaces/TestDto";
+import { GetTestResultForStudent } from "../../ReviewTest/TestOfStudentActions";
 const skippedTestEmailLink = "mailto:example@email.com?subject=Missed test&body=Hello%2C%0A%0ALooks%20like%20I%20missed%20a%20test%2C%20can%20we%20agree%20on%20a%20retake%20date%3F%0A";
 
 const StartTestSummary = () => {
@@ -106,7 +107,11 @@ const StartTestSummary = () => {
     // }
   };
 
-  const onReviewClick = async (testResultId: number) => {};
+  const onReviewClick = async (testResultId: number) => {
+    dispatch(GetTestResultForStudent(testResultId.toString())).then((res: any) => {
+      navigate(`review/${testResultId}`);
+    })
+  };
 
   if (!dataLoaded || !currentTestDraft || !attemptsInfo || !selectedSubject || !startDate || !endDate) {
     return <></>;
