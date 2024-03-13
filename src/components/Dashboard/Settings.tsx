@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Breadcrumb, Button, Form, InputGroup, Row, Col, Alert, Dropdown} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import MessageModal from "../Modals/MessageModal";
 import {useAppDispatch} from "../../app/hooks";
 import {createDraftFromTest, deleteDraft, deleteTest, duplicateDraft, getDraft, getTest, getTestDraftQuestions, updateDraft, updateTest, updateTestTime} from "./TestActions";
@@ -313,13 +313,13 @@ const Settings = () => {
           Settings
         </h5>
         <Breadcrumb style={{fontSize: 14}}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/" + params.selectedSubjectId)}>{selectedSubject.title}</Breadcrumb.Item>
-          <Breadcrumb.Item active={currentTestDraft.itemType === "TestDraft"} onClick={() => navigate("/" + params.selectedSubjectId + "/" + params.test)}>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to:'/'}}>Dashboard</Breadcrumb.Item>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to:`/${ params.selectedSubjectId}`}}>{selectedSubject.title}</Breadcrumb.Item>
+          <Breadcrumb.Item active={currentTestDraft.itemType === "TestDraft"} linkAs={Link} linkProps={{to:`/${ params.selectedSubjectId}/${params.test}`}}>
             {/*selectedTest && selectedTest.examName*/}
             {currentTestDraft && currentTestDraft.title}
           </Breadcrumb.Item>
-          {currentTestDraft && currentTestDraft.itemType === "Test" && <Breadcrumb.Item active>Settings</Breadcrumb.Item>}
+          {currentTestDraft && currentTestDraft.itemType === "Test" && <Breadcrumb.Item linkAs={Link} linkProps={{to:`/${ params.selectedSubjectId}/${params.test}/settings`}} active>Settings</Breadcrumb.Item>}
         </Breadcrumb>
 
         <Row className="mb-4">
@@ -503,13 +503,13 @@ const Settings = () => {
                           {getReviewResultName(reviewResult || 0)}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                          <Dropdown.Item key={0} value={0} onClick={() => setReviewResult(0)}>
+                          <Dropdown.Item as={Button} key={0} value={0} onClick={() => setReviewResult(0)}>
                             Set manually
                           </Dropdown.Item>
-                          <Dropdown.Item key={1} value={1} onClick={() => setReviewResult(1)}>
+                          <Dropdown.Item as={Button} key={1} value={1} onClick={() => setReviewResult(1)}>
                             After submission
                           </Dropdown.Item>
-                          <Dropdown.Item key={2} value={2} onClick={() => setReviewResult(2)}>
+                          <Dropdown.Item as={Button} key={2} value={2} onClick={() => setReviewResult(2)}>
                             After auto check
                           </Dropdown.Item>
                         </Dropdown.Menu>

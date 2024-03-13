@@ -81,8 +81,8 @@ const TestTab = () => {
             </div>
           </div>
           <Breadcrumb style={{fontSize: 14}}>
-            <Breadcrumb.Item onClick={() => navigate("/")}>Dashboard</Breadcrumb.Item>
-            {selectedSubject && <Breadcrumb.Item onClick={() => navigate("/" + selectedSubject.id)}>{selectedSubject && selectedSubject.title}</Breadcrumb.Item>}
+            <Breadcrumb.Item linkAs={Link} linkProps={{to: '/'}}>Dashboard</Breadcrumb.Item>
+            {selectedSubject && <Breadcrumb.Item linkAs={Link} linkProps={{to: "/" + selectedSubject.id}}>{selectedSubject && selectedSubject.title}</Breadcrumb.Item>}
             <Breadcrumb.Item active>{main.currentTestDraft && main.currentTestDraft.title}</Breadcrumb.Item>
           </Breadcrumb>
           <AnswersGrid />

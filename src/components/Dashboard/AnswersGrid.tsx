@@ -79,7 +79,7 @@ const AnswersGrid = () => {
               variant="outline-primary"
             />
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1" disabled>
+              <Dropdown.Item as={Button} disabled>
                 <i className="bi bi-eye-slash me-2"></i> Hide selected
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -90,7 +90,7 @@ const AnswersGrid = () => {
             </Button>
             <Dropdown.Toggle split id="dropdown-split-basic" />
             <Dropdown.Menu>
-              <Dropdown.Item>
+              <Dropdown.Item as={Button}>  
                 <i className="bi bi-exclamation-circle me-2"></i> Check all
               </Dropdown.Item>
               {/* <Dropdown.Divider />

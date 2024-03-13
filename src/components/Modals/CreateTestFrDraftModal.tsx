@@ -349,13 +349,13 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
                     {getReviewResultName(reviewResult || 0)}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item value={0} onClick={() => setReviewResult(0)}>
+                    <Dropdown.Item as={Button} value={0} onClick={() => setReviewResult(0)}>
                       Set manually
                     </Dropdown.Item>
-                    <Dropdown.Item value={1} onClick={() => setReviewResult(1)}>
+                    <Dropdown.Item as={Button} value={1} onClick={() => setReviewResult(1)}>
                       After submission
                     </Dropdown.Item>
-                    <Dropdown.Item value={2} onClick={() => setReviewResult(2)}>
+                    <Dropdown.Item as={Button} value={2} onClick={() => setReviewResult(2)}>
                       After auto check
                     </Dropdown.Item>
                   </Dropdown.Menu>

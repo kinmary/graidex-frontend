@@ -11,6 +11,7 @@ import { getStudentsList } from "../Dashboard/SubjectActions";
 import { ColumnState, GridReadyEvent } from "ag-grid-community";
 import profilePic from "../../images/blank-profile-picture.jpg";
 import { ISubject } from "../../interfaces/Subject";
+import { themes } from "../../constants/Themes";
 
 interface Props {
   selectedSubject: ISubject;
@@ -18,7 +19,7 @@ interface Props {
 const ManageStudentsModal = ({ selectedSubject }: Props) => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
-
+  const { theme } = main;
   const PendingStudentRequests = [
     { field: "studentEmail", flex: 2, headerName: "Email" },
     {
@@ -121,7 +122,7 @@ const ManageStudentsModal = ({ selectedSubject }: Props) => {
               }
               eventKey={"active-students"}
             >
-              <div className="ag-theme-alpine" style={{ height: 450 }}>
+              <div className={theme === themes.light ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={{ height: 450 }}>
                 <AgGridReact
                   rowSelection={"single"}
                   columnDefs={StudentListGridColumns}
@@ -139,7 +140,7 @@ const ManageStudentsModal = ({ selectedSubject }: Props) => {
               }
               eventKey={"pending-students"}
             >
-              <div className="ag-theme-alpine" style={{ height: 450 }}>
+              <div className={theme === themes.light ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={{ height: 450 }}>
                 <AgGridReact
                   rowSelection={"single"}
                   columnDefs={PendingStudentRequests}

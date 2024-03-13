@@ -113,10 +113,10 @@ const SubjectPage = () => {
                         {isPreview ? <i className="bi bi-eye"></i> : <i className="bi bi-eye-slash"></i>}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item value={true} key={1} onClick={() => onPreviewDDClick(true)}>
+                        <Dropdown.Item as={Button} value={true} key={1} onClick={() => onPreviewDDClick(true)}>
                           <i className="bi bi-eye"></i> Preview
                         </Dropdown.Item>
-                        <Dropdown.Item value={false} key={2} onClick={() => onPreviewDDClick(false)}>
+                        <Dropdown.Item as={Button} value={false} key={2} onClick={() => onPreviewDDClick(false)}>
                           <i className="bi bi-eye-slash"></i> Constructor
                         </Dropdown.Item>
                       </Dropdown.Menu>
@@ -127,9 +127,7 @@ const SubjectPage = () => {
             </div>
             <Breadcrumb style={{fontSize: 14}} data-bs-theme="dark">
               <Breadcrumb.Item
-                onClick={() => {
-                  navigate("/");
-                }}
+                linkAs={Link} linkProps={{to: '/'}}
               >
                 Dashboard
               </Breadcrumb.Item>
@@ -165,10 +163,10 @@ const SubjectPage = () => {
                           <Dropdown>
                             <Dropdown.Toggle variant={main.theme}>{!test.isVisible ? "Hidden" : "Shown"}</Dropdown.Toggle>
                             <Dropdown.Menu>
-                              <Dropdown.Item key={`dropdown-1-${idx}`} value={true} onClick={() => onChangeVisible(test.id, true, test.subjectId)}>
+                              <Dropdown.Item as={Button} key={`dropdown-1-${idx}`} value={true} onClick={() => onChangeVisible(test.id, true, test.subjectId)}>
                                 Shown
                               </Dropdown.Item>
-                              <Dropdown.Item key={`dropdown-2-${idx}`} value={false} onClick={() => onChangeVisible(test.id, false, test.subjectId)}>
+                              <Dropdown.Item as={Button} key={`dropdown-2-${idx}`} value={false} onClick={() => onChangeVisible(test.id, false, test.subjectId)}>
                                 Hidden
                               </Dropdown.Item>
                             </Dropdown.Menu>

@@ -3,7 +3,7 @@ import {Button, Form, Breadcrumb, Alert, ListGroup, Row, Col, Badge} from "react
 import {useSelector} from "react-redux";
 import {RootState} from "../../../app/store";
 import {useAppDispatch} from "../../../app/hooks";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {getVisibleSubjectContent} from "../../Dashboard/SubjectActions";
 import ISubjectContent from "../../../interfaces/SubjectContent";
 import {getAttemptsDescription, getVisibleTestStudent} from "../../Dashboard/TestActions";
@@ -126,9 +126,9 @@ const StartTestSummary = () => {
           {currentTestDraft?.title}
         </h5>
         <Breadcrumb style={{fontSize: 14}}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/" + params.selectedSubjectId)}>{selectedSubject?.title}</Breadcrumb.Item>
-          <Breadcrumb.Item active={currentTestDraft?.itemType === "Test"} onClick={() => navigate("/" + params.selectedSubjectId + "/" + params.test)}>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to:'/'}}>Dashboard</Breadcrumb.Item>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to: "/" + params.selectedSubjectId}}>{selectedSubject?.title}</Breadcrumb.Item>
+          <Breadcrumb.Item active={currentTestDraft?.itemType === "Test"} linkAs={Link} linkProps={{to:"/" + params.selectedSubjectId + "/" + params.test}}>
             {currentTestDraft && currentTestDraft.title}
           </Breadcrumb.Item>
         </Breadcrumb>

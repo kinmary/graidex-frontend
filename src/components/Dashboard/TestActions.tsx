@@ -187,13 +187,13 @@ export const getTest = (testid: string | number) => {
         });
       }
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
-      } else {
-        //   dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-      }
+      // if (error.response.status === 400) {
+      //   //Bad Request
+      //   error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
+      // } else {
+      //   //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      // }
     }
     return Promise.resolve();
   };

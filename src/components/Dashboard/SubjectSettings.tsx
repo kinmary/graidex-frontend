@@ -6,7 +6,7 @@ import {getStudentsList, updateSubject} from "./SubjectActions";
 import {useAppDispatch} from "../../app/hooks";
 import {RootState} from "../../app/store";
 import {useSelector} from "react-redux";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import DeleteSubjectModal from "../Modals/DeleteSubjectModal";
 import ChangeImageModal from "../Modals/ChangeImageModal";
 import MessageModal from "../Modals/MessageModal";
@@ -94,16 +94,12 @@ if(!selectedSubject || !selectedSubjectChanged) return null;
               </h5>
               <Breadcrumb style={{fontSize: 14}}>
                 <Breadcrumb.Item
-                  onClick={() => {
-                    navigate("/");
-                  }}
+                  linkAs={Link} linkProps={{to: '/'}}
                 >
                   Dashboard
                 </Breadcrumb.Item>
                 <Breadcrumb.Item
-                  onClick={() => {
-                    navigate("/" + selectedSubject!.id);
-                  }}
+                  linkAs={Link} linkProps={{to: '/' + selectedSubject!.id}}
                 >
                   {selectedSubject?.title}
                 </Breadcrumb.Item>

@@ -51,7 +51,7 @@ const Dashboard = () => {
           </div>
         </div>
         <Breadcrumb style={{fontSize: 14}}>
-          <Breadcrumb.Item active> Dashboard</Breadcrumb.Item>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to:'/'}} active> Dashboard</Breadcrumb.Item>
         </Breadcrumb>
         {/*//TODO: add filter button */}
         {allSubjects.length > 0 ? (

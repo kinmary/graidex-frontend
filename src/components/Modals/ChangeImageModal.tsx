@@ -19,13 +19,14 @@ import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { ISubject } from "../../interfaces/Subject";
+import { themes } from "../../constants/Themes";
 interface ChangeImageModalProps {
   selectedSubject: ISubject;
 }
 const ChangeImageModal = ({selectedSubject}: ChangeImageModalProps) => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
-  const { changeImgModal } = main;
+  const { changeImgModal, theme } = main;
 
   const getCurrentImage = () =>{
     return selectedSubject.imageUrl;
@@ -138,7 +139,7 @@ const ChangeImageModal = ({selectedSubject}: ChangeImageModalProps) => {
             <InputGroup>
               <InputGroup.Text id="pexel-logo">
                 <a href="https://www.pexels.com" target="_blank" rel="noreferrer">
-                  <img src="https://images.pexels.com/lib/api/pexels.png" alt="" style={{height: "1.5rem"}} />
+                  <img src={theme === themes.light ? "https://images.pexels.com/lib/api/pexels.png" : "https://images.pexels.com/lib/api/pexels-white.png"}  alt="" style={{height: "1.5rem"}} />
                 </a>
               </InputGroup.Text>
               <Form.Control
