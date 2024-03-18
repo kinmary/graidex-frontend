@@ -99,24 +99,26 @@ const SignUp = () => {
           </div>
           <ButtonGroup className="d-flex" style={{ marginTop: 10 }}>
             <ToggleButton
+              id="teacher"
               size="sm"
               type="radio"
               name="Teacher"
               variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={0}
               checked={auth.userRole === 0 ? true : false}
-              onClick={(e) => dispatch(ChangeUserRole(0))}
+              onClick={(e: any) => dispatch(ChangeUserRole(0))}
             >
               Teacher
             </ToggleButton>
             <ToggleButton
               size="sm"
               type="radio"
+              id="student"
               name="Student"
               variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={1}
               checked={auth.userRole === 1 ? true : false}
-              onClick={(e) => dispatch(ChangeUserRole( 1 ))}
+              onClick={(e: any) => dispatch(ChangeUserRole( 1 ))}
             >
               Student
             </ToggleButton>

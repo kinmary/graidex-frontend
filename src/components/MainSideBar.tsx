@@ -96,11 +96,7 @@ const MainSidebar = ({children}: LayoutProps) => {
                 },
               }}
             >
-              <MenuItem
-                component={<Link to="/" />}
-                style={{...mainMenuItemStyle, marginTop: "9px"}}
-                icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>}
-              >
+              <MenuItem component={<Link to="/" />} style={{...mainMenuItemStyle, marginTop: "9px"}} icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>}>
                 Dashboard
               </MenuItem>
 
@@ -146,25 +142,12 @@ const MainSidebar = ({children}: LayoutProps) => {
                   }
                   // onClick={() => navigate("/subject-requests")}
                 >
-                    Requests
+                  Requests
                 </MenuItem>
               )}
-
-              {/* <MenuItem
-                style={mainMenuItemStyle}
-                icon={<i className="bi bi-info-circle"></i>}
-                disabled
-              >
-                About
+              <MenuItem style={mainMenuItemStyle} component={<Link to="/calendar" />} icon={location.pathname.startsWith("/calendar") ? <i className="bi bi-calendar2-week-fill"></i> : <i className="bi bi-calendar2-week"></i>}>
+                Calendar
               </MenuItem>
-              <MenuItem
-                style={mainMenuItemStyle}
-                icon={<i className="bi bi-shield-check"></i>}
-                disabled
-              >
-                Privacy &amp; Policy
-              </MenuItem> */}
-
               <MenuItem style={mainMenuItemStyle} icon={<i className="bi bi-question-circle"></i>} disabled>
                 Help & Feedback
               </MenuItem>

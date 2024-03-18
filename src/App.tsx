@@ -20,6 +20,7 @@ import SubjectRequests from "./components/Dashboard/SubjectRequests";
 import StartTestSummary from "./components/StudentSide/TakeTest/StartTestSummary";
 import {SetOpen} from "./components/MainAction";
 import {themes} from "./constants/Themes";
+import Calendar from "./components/Calendar/Calendar";
 
 const ProtectedRoute = ({role}: any) => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -60,6 +61,10 @@ function App() {
         {
           path: "/:selectedSubjectId",
           element: <SubjectPage />,
+        },
+        {
+          path: "/calendar",
+          element: <Calendar />,
         },
         {
           element: <ProtectedRoute role={0} />, //teacher
@@ -105,6 +110,10 @@ function App() {
         {
           path: "/:selectedSubjectId",
           element: <SubjectPage />,
+        },
+        {
+          path: "/calendar",
+          element: <Calendar />,
         },
         {
           element: <ProtectedRoute role={1} />, //student

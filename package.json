@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/runtime": "^7.24.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -21,6 +22,7 @@
     "pexels": "^1.4.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
+    "react-big-calendar": "^1.11.2",
     "react-bootstrap": "^2.8.0",
     "react-bootstrap-icons": "^1.10.3",
     "react-bootstrap-sidebar-menu": "^2.0.3",
@@ -63,6 +65,7 @@
   },
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.4",
+    "@types/react-big-calendar": "^1.8.9",
     "@types/react-redux": "^7.1.25",
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
