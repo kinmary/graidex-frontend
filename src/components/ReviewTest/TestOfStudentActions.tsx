@@ -11,6 +11,7 @@ import { IQuestion } from "../../interfaces/Questions";
 import { TestBaseMultipleChoiceQuestionDto, TestBaseOpenQuestionDto, TestBaseSingleChoiceQuestionDto } from "../../constants/TestBackendTypes";
 import IAnswerOption from "../../interfaces/AnswerOption";
 import { ITestResultForTeacher } from "../../interfaces/TestResultForTeacherDto";
+import { ILeaveFeedbackDto } from "../../interfaces/LeaveFeedbackOnAnswerDto";
 
 export const ChangeQuestionAttr = (id: number, name: string, value: any) => {
   return (dispatch: AppDispatch) => {
@@ -40,16 +41,20 @@ export const ResetTestOfStudentState = () => {
   };
 };
 
-export const LeaveFeedbackOnAnswer = (testResultId: string, questionId: string,points: number, feedback?: string ) => {
+export const LeaveFeedbackOnAnswer = (testResultId: string, feedbacks: IQuestion[] ) => {
   return async (dispatch: AppDispatch) => {
     try {
-      let feedbackDto = {
-        feedback: feedback || "",
-        points: points || 0
-      }
+      let feedbackDtos : ILeaveFeedbackDto[] = [];
+      feedbacks.forEach((question: IQuestion) => {
+        feedbackDtos.push({
+          questionIndex: (question.questionIndex !== undefined ? question.questionIndex : -1),
+          feedback: question.feedback || "",
+          points: question.points || 0,
+        });
+      });
       const response = await axios.put(
-        `${API_BASE_URL}/api/TestResult/leave-feedback-on-answer/${testResultId}?index=${questionId}`,
-          feedbackDto
+        `${API_BASE_URL}/api/TestResult/leave-feedback-on-answer/${testResultId}`,
+          feedbackDtos
       );
       if (response.status === 200) {
         return true;
@@ -144,6 +149,7 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           title: element.question.text,
           maxPoints: element.question.maxPoints,
           type: getQuestionType(element.question.$type),
+          questionIndex: element.answer.questionIndex,
           selected: false,
           answerOptions: options,
           points: element.answer.points,
@@ -169,6 +175,7 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           selected: false,
           answerOptions: answerOptions,
           points: element.answer.points,
+          questionIndex: element.answer.questionIndex,
           feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return multiple;
@@ -178,6 +185,7 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           title: element.question.text,
           maxPoints: element.question.maxPoints,
           type: getQuestionType(element.question.$type),
+          questionIndex: element.answer.questionIndex,
           selected: false,
           answerOptions: [{id: 0, text: element.answer.text || ""}],
           points: element.answer.points,

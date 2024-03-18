@@ -5,6 +5,7 @@ import ISubjectContent from "../interfaces/SubjectContent";
 import { ITestDto } from "../interfaces/TestDto";
 import { GetAttemptsDescDto } from "../interfaces/GetAttemptsDescDto";
 import { themes } from "../constants/Themes";
+import IAnswerGrid from "../interfaces/AnswerGrid";
 
 interface MainState {
   editPage: boolean;
@@ -39,6 +40,7 @@ interface MainState {
   createTestFromDraft?: boolean;
   attemptsInfo?: GetAttemptsDescDto | undefined;
   theme: string;
+  answersGrid?: IAnswerGrid[] | undefined;
 }
 
 const initialState: MainState = {
@@ -74,6 +76,7 @@ const initialState: MainState = {
   createTestFromDraft: false,
   attemptsInfo: undefined,
   theme: themes.light,
+  answersGrid: Array<IAnswerGrid>(),
 };
 
 interface MainAction {
@@ -87,7 +90,8 @@ interface MainAction {
     | typeof GET_SUBJECT_CONTENT
     | typeof SHOW_LOADER
     | typeof SET_CURRENT_TEST_DRAFT
-    | typeof SET_ATTEMPTS_INFO;
+    | typeof SET_ATTEMPTS_INFO
+    | typeof SET_ANSWERS_GRID;
   name?: string;
   value?: any;
   mode?: boolean;
@@ -100,6 +104,7 @@ interface MainAction {
   currentTestDraft?: ITestDto;
   attemptsInfo?: GetAttemptsDescDto;
   theme?: string;
+  answersGrid?: IAnswerGrid[];
 }
 
 export const MainReducer = (
@@ -162,6 +167,11 @@ export const MainReducer = (
         ...state,
         attemptsInfo: action.attemptsInfo,
       };
+      case SET_ANSWERS_GRID:
+      return {
+        ...state,
+        answersGrid: action.answersGrid,
+      };
     default:
       break;
   }
@@ -178,3 +188,4 @@ export const GET_SUBJECT_CONTENT = "GET_SUBJECT_CONTENT";
 export const SHOW_LOADER = "SHOW_LOADER";
 export const SET_CURRENT_TEST_DRAFT = "SET_CURRENT_TEST_DRAFT";
 export const SET_ATTEMPTS_INFO = "SET_ATTEMPTS_INFO";
+export const SET_ANSWERS_GRID = "SET_ANSWERS_GRID";

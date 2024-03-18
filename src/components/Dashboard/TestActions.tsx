@@ -6,7 +6,7 @@ import {getSubjectContent} from "./SubjectActions";
 import {IUpdateTestDto, IUpdateTestTimeDto} from "../../interfaces/UpdateTestDto";
 import {IUpdateTestDraftDto} from "../../interfaces/UpdateTestDraftDto";
 import {ICreateTestDto} from "../../interfaces/CreateTestDto";
-import {SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT} from "../MainReducer";
+import {SET_ANSWERS_GRID, SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT} from "../MainReducer";
 import {CHANGE_QUESTIONS, RESET_STATE} from "../TeacherSide/CreateTest/CreateTestReducer";
 import {IQuestion} from "../../interfaces/Questions";
 import IAnswerOption from "../../interfaces/AnswerOption";
@@ -280,6 +280,27 @@ export const updateTest = (testid: string | number, updateTestDto: IUpdateTestDt
   };
 };
 
+export const addTestToCheckingQueue = (testid: string | number, testResultIds: string[]) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/api/TestResult/add-test-results-to-checking-queue/` + testid, testResultIds);
+      if (response.status === 200) {
+        dispatch(getAllTestResults(testid));
+      }
+    } catch (error: any) {
+      // if (error.response.status === 400 && error.response.data) {
+      //   //Bad Request
+      //   // error.response.data.map((obj: any) =>
+      //   alert(error.response.data);
+      //   // );
+      // } else {
+      //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      // }
+    }
+  };
+};
+
 export const updateTestTime = (testid: string | number, updateTestTimeDto: IUpdateTestTimeDto, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {
@@ -426,11 +447,26 @@ export const removeStudentsFromTest = (testid: string | number, studentEmails: s
     } catch (error: any) {
       // if (error.response.status === 400) {
       //Bad Request
-      alert(error.response.data);
+      // alert(error.response.data);
       // } else {
       //   dispatch(CheckAuthorization(error.response.status));
       //   alert(error.message);
       // }
+    }
+  };
+};
+
+export const getAllTestResults = (testid: string | number) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/TestResult/get-all-test-results/` + testid);
+      dispatch({type: SET_ANSWERS_GRID, answersGrid: []});
+      if (response.data.length !== 0) {
+
+        dispatch({type: SET_ANSWERS_GRID, answersGrid: response.data});
+      }
+    } catch (error: any) {
+      // alert(error.message);
     }
   };
 };

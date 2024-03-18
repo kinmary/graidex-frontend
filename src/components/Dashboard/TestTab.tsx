@@ -74,7 +74,7 @@ const TestTab = () => {
             </h5>
             <div style={{marginLeft: "auto"}}>
               {auth.userRole === 0 && (
-                <Button size="sm" onClick={onEditTestClick}>
+                <Button size="sm" onClick={onEditTestClick} disabled={new Date(main.currentTestDraft.startDateTime) < new Date()}>
                   <i className="bi bi-pencil-square"></i> Edit test
                 </Button>
               )}

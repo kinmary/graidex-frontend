@@ -101,12 +101,13 @@ const TestField = () => {
               display: "flex",
               alignItems: "center",
               marginBottom: 20,
+              justifyContent: "space-between",
             }}
           >
-            <h5 style={{ fontWeight: "bold", width: "85%" }}>
+            <h5 style={{ fontWeight: "bold" }}>
               {selectedQuestion?.title}
             </h5>
-            <InputGroup style={{ width: "15%" }}>
+            <InputGroup style={{ width: "19%" }}>
               <Form.Control
                 type="number"
                 autoComplete="off"

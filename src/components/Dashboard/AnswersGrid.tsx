@@ -1,26 +1,53 @@
-import React, { useCallback, useRef, useState } from "react";
-import { SetOpen } from "../MainAction";
-import { AgGridReact } from "ag-grid-react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {SetOpen} from "../MainAction";
+import {AgGridReact} from "ag-grid-react";
 import IAnswerGrid from "../../interfaces/AnswerGrid";
-import { AnswerGridCol } from "../../constants/AnswerGridColumns";
-import { ColDef, GetRowIdParams } from "ag-grid-community";
-import { useAppDispatch } from "../../app/hooks";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { useNavigate } from "react-router-dom";
-import { Button, ButtonGroup, Dropdown, Form } from "react-bootstrap";
+import {AnswerGridCol} from "../../constants/AnswerGridColumns";
+import {ColDef, GetRowIdParams} from "ag-grid-community";
+import {useAppDispatch} from "../../app/hooks";
+import {useSelector} from "react-redux";
+import {RootState} from "../../app/store";
+import {useNavigate, useParams} from "react-router-dom";
+import {Button, ButtonGroup, Dropdown, Form} from "react-bootstrap";
 import "../../index.css";
-import { answersGrid } from "../../constants/TestExample";
-import { GetTestResultForTeacher } from "../ReviewTest/TestOfStudentActions";
-import { themes } from "../../constants/Themes";
+import {answersGrid} from "../../constants/TestExample";
+import {GetTestResultForTeacher} from "../ReviewTest/TestOfStudentActions";
+import {themes} from "../../constants/Themes";
+import {addTestToCheckingQueue, getAllTestResults} from "./TestActions";
 
 const AnswersGrid = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const gridRef = useRef<AgGridReact<IAnswerGrid>>(null);
   const theme = useSelector((state: RootState) => state.main.theme);
-  const [rowData, setRowData] = useState(answersGrid);
+  const [rowData, setRowData] = useState<IAnswerGrid[]>();
+  const main = useSelector((state: RootState) => state.main);
   const [columnDefs, setColumnDefs] = useState<ColDef[]>(AnswerGridCol);
+  const params = useParams();
+  useEffect(() => {
+    if (!params.test) return;
+    dispatch(getAllTestResults(params.test));
+  }, [params.test]);
+  useEffect(() => {
+    if (main.answersGrid) {
+      main.answersGrid.map((item: IAnswerGrid) => {
+        
+        if (new Date(item.endTime) > new Date()) {
+          item.status = 0;
+        // } else if (new Date(item.endTime) < new Date()) {
+        //   item.status = 1;
+        } else if (item.grade > (main.currentTestDraft?.gradeToPass || 4)) {
+          item.status = 3;
+        } else if (item.grade < (main.currentTestDraft?.gradeToPass || 4)) {
+          item.status = 4;
+        }
+        
+        return item;
+      });
+      setRowData(main.answersGrid);
+    }
+  }, [main.answersGrid]);
+
   const getRowId = useCallback((params: GetRowIdParams) => {
     return params.data.student.email;
   }, []);
@@ -28,56 +55,48 @@ const AnswersGrid = () => {
   const [selectedRowsCount, setSelectedRowsCount] = useState(0);
 
   const onQuickFilterChanged = useCallback(() => {
-    gridRef.current?.api.setQuickFilter(
-      (document.getElementById("quickFilter") as HTMLInputElement).value
-    );
+    gridRef.current?.api.setQuickFilter((document.getElementById("quickFilter") as HTMLInputElement).value);
   }, []);
 
   const onRowDoubleClicked = useCallback(
     (param: any) => {
       //TODO: Add get testResultId from grid
-      const testResultId = "4";
+      const testResultId = param.data.id;
       if (testResultId) {
         dispatch(GetTestResultForTeacher(testResultId)).then((res: any) => {
           // if(!res) {alert("Error occured"); return;}
           navigate(`review/${testResultId}`);
-        })
+        });
       }
     },
     [gridRef]
   );
 
+  const handleTestToCheckingQueue = () => {
+    const selectedRows = gridRef.current?.api.getSelectedRows();
+    if (!selectedRows || !params.test) return;
+    const testResultIds = selectedRows.map((item) => item.id);
+    dispatch(addTestToCheckingQueue(params.test, testResultIds));
+  }
+
+  const handleAutocheckAll = () => {
+    if (!rowData || !params.test) return;
+    const testResultIds = rowData.map((item) => item.id);
+    dispatch(addTestToCheckingQueue(params.test, testResultIds));
+  }
+
+  if (!rowData) return null;
   return (
     <>
       {/* //TODO: Add filter and sort buttons, + search in name field */}
-      <div
-        className="ag-theme-alpine"
-        style={{ marginTop: 10, height: "calc(100vh - 110px)" }}
-      >
+      <div className="ag-theme-alpine" style={{marginTop: 10, height: "calc(100vh - 110px)"}}>
         <div className="d-flex mb-2">
-          <Form.Control
-            autoComplete="off"
-            size="sm"
-            className="me-2 w-auto flex-grow-1"
-            type="text"
-            onInput={onQuickFilterChanged}
-            id="quickFilter"
-            placeholder="Filter attempts..."
-          />
+          <Form.Control autoComplete="off" size="sm" className="me-2 w-auto flex-grow-1" type="text" onInput={onQuickFilterChanged} id="quickFilter" placeholder="Filter attempts..." />
           <Dropdown as={ButtonGroup} size="sm" align="end" className="me-2">
-            <Button
-              size="sm"
-              disabled={selectedRowsCount === 0}
-              variant="outline-primary"
-            >
+            <Button size="sm" disabled={selectedRowsCount === 0} variant="outline-primary">
               <i className="bi bi-eye me-2"></i> Show selected
             </Button>
-            <Dropdown.Toggle
-              disabled={selectedRowsCount === 0}
-              split
-              id="dropdown-split-basic"
-              variant="outline-primary"
-            />
+            <Dropdown.Toggle disabled={selectedRowsCount === 0} split id="dropdown-split-basic" variant="outline-primary" />
             <Dropdown.Menu>
               <Dropdown.Item as={Button} disabled>
                 <i className="bi bi-eye-slash me-2"></i> Hide selected
@@ -85,12 +104,12 @@ const AnswersGrid = () => {
             </Dropdown.Menu>
           </Dropdown>
           <Dropdown as={ButtonGroup} size="sm" align="end">
-            <Button size="sm" disabled={selectedRowsCount === 0}>
-              <i className="bi bi-play-fill"></i> Autocheck new
+            <Button size="sm" disabled={selectedRowsCount === 0} onClick={handleTestToCheckingQueue}>
+              <i className="bi bi-play-fill"></i> Autocheck selected
             </Button>
             <Dropdown.Toggle split id="dropdown-split-basic" />
             <Dropdown.Menu>
-              <Dropdown.Item as={Button}>  
+              <Dropdown.Item as={Button} onClick={handleAutocheckAll}>
                 <i className="bi bi-exclamation-circle me-2"></i> Check all
               </Dropdown.Item>
               {/* <Dropdown.Divider />
@@ -99,8 +118,8 @@ const AnswersGrid = () => {
               </Dropdown.Item>
               <Dropdown.Item href="#/action-1">
                 <i className="bi bi-x-square-fill me-2"></i> Abort all
-              </Dropdown.Item> */}
-              {/* <Dropdown.Divider />
+              </Dropdown.Item> 
+              <Dropdown.Divider />
                   <Dropdown.Header className="py-0">Parameters</Dropdown.Header>
                   <Dropdown.ItemText>
                     <Form.Check
@@ -124,7 +143,7 @@ const AnswersGrid = () => {
           </Dropdown>
         </div>
 
-        <div style={{ height: "95%" }} className={theme === themes.light ? "ag-theme-alpine" : "ag-theme-alpine-dark"}>
+        <div style={{height: "95%"}} className={theme === themes.light ? "ag-theme-alpine" : "ag-theme-alpine-dark"}>
           <AgGridReact<IAnswerGrid>
             ref={gridRef}
             getRowId={getRowId}
@@ -134,14 +153,11 @@ const AnswersGrid = () => {
             onRowDoubleClicked={onRowDoubleClicked}
             suppressRowClickSelection={true}
             suppressCellFocus
+            pagination={true}
             suppressMovableColumns
             alwaysMultiSort
             animateRows
-            onSelectionChanged={() =>
-              setSelectedRowsCount(
-                gridRef.current?.api?.getSelectedRows()?.length || 0
-              )
-            }
+            onSelectionChanged={() => setSelectedRowsCount(gridRef.current?.api?.getSelectedRows()?.length || 0)}
           />
         </div>
       </div>

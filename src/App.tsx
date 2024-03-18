@@ -80,10 +80,10 @@ function App() {
               path: "/:selectedSubjectId/:test/edit-test",
               element: <CreateTest />,
             },
-            // {
-            //   path: "/:selectedSubjectId/:test/review/:studentName", //change it when review result is done
-            //   element: <TestOfStudent />,
-            // },
+            {
+              path: "/:selectedSubjectId/:test/review/:testResultId",
+              element: <TestOfStudent />,
+            },
           ],
         },
       ],
