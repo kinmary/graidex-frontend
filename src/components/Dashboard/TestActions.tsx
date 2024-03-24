@@ -16,7 +16,7 @@ import {IMultipleChoiceOption} from "../../interfaces/MutipleChoiceOptions";
 import {IOption} from "../../interfaces/Option";
 import {ISingleChoiceQuestion} from "../../interfaces/SingleChoiceQuestion";
 import {IOpenQuestion} from "../../interfaces/OpenQuestion";
-import {parseReviewResultToFrontend} from "../../utils/GetReviewResult";
+import {parseShowToStudentToFrontend} from "../../utils/GetShowToStudent";
 
 export const createTestDraft = (subjectId: string | number | undefined, title: string, description: string, gradeToPass: number) => {
   return async (dispatch: AppDispatch) => {
@@ -180,7 +180,7 @@ export const getTest = (testid: string | number) => {
       // dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
       const response = await axios.get(`${API_BASE_URL}/api/Test/get-test/` + testid);
       if (response.status === 200) {
-        response.data.reviewResult = parseReviewResultToFrontend(response.data.reviewResult);
+        response.data.showToStudent = parseShowToStudentToFrontend(response.data.showToStudent);
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
           currentTestDraft: response.data,
@@ -280,27 +280,18 @@ export const updateTest = (testid: string | number, updateTestDto: IUpdateTestDt
   };
 };
 
-export const addTestToCheckingQueue = (testid: string | number, testResultIds: string[]) => {
+
+export const setShowTestResultsToStudents = (testid: string | number, testResultIds: string[], show: boolean) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/api/TestResult/add-test-results-to-checking-queue/` + testid, testResultIds);
+      const response = await axios.put(`${API_BASE_URL}/api/TestResult/set-show-test-results-to-student/` + testid, testResultIds, {params: {show: show}});
       if (response.status === 200) {
         dispatch(getAllTestResults(testid));
       }
     } catch (error: any) {
-      // if (error.response.status === 400 && error.response.data) {
-      //   //Bad Request
-      //   // error.response.data.map((obj: any) =>
-      //   alert(error.response.data);
-      //   // );
-      // } else {
-      //   dispatch(CheckAuthorization(error.response.status));
-      //   alert(error.message);
-      // }
     }
   };
 };
-
 export const updateTestTime = (testid: string | number, updateTestTimeDto: IUpdateTestTimeDto, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {

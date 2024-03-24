@@ -21,7 +21,7 @@ const QuestionsList = () => {
             <Col key={index} style={{ marginBottom: 5 }}>
               <Card>
                 <Card.Body
-                  style={{ fontWeight: "bold", padding: 10 }}
+                  style={{ fontWeight: "bold", padding: 10, height: "45px" }}
                   className="d-flex align-items-center"
                 >
                   <Badge bg="secondary" className="me-2">
@@ -30,7 +30,7 @@ const QuestionsList = () => {
                   <span
                     id={question.id.toString()}
                     onClick={handleCardClick}
-                    className="flex-grow-1"
+                    className="flex-grow-1 text-truncate"
                   >
                     {question.title}
                   </span>

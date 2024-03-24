@@ -6,11 +6,12 @@ export interface GetAttemptsDescDto {
 
 interface TestResultPreview {
     id: number;
-    canReview: boolean;
+    showToStudent: boolean;
     startTime: Date;
     endTime: Date;
     totalPoints: number | null;
     grade: number | null;
+    requireTeacherReview: boolean;
 }
 
 interface TestAttemptPreview {

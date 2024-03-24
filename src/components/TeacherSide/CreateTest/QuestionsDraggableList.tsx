@@ -129,7 +129,7 @@ const QuestionsDraggableList = () => {
                         >
                           <Card style={{ margin: 5 }}>
                             <Card.Body
-                              style={{ fontWeight: "bold", padding: 10 }}
+                              style={{ fontWeight: "bold", padding: 10, height: "45px" }}
                               className="d-flex align-items-center"
                             >
                               <i
@@ -142,7 +142,7 @@ const QuestionsDraggableList = () => {
                               <span
                                 id={question.id.toString()}
                                 onClick={handleCardClick}
-                                className="flex-grow-1"
+                                className="flex-grow-1 text-truncate me-2"
                               >
                                 {question.title}
                               </span>

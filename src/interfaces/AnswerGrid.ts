@@ -8,6 +8,7 @@ export default interface IAnswerGrid {
   startTime: Date;
   endTime: Date;
   grade: number;
-  canReview: boolean;
+  showToStudent: boolean;
   status?: number;
+  requireTeacherReview: boolean;
 }

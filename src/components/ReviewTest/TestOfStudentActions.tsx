@@ -79,8 +79,8 @@ export const GetTestResultForTeacher = (testResultid: string) => {
         let questions: IQuestion[] = mapToFrontendQuestions(response.data.resultAnswers).filter(x => x!==undefined) as IQuestion[];
         let testResult : ITestResultForTeacher = {
           resultAnswers: questions,
-          isAutoChecked: response.data.isAutoChecked,
-          canReview: response.data.canReview,
+          // isAutoChecked: response.data.isAutoChecked,
+          showToStudent: response.data.showToStudent,
           startTime: response.data.startTime, //FIX TIME
           endTime: response.data.endTime, //FIX TIME
           testId: response.data.testId,
@@ -110,8 +110,8 @@ export const GetTestResultForStudent = (testResultid: string) => {
         let questions: IQuestion[] = mapToFrontendQuestions(response.data.resultAnswers).filter(x => x!==undefined) as IQuestion[];
         let testResult : ITestResultForTeacher = {
           resultAnswers: questions,
-          isAutoChecked: response.data.isAutoChecked,
-          canReview: response.data.canReview,
+          // isAutoChecked: response.data.isAutoChecked,
+          showToStudent: response.data.showToStudent,
           startTime: response.data.startTime, //FIX TIME
           endTime: response.data.endTime, //FIX TIME
           testId: response.data.testId,
@@ -153,6 +153,7 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           selected: false,
           answerOptions: options,
           points: element.answer.points,
+          requireTeacherReview: element.answer.requireTeacherReview || false,
           feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return single;
@@ -176,6 +177,7 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           answerOptions: answerOptions,
           points: element.answer.points,
           questionIndex: element.answer.questionIndex,
+          requireTeacherReview: element.answer.requireTeacherReview || false,
           feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return multiple;
@@ -189,7 +191,8 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           selected: false,
           answerOptions: [{id: 0, text: element.answer.text || ""}],
           points: element.answer.points,
-          feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
+          feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback,
+          requireTeacherReview: element.answer.requireTeacherReview || false,
         };
         return open;
         default:

@@ -6,7 +6,7 @@ import {RootState} from "../../app/store";
 import MessageModal from "../Modals/MessageModal";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getDraft, getTest, getTestDraftQuestions, getTestQuestionsOfTeacher} from "./TestActions";
+import {getDraft, getTest, getTestQuestionsOfTeacher} from "./TestActions";
 import {getSubjectContent} from "./SubjectActions";
 import ISubjectContent from "../../interfaces/SubjectContent";
 import Settings from "./Settings";

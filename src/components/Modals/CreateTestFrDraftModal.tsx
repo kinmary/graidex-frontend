@@ -10,7 +10,7 @@ import {addStudentsToTest, createTest} from "../Dashboard/TestActions";
 import {SetOpen} from "../MainAction";
 import {getStudentsList} from "../Dashboard/SubjectActions";
 import {calcTimeLimit} from "../../utils/TimeLimitRecalculate";
-import {getReviewResultName} from "../../utils/GetReviewResult";
+import {getShowToStudentName} from "../../utils/GetShowToStudent";
 interface IProps {
   subjectId: string | undefined;
   inputs: {title: string; description: string; gradeToPass: number};
@@ -29,12 +29,12 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [autoCheck, setAutoCheck] = useState<boolean>(false);
+  // const [autoCheck, setAutoCheck] = useState<boolean>(false);
   const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
   const [addAllStudents, setAddAllStudents] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(inputs.title);
-  const [reviewResult, setReviewResult] = useState<number | undefined>(1);
+  const [showToStudent, setShowToStudent] = useState<number | undefined>(1);
   const [isCustomTimeLimit, setIsCustomTimeLimit] = useState<boolean>(false);
   const [timeLimit, setTimeLimit] = useState<ITimeLimit>({
     hours: 0,
@@ -63,8 +63,8 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
       startDate: new Date(),
       endDate: new Date(),
     });
-    setAutoCheck(false);
-    setReviewResult(0);
+    // setAutoCheck(false);
+    setShowToStudent(0);
     setTimeLimit({
       hours: 0,
       minutes: 0,
@@ -92,8 +92,8 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
       startDateTime: startDateTime,
       endDateTime: endDateTime,
       timeLimit: calcTimeLimit(timeLimit.hours, timeLimit.minutes),
-      autoCheckAfterSubmission: autoCheck,
-      reviewResult: reviewResult,
+      // autoCheckAfterSubmission: autoCheck,
+      showToStudent: showToStudent,
       shuffleQuestions: shuffleQuestions,
       isVisible: visible,
       orderIndex: currentTestDraft.orderIndex,
@@ -293,19 +293,6 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
               <InputGroup.Text>
                 <Form.Check
                   type="switch"
-                  id="check-after-submission-switch"
-                  label="Auto check after submission"
-                  checked={autoCheck}
-                  onChange={(event) => {
-                    setAutoCheck(event.target.checked);
-                  }}
-                />
-              </InputGroup.Text>
-            </Form.Group>
-            <Form.Group style={{marginTop: 10}}>
-              <InputGroup.Text>
-                <Form.Check
-                  type="switch"
                   id="shuffle-questions-switch"
                   label="Shuffle questions on start"
                   checked={shuffleQuestions}
@@ -346,17 +333,14 @@ const CreateTestFromDraft = ({subjectId, inputs}: IProps) => {
                 <Form.Label>Review results of test</Form.Label>
                 <Dropdown style={{marginLeft: "auto"}}>
                   <Dropdown.Toggle variant="outline-primary" id="status-dropdown">
-                    {getReviewResultName(reviewResult || 0)}
+                    {getShowToStudentName(showToStudent || 0)}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={Button} value={0} onClick={() => setReviewResult(0)}>
+                    <Dropdown.Item as={Button} value={0} onClick={() => setShowToStudent(0)}>
                       Set manually
                     </Dropdown.Item>
-                    <Dropdown.Item as={Button} value={1} onClick={() => setReviewResult(1)}>
+                    <Dropdown.Item as={Button} value={1} onClick={() => setShowToStudent(1)}>
                       After submission
-                    </Dropdown.Item>
-                    <Dropdown.Item as={Button} value={2} onClick={() => setReviewResult(2)}>
-                      After auto check
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

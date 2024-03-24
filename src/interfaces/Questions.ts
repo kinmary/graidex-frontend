@@ -16,4 +16,5 @@ export interface IQuestion {
         files?: any[];
         previews?: any[];
         questionIndex?: number;
+        requireTeacherReview?: boolean;
 }

@@ -10,8 +10,8 @@ import {getAttemptsDescription, getVisibleTestStudent} from "../../Dashboard/Tes
 import {getAllQuestionsWithAnswers, startTestAttempt} from "./TakeTestActions";
 import {GetAttemptsDescDto} from "../../../interfaces/GetAttemptsDescDto";
 import {ISubject} from "../../../interfaces/Subject";
-import { ITestDto } from "../../../interfaces/TestDto";
-import { GetTestResultForStudent } from "../../ReviewTest/TestOfStudentActions";
+import {ITestDto} from "../../../interfaces/TestDto";
+import {GetTestResultForStudent} from "../../ReviewTest/TestOfStudentActions";
 const skippedTestEmailLink = "mailto:example@email.com?subject=Missed test&body=Hello%2C%0A%0ALooks%20like%20I%20missed%20a%20test%2C%20can%20we%20agree%20on%20a%20retake%20date%3F%0A";
 
 const StartTestSummary = () => {
@@ -53,17 +53,16 @@ const StartTestSummary = () => {
   }, [main.tests]);
 
   useEffect(() => {
-    if(!main.currentTestDraft || !main.attemptsInfo) return;
+    if (!main.currentTestDraft || !main.attemptsInfo) return;
     const attemptsInfo = main.attemptsInfo;
     setCurrentTestDraft(main.currentTestDraft);
     setStartDate(new Date(main.currentTestDraft.startDateTime));
     setEndDate(new Date(main.currentTestDraft.endDateTime));
     setAttemptsInfo(attemptsInfo);
-   
   }, [main.currentTestDraft, main.attemptsInfo]);
 
   useEffect(() => {
-    if(!attemptsInfo || !startDate || !endDate) return;
+    if (!attemptsInfo || !startDate || !endDate) return;
     setShowTestDescriptionAtLeft(attemptsInfo.submittedTestResults.length > 0 || attemptsInfo.currentTestAttempt !== null);
     setShowTestNotStartedAlert(startDate.getTime() > new Date().getTime());
     setShowTestEndedAlert(endDate.getTime() < new Date().getTime());
@@ -110,7 +109,7 @@ const StartTestSummary = () => {
   const onReviewClick = async (testResultId: number) => {
     dispatch(GetTestResultForStudent(testResultId.toString())).then((res: any) => {
       navigate(`review/${testResultId}`);
-    })
+    });
   };
 
   if (!dataLoaded || !currentTestDraft || !attemptsInfo || !selectedSubject || !startDate || !endDate) {
@@ -131,9 +130,13 @@ const StartTestSummary = () => {
           {currentTestDraft?.title}
         </h5>
         <Breadcrumb style={{fontSize: 14}}>
-          <Breadcrumb.Item linkAs={Link} linkProps={{to:'/'}}>Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item linkAs={Link} linkProps={{to: "/" + params.selectedSubjectId}}>{selectedSubject?.title}</Breadcrumb.Item>
-          <Breadcrumb.Item active={currentTestDraft?.itemType === "Test"} linkAs={Link} linkProps={{to:"/" + params.selectedSubjectId + "/" + params.test}}>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to: "/"}}>
+            Dashboard
+          </Breadcrumb.Item>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to: "/" + params.selectedSubjectId}}>
+            {selectedSubject?.title}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item active={currentTestDraft?.itemType === "Test"} linkAs={Link} linkProps={{to: "/" + params.selectedSubjectId + "/" + params.test}}>
             {currentTestDraft && currentTestDraft.title}
           </Breadcrumb.Item>
         </Breadcrumb>
@@ -233,7 +236,13 @@ const StartTestSummary = () => {
                 <ListGroup key={idx}>
                   <ListGroup.Item key={`attempt-${idx}`} className="d-flex align-items-center">
                     <h6 className="m-0 text-start me-3">Attempt {idx + 1}</h6>
-                    {attempt.grade !== null &&
+                    {attempt.requireTeacherReview ? (
+                      <Badge bg="warning" className="ms-auto">
+                        <i className="bi bi-exclamation-circle me-1"></i>
+                        Teacher review
+                      </Badge>
+                    ) : (
+                      attempt.grade !== null &&
                       (attempt.grade >= currentTestDraft.gradeToPass ? (
                         <Badge bg="success" className="ms-auto">
                           <i className="bi bi-check-lg me-1"></i>
@@ -244,7 +253,8 @@ const StartTestSummary = () => {
                           <i className="bi bi-x-lg me-1"></i>
                           Failed
                         </Badge>
-                      ))}
+                      ))
+                    )}
                   </ListGroup.Item>
                   <ListGroup.Item key={`attempt-start-${idx}`} action as="div" variant="light" className="d-flex align-items-center">
                     <i className="bi bi-calendar-check-fill me-3"></i>
@@ -282,10 +292,17 @@ const StartTestSummary = () => {
                     )}
                     {attempt.grade !== null ? <strong>{attempt.grade}</strong> : <span className="text-muted">Not graded yet</span>}
                   </ListGroup.Item>
+
                   <ListGroup.Item key={`attempt-${idx}-btn`} variant="light" className="d-flex p-2">
-                    <Button variant="outline-primary" className="flex-fill" onClick={() => onReviewClick(attempt.id)} disabled={!attempt.canReview}>
-                      Review evaluation
-                    </Button>
+                    {attempt.showToStudent ? (
+                      <Button variant="outline-primary" className="flex-fill" onClick={() => onReviewClick(attempt.id)} disabled={!attempt.showToStudent}>
+                        Review evaluation
+                      </Button>
+                    ) : (
+                      <Button variant="outline-secondary" className="flex-fill" disabled={!attempt.showToStudent}>
+                        Review is not available
+                      </Button>
+                    )}
                   </ListGroup.Item>
                 </ListGroup>
               ))}

@@ -79,3 +79,9 @@ code {
   /* background-color: var(--bs-danger-bg-subtle) !important; */
   border-color: var(--bs-danger-border-subtle) !important;
 }
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

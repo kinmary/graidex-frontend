@@ -7,7 +7,6 @@ import {RootState} from "../../../app/store";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {submitTestAttempt, updateTestAttempt} from "./TakeTestActions";
-import { getAttemptsDescription } from "../../Dashboard/TestActions";
 
 const SendTestConfirmModal = () => {
   const dispatch = useAppDispatch();

@@ -8,9 +8,6 @@ import QuestionsList from "./QuestionsList";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {themes} from "../../../constants/Themes";
-import { getVisibleSubjectContent } from "../../Dashboard/SubjectActions";
-import ISubjectContent from "../../../interfaces/SubjectContent";
-import { getAttemptsDescription, getVisibleTestStudent } from "../../Dashboard/TestActions";
 
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
@@ -151,7 +148,7 @@ const TestConstructor = () => {
             }}
           ></Navbar>
           {/* )}  */}
-          <h5 style={{fontWeight: "bold", width: "87%", marginBottom: 20}}>{selectedQuestion.title}</h5>
+          <h5 style={{fontWeight: "bold", marginBottom: 20}}>{selectedQuestion.title}</h5>
           {selectedQuestion.answerOptions.map((answer: any, idx: any) =>
             selectedQuestion.type === 2 ? (
               <Form.Control

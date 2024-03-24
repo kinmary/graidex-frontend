@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {SetOpen} from "../MainAction";
 import {AgGridReact} from "ag-grid-react";
 import IAnswerGrid from "../../interfaces/AnswerGrid";
-import {AnswerGridCol} from "../../constants/AnswerGridColumns";
 import {ColDef, GetRowIdParams} from "ag-grid-community";
 import {useAppDispatch} from "../../app/hooks";
 import {useSelector} from "react-redux";
@@ -10,10 +8,10 @@ import {RootState} from "../../app/store";
 import {useNavigate, useParams} from "react-router-dom";
 import {Button, ButtonGroup, Dropdown, Form} from "react-bootstrap";
 import "../../index.css";
-import {answersGrid} from "../../constants/TestExample";
 import {GetTestResultForTeacher} from "../ReviewTest/TestOfStudentActions";
 import {themes} from "../../constants/Themes";
-import {addTestToCheckingQueue, getAllTestResults} from "./TestActions";
+import {setShowTestResultsToStudents, getAllTestResults} from "./TestActions";
+import {AnswerGridCol} from "../../constants/AnswerGridColumns";
 
 const AnswersGrid = () => {
   const dispatch = useAppDispatch();
@@ -22,7 +20,7 @@ const AnswersGrid = () => {
   const theme = useSelector((state: RootState) => state.main.theme);
   const [rowData, setRowData] = useState<IAnswerGrid[]>();
   const main = useSelector((state: RootState) => state.main);
-  const [columnDefs, setColumnDefs] = useState<ColDef[]>(AnswerGridCol);
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>();
   const params = useParams();
   useEffect(() => {
     if (!params.test) return;
@@ -31,20 +29,22 @@ const AnswersGrid = () => {
   useEffect(() => {
     if (main.answersGrid) {
       main.answersGrid.map((item: IAnswerGrid) => {
-        
         if (new Date(item.endTime) > new Date()) {
           item.status = 0;
-        // } else if (new Date(item.endTime) < new Date()) {
-        //   item.status = 1;
         } else if (item.grade > (main.currentTestDraft?.gradeToPass || 4)) {
           item.status = 3;
         } else if (item.grade < (main.currentTestDraft?.gradeToPass || 4)) {
           item.status = 4;
         }
-        
+
+        if (item.requireTeacherReview) {
+          item.status = 2;
+        }
+
         return item;
       });
       setRowData(main.answersGrid);
+      setColumnDefs(AnswerGridCol);
     }
   }, [main.answersGrid]);
 
@@ -58,58 +58,63 @@ const AnswersGrid = () => {
     gridRef.current?.api.setQuickFilter((document.getElementById("quickFilter") as HTMLInputElement).value);
   }, []);
 
+  const [doubleClicked, setDoubleClicked] = useState(false);
+
   const onRowDoubleClicked = useCallback(
     (param: any) => {
-      //TODO: Add get testResultId from grid
+      if (doubleClicked) return;
+
+      setDoubleClicked(true);
+      setTimeout(() => setDoubleClicked(false), 400);
+
       const testResultId = param.data.id;
       if (testResultId) {
         dispatch(GetTestResultForTeacher(testResultId)).then((res: any) => {
-          // if(!res) {alert("Error occured"); return;}
           navigate(`review/${testResultId}`);
         });
       }
     },
-    [gridRef]
+    [gridRef, doubleClicked]
   );
 
-  const handleTestToCheckingQueue = () => {
+  const handleShowTestResults = () => {
     const selectedRows = gridRef.current?.api.getSelectedRows();
     if (!selectedRows || !params.test) return;
     const testResultIds = selectedRows.map((item) => item.id);
-    dispatch(addTestToCheckingQueue(params.test, testResultIds));
-  }
+    dispatch(setShowTestResultsToStudents(params.test, testResultIds, true));
+  };
 
-  const handleAutocheckAll = () => {
-    if (!rowData || !params.test) return;
-    const testResultIds = rowData.map((item) => item.id);
-    dispatch(addTestToCheckingQueue(params.test, testResultIds));
-  }
+  const handleHideTestResults = () => {
+    const selectedRows = gridRef.current?.api.getSelectedRows();
+    if (!selectedRows || !params.test) return;
+    const testResultIds = selectedRows.map((item) => item.id);
+    dispatch(setShowTestResultsToStudents(params.test, testResultIds, false));
+  };
 
-  if (!rowData) return null;
+  if (!rowData || !columnDefs) return null;
   return (
     <>
-      {/* //TODO: Add filter and sort buttons, + search in name field */}
       <div className="ag-theme-alpine" style={{marginTop: 10, height: "calc(100vh - 110px)"}}>
         <div className="d-flex mb-2">
           <Form.Control autoComplete="off" size="sm" className="me-2 w-auto flex-grow-1" type="text" onInput={onQuickFilterChanged} id="quickFilter" placeholder="Filter attempts..." />
           <Dropdown as={ButtonGroup} size="sm" align="end" className="me-2">
-            <Button size="sm" disabled={selectedRowsCount === 0} variant="outline-primary">
+            <Button size="sm" disabled={selectedRowsCount === 0} variant="outline-primary" onClick={handleShowTestResults}>
               <i className="bi bi-eye me-2"></i> Show selected
             </Button>
             <Dropdown.Toggle disabled={selectedRowsCount === 0} split id="dropdown-split-basic" variant="outline-primary" />
             <Dropdown.Menu>
-              <Dropdown.Item as={Button} disabled>
+              <Dropdown.Item as={Button} onClick={handleHideTestResults}>
                 <i className="bi bi-eye-slash me-2"></i> Hide selected
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           <Dropdown as={ButtonGroup} size="sm" align="end">
-            <Button size="sm" disabled={selectedRowsCount === 0} onClick={handleTestToCheckingQueue}>
-              <i className="bi bi-play-fill"></i> Autocheck selected
+            <Button size="sm" disabled={selectedRowsCount === 0}>
+              <i className="bi bi-stars"></i> Check with AI
             </Button>
             <Dropdown.Toggle split id="dropdown-split-basic" />
             <Dropdown.Menu>
-              <Dropdown.Item as={Button} onClick={handleAutocheckAll}>
+              <Dropdown.Item as={Button} disabled>
                 <i className="bi bi-exclamation-circle me-2"></i> Check all
               </Dropdown.Item>
               {/* <Dropdown.Divider />
@@ -150,7 +155,7 @@ const AnswersGrid = () => {
             rowSelection="multiple"
             columnDefs={columnDefs}
             rowData={rowData}
-            onRowDoubleClicked={onRowDoubleClicked}
+            onRowClicked={onRowDoubleClicked}
             suppressRowClickSelection={true}
             suppressCellFocus
             pagination={true}

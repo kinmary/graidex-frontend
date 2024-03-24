@@ -1,10 +1,10 @@
-import {Image, Spinner} from "react-bootstrap";
+import {Button, Image, Spinner} from "react-bootstrap";
 import profilePic from "../images/blank-profile-picture.jpg";
+import {Link} from "react-router-dom";
 
 export const AnswerGridCol = [
   {
     sortable: true,
-    unSortIcon: true,
     field: "student",
     flex: 1,
     autoWidth: true,
@@ -15,9 +15,7 @@ export const AnswerGridCol = [
     },
     cellRenderer: (params: any) => (
       <div className="d-flex my-1">
-        <div className="d-flex flex-column">
-          {/* <Image className="profile-image my-1 ms-0 me-2" src={params.value.profileImage || profilePic} /> */}
-        </div>
+        <div className="d-flex flex-column">{/* <Image className="profile-image my-1 ms-0 me-2" src={params.value.profileImage || profilePic} /> */}</div>
         <div className="d-flex flex-column lh-base">
           <div style={{fontWeight: "bold"}}>
             {params.data.student.name} {params.data.student.surname}
@@ -31,25 +29,23 @@ export const AnswerGridCol = [
   {
     field: "startEnd",
     sortable: true,
-    unSortIcon: true,
-    flex: 1.5,
+    flex: 1,
     autoHeight: true,
     headerName: "Timeline",
     getQuickFilterText: (params: any) => {
-      return new Date(params.data.startTime).toLocaleString('en-GB') + " - " + new Date(params.data.endTime).toLocaleString('en-GB');
+      return new Date(params.data.startTime).toLocaleString("en-GB") + " - " + new Date(params.data.endTime).toLocaleString("en-GB");
     },
     cellRenderer: (params: any) => (
       <div className="d-flex flex-column lh-base">
-        <div>{new Date(params.data.startTime).toLocaleString('en-GB')} -</div>
-        <div>{new Date(params.data.endTime).toLocaleString('en-GB')}</div>
+        <div>{new Date(params.data.startTime).toLocaleString("en-GB")} -</div>
+        <div>{new Date(params.data.endTime).toLocaleString("en-GB")}</div>
       </div>
     ),
   },
   {
     field: "grade",
     sortable: true,
-    unSortIcon: true,
-    flex: 1,
+    flex: 0.5,
     headerName: "Grade",
     cellRenderer: (params: any) =>
       params.data && (
@@ -61,7 +57,6 @@ export const AnswerGridCol = [
   {
     field: "status",
     sortable: true,
-    unSortIcon: true,
     flex: 1,
     headerName: "Status",
     getQuickFilterText: (params: any) => {
@@ -71,7 +66,7 @@ export const AnswerGridCol = [
         case 1:
           return "Submitted";
         case 2:
-          return "Autochecking...";
+          return "Review required";
         case 3:
           return "Passed";
         case 4:
@@ -98,9 +93,9 @@ export const AnswerGridCol = [
           );
         case 2:
           return (
-            <div className="text-secondary">
-              <Spinner animation="border" size="sm" className="me-2" />
-              Checking...
+            <div className="text-warning">
+              <i className="bi bi-exclamation-circle-fill ms-1 me-2"></i>
+              Review required
             </div>
           );
         case 3:
@@ -123,23 +118,23 @@ export const AnswerGridCol = [
     },
   },
   {
-    field: "canReview",
+    field: "showToStudent",
     sortable: true,
-    unSortIcon: true,
     flex: 1,
-    headerName: "Can review",
-    cellRenderer: (params: any) =>
-      params.data && (
-        <div>
-          <b>{params.data.canReview ? "Yes" : "No"}</b>
-        </div>
-      ),
-  },
-  {
+    headerName: "Shown to student",
+    checkboxSelection: true,
     headerCheckboxSelection: true,
     headerCheckboxSelectionFilteredOnly: true,
-    checkboxSelection: true,
-    flex: 0.5,
+    cellRenderer: (params: any) => params.data && <b>{params.data.showToStudent ? "Yes" : "No"}</b>,
   },
-
+  {
+    field: "",
+    flex: 0.7,
+    headerName: "",
+    cellRenderer: (params: any) => (
+      <Button variant="outline-primary" className="w-100">
+        Review
+      </Button>
+    ),
+  },
 ];

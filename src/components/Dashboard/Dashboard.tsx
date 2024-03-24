@@ -63,7 +63,7 @@ const Dashboard = () => {
                     <Card.Img variant="top" src={subject.imageUrl || logoDark} style={{height: "70%", objectFit: "cover"}} />
                     <Card.Body>
                       <Card.Subtitle className="mb-2 text-muted">{subject.customId}</Card.Subtitle>
-                      <Card.Title>{subject.title}</Card.Title>
+                      <Card.Title className="text-truncate">{subject.title}</Card.Title>
                     </Card.Body>
                   </Card>
                 </Link>

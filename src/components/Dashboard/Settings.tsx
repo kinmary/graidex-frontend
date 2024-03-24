@@ -15,7 +15,7 @@ import ISubjectContent from "../../interfaces/SubjectContent";
 import {SetOpen} from "../MainAction";
 import CreateTestFromDraft from "../Modals/CreateTestFrDraftModal";
 import {calcTimeLimit, parseTimeLimit} from "../../utils/TimeLimitRecalculate";
-import {getReviewResultName} from "../../utils/GetReviewResult";
+import {getShowToStudentName} from "../../utils/GetShowToStudent";
 import { ITestDto } from "../../interfaces/TestDto";
 
 interface ITimeLimit {
@@ -34,16 +34,13 @@ const Settings = () => {
     description: "",
     gradeToPass: 4,
   });
-  // !Date validations are:
-  // Custom time limit can not be more than date difference
-  // Start date can not be later than endDate
+
   const [dates, setDates] = useState({
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [autoCheck, setAutoCheck] = useState<boolean>(false);
   const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
-  const [reviewResult, setReviewResult] = useState<number | undefined>(1);
+  const [showToStudent, setShowToStudent] = useState<number | undefined>(1);
   const [isCustomTimeLimit, setIsCustomTimeLimit] = useState<boolean>(false);
   const [timeLimit, setTimeLimit] = useState<ITimeLimit>({
     hours: 0,
@@ -86,9 +83,8 @@ const Settings = () => {
 
     if (currentTestDraft.itemType === "Test") {
       let timeLimit = parseTimeLimit(currentTestDraft.timeLimit?.toString() || "00:00:00");
-      setAutoCheck(currentTestDraft.autoCheckAfterSubmission);
       setShuffleQuestions(currentTestDraft.shuffleQuestions);
-      setReviewResult(currentTestDraft.reviewResult);
+      setShowToStudent(currentTestDraft.showToStudent);
       if(currentTestDraft.startDateTime && currentTestDraft.endDateTime){
         setDates({
           startDate: new Date(currentTestDraft.startDateTime),
@@ -108,15 +104,6 @@ const Settings = () => {
     }
   }, [currentTestDraft]);
 
-  // useEffect(() => {
-  //   if (!isCustomTimeLimit) {
-  //     const timeDifference =
-  //       dates.endDate.getTime() - dates.startDate.getTime();
-  //     const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-  //     const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-  //     setTimeLimit({ hours: hours, minutes: minutes });
-  //   }
-  // }, [dates.startDate, dates.endDate, isCustomTimeLimit]);
 
   const handleDiscardChanges = () => {
     if (!currentTestDraft) return;
@@ -132,9 +119,8 @@ const Settings = () => {
       endDate: new Date(currentTestDraft.endDateTime),
     });
   }
-    setAutoCheck(currentTestDraft.autoCheckAfterSubmission);
     setShuffleQuestions(currentTestDraft.shuffleQuestions);
-    setReviewResult(currentTestDraft.reviewResult);
+    setShowToStudent(currentTestDraft.showToStudent);
     setTimeLimit({
       hours: Number(timeLimit.hours),
       minutes: Number(timeLimit.minutes),
@@ -153,8 +139,8 @@ const Settings = () => {
           description: inputs.description,
           gradeToPass: inputs.gradeToPass,
           isVisible: currentTestDraft.isVisible,
-          autoCheckAfterSubmission: autoCheck,
-          reviewResult: reviewResult,
+          // autoCheckAfterSubmission: autoCheck,
+          showToStudent: showToStudent,
           shuffleQuestions: shuffleQuestions,
           orderIndex: currentTestDraft.orderIndex,
         };
@@ -471,20 +457,6 @@ const Settings = () => {
                     <InputGroup.Text>
                       <Form.Check
                         type="switch"
-                        id="check-sub-switch"
-                        label="Auto check after submission"
-                        disabled={currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()}
-                        checked={autoCheck}
-                        onChange={(event) => {
-                          setAutoCheck(event.target.checked);
-                        }}
-                      />
-                    </InputGroup.Text>
-                  </Form.Group>
-                  <Form.Group style={{marginTop: 10}}>
-                    <InputGroup.Text>
-                      <Form.Check
-                        type="switch"
                         id="custom-switch"
                         label="Shuffle questions on start"
                         disabled={currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()}
@@ -500,17 +472,14 @@ const Settings = () => {
                       <Form.Label>Review results of test</Form.Label>
                       <Dropdown style={{marginLeft: "auto"}}>
                         <Dropdown.Toggle variant="outline-primary" id="status-dropdown" disabled={currentTestDraft.itemType === "Test" && dates.endDate.getTime() < new Date().getTime()}>
-                          {getReviewResultName(reviewResult || 0)}
+                          {getShowToStudentName(showToStudent)}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                          <Dropdown.Item as={Button} key={0} value={0} onClick={() => setReviewResult(0)}>
+                          <Dropdown.Item as={Button} key={0} value={0} onClick={() => setShowToStudent(0)}>
                             Set manually
                           </Dropdown.Item>
-                          <Dropdown.Item as={Button} key={1} value={1} onClick={() => setReviewResult(1)}>
+                          <Dropdown.Item as={Button} key={1} value={1} onClick={() => setShowToStudent(1)}>
                             After submission
-                          </Dropdown.Item>
-                          <Dropdown.Item as={Button} key={2} value={2} onClick={() => setReviewResult(2)}>
-                            After auto check
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
