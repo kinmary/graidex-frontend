@@ -12,12 +12,28 @@ export const loginToHub = async () => {
       .withAutomaticReconnect()
       .build();
       
-    // Register methods which can be called from the server, e.g.:
-    connection.on(ReceiveApplicationTestNotification.name, ReceiveApplicationTestNotification);
-    // or (this one is just example):
-    connection.on('ReceiveAnotherNotification', () =>{
-      console.log('Another notification received');
-    });
+    // Register methods which can be called from the server:
+    // connection.on(ReceiveApplicationTestNotification.name, ReceiveApplicationTestNotification);
+    // const ReceiveApplicationTestNotification = (message: string) => {
+    //  console.log(message);
+    // };
+    // 
+    // or :
+    // connection.on('ReceiveAnotherNotification', () => {
+    //   console.log('Another notification received');
+    // });
+
+    connection.on("ReceiveNewSubjectRequestNotification", LogRecievedNotification);
+    connection.on("ReceiveSubjectRequestAcceptedNotification", LogRecievedNotification);
+
+    connection.on("ReceiveTestOpensNotification", LogRecievedNotification);
+
+    connection.on("ReceiveStudentStartedTestNotification", LogRecievedNotification);
+    connection.on("ReceiveStudentSubmittedTestNotification", LogRecievedNotification);
+    connection.on("ReceiveTestResultShownToStudentNotification", LogRecievedNotification);
+    connection.on("ReceiveTestResultReviewedByTeacherNotification", LogRecievedNotification);
+    
+    connection.on("ReceiveLoginNotification", LogRecievedNotification);
 
     try {
       await connection.start();
@@ -31,6 +47,6 @@ export const logoutFromHub = async (connection: HubConnection) => {
   await connection.stop();
 }
 
-const ReceiveApplicationTestNotification = (message: string) => {
-  console.log(message);
-}
+const LogRecievedNotification = (obj: any) => {
+  console.log(obj);
+};
