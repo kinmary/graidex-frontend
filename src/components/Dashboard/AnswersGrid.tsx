@@ -49,7 +49,7 @@ const AnswersGrid = () => {
   }, [main.answersGrid]);
 
   const getRowId = useCallback((params: GetRowIdParams) => {
-    return params.data.student.email;
+    return params.data.id;
   }, []);
 
   const [selectedRowsCount, setSelectedRowsCount] = useState(0);

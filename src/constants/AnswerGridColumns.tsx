@@ -1,15 +1,15 @@
-import {Button, Image, Spinner} from "react-bootstrap";
-import profilePic from "../images/blank-profile-picture.jpg";
-import {Link} from "react-router-dom";
+import {Button} from "react-bootstrap";
 
 export const AnswerGridCol = [
   {
     sortable: true,
     field: "student",
     flex: 1,
-    autoWidth: true,
     autoHeight: true,
     headerName: "Student",
+    valueGetter: (params: any) => {
+      return params.data.student.name + " " + params.data.student.surname + "\n" + params.data.student.customId;
+    },
     getQuickFilterText: (params: any) => {
       return params.data.student.name + " " + params.data.student.surname + "\n" + params.data.student.customId;
     },
@@ -24,7 +24,6 @@ export const AnswerGridCol = [
         </div>
       </div>
     ),
-    // pinned: true,
   },
   {
     field: "startEnd",
@@ -32,6 +31,9 @@ export const AnswerGridCol = [
     flex: 1,
     autoHeight: true,
     headerName: "Timeline",
+    valueGetter: (params: any) => {
+      return new Date(params.data.startTime).toLocaleString("en-GB") + " - " + new Date(params.data.endTime).toLocaleString("en-GB");
+    },
     getQuickFilterText: (params: any) => {
       return new Date(params.data.startTime).toLocaleString("en-GB") + " - " + new Date(params.data.endTime).toLocaleString("en-GB");
     },
