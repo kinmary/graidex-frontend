@@ -6,8 +6,10 @@ import {RootState} from "../../../app/store";
 import {useSelector} from "react-redux";
 import QuestionsList from "./QuestionsList";
 import {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {themes} from "../../../constants/Themes";
+import {questionTypes} from "../../../constants/QuestionTypes";
+import {ReadMore} from "../../../utils/ReadMoreHeader";
 
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +17,6 @@ const TestConstructor = () => {
   const takeTest = useSelector((state: RootState) => state.takeTest);
   const theme = useSelector((state: RootState) => state.main.theme);
   const params = useParams();
-  const navigate = useNavigate();
   const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -148,7 +149,16 @@ const TestConstructor = () => {
             }}
           ></Navbar>
           {/* )}  */}
-          <h5 style={{fontWeight: "bold", marginBottom: 20}}>{selectedQuestion.title}</h5>
+          <div className="d-flex align-items-center mb-1">
+            <Button className="me-3" disabled variant="light" style={{color: "var(--bs-dark) !important", paddingLeft: 0}}>
+              <i className={questionTypes[selectedQuestion.type].iconClass + " me-2"}></i>
+              {questionTypes[selectedQuestion.type].label}
+            </Button>
+          </div>
+
+          <div style={{marginBottom: 20}}>
+            <ReadMore>{selectedQuestion?.title}</ReadMore>
+          </div>
           {selectedQuestion.answerOptions.map((answer: any, idx: any) =>
             selectedQuestion.type === 2 ? (
               <Form.Control

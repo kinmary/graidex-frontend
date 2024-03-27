@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-import {Button, Col, Form, InputGroup, Navbar, Row, Dropdown} from "react-bootstrap";
+import {Button, Form, InputGroup, Navbar, Row, Dropdown} from "react-bootstrap";
 import {AddAnswer, InputChange, ChangeAnswers, SetSelectedQ, ChangeQuestions} from "./CreateTestActions";
 import {useAppDispatch} from "../../../app/hooks";
 import {RootState} from "../../../app/store";
@@ -9,6 +9,7 @@ import {IQuestion} from "../../../interfaces/Questions";
 import IAnswerOption from "../../../interfaces/AnswerOption";
 import QuestionsDraggableList from "./QuestionsDraggableList";
 import {themes} from "../../../constants/Themes";
+import { questionTypes } from "../../../constants/QuestionTypes";
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
   const createTest = useSelector((state: RootState) => state.createTest);
@@ -211,36 +212,11 @@ const TestConstructor = () => {
     answerOptions = selectedQuestion.answerOptions;
   }
 
-  const questionTypes = [
-    {value: 0, label: "Single choice", iconClass: "bi bi-record-circle"},
-    {value: 1, label: "Multiple choice", iconClass: "bi bi-ui-checks-grid"},
-    {value: 2, label: "Open question", iconClass: "bi bi-file-text"},
-  ];
-
+  
   return (
     <div>
       {selectedQuestion ? (
         <Form key={"form"}>
-          {/* {selectedQuestion.type === 2 && ( */}
-          {/* <Navbar
-                bg="light"
-                variant="light"
-                style={{
-                  borderRadius: "5px 5px 0px 0px",
-                  padding: "0px 0px",
-                }}
-              > */}
-          {/* //TODO: bold italic underline  */}
-          {/* <Navbar.Brand style={{ marginLeft: "auto", marginRight: 10 }}>
-                  <i
-                    className="bi bi-paperclip"
-                    onClick={() => {
-                      setState({...state, addFile: true });
-                    }}
-                  ></i>
-                </Navbar.Brand>
-              </Navbar> */}
-          {/* )}  */}
           <div className="d-flex align-items-center mb-2">
             <Dropdown drop="down-centered" className="me-3">
               <Dropdown.Toggle variant={theme} id="status-dropdown" key={1}>

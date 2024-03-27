@@ -1,4 +1,4 @@
-import {Button, Card, Form, InputGroup, Navbar} from "react-bootstrap";
+import {Button, Card, Dropdown, Form, InputGroup, Navbar} from "react-bootstrap";
 import {ChangeQuestionAttr, SetSelectedQ} from "./TestOfStudentActions";
 import {useAppDispatch} from "../../app/hooks";
 import {useSelector} from "react-redux";
@@ -7,6 +7,8 @@ import {ITestResultForTeacher} from "../../interfaces/TestResultForTeacherDto";
 import QuestionsList from "./QuestionsList";
 import {IQuestion} from "../../interfaces/Questions";
 import {themes} from "../../constants/Themes";
+import {questionTypes} from "../../constants/QuestionTypes";
+import {ReadMore} from "../../utils/ReadMoreHeader";
 
 const TestField = () => {
   const dispatch = useAppDispatch();
@@ -54,15 +56,20 @@ const TestField = () => {
     <>
       {selectedQuestion ? (
         <>
-          <div className="d-flex mb-2 align-items-center">
-            <h5 className="text-truncate me-2" style={{fontWeight: "bold", width: "80%"}}>{selectedQuestion?.title}</h5>
+          <div className="d-flex align-items-center mb-1">
+            <Button className="me-3" disabled variant="light" style={{color: "var(--bs-dark) !important", paddingLeft: 0}}>
+              <i className={questionTypes[selectedQuestion.type].iconClass + " me-2"}></i>
+              {questionTypes[selectedQuestion.type].label}
+            </Button>
             <InputGroup style={{width: "17%", marginLeft: "auto"}}>
               <Form.Control type="number" autoComplete="off" value={selectedQuestion?.points || 0} style={{fontWeight: "bold"}} min={0} onChange={ChangePoints} readOnly={userRole === 1} />
               <InputGroup.Text>/{selectedQuestion?.maxPoints || 0} points</InputGroup.Text>
             </InputGroup>
           </div>
 
-          <h6 style={{marginBottom: 20}}>{selectedQuestion?.title}</h6>
+          <div style={{marginBottom: 20}}>
+            <ReadMore>{selectedQuestion?.title}</ReadMore>
+          </div>
 
           {selectedQuestion?.type === 2 ? (
             <Card key={selectedQuestion.id}>

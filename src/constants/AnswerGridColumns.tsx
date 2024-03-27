@@ -134,6 +134,7 @@ export const AnswerGridCol = [
     flex: 0.7,
     headerName: "",
     cellRenderer: (params: any) => (
+      params.data.status === 0 ? <></> :
       <Button variant="outline-primary" className="w-100">
         Review
       </Button>

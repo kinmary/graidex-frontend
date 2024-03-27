@@ -292,6 +292,19 @@ export const setShowTestResultsToStudents = (testid: string | number, testResult
     }
   };
 };
+
+export const checkTestResultsWithAI = (testid: string | number, testResultIds: string[]) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/api/TestResult/check-test-results-with-ai/` + testid, testResultIds);
+      if (response.status === 200) {
+        dispatch(getAllTestResults(testid));
+      }
+    } catch (error: any) {
+    }
+  };
+};
+
 export const updateTestTime = (testid: string | number, updateTestTimeDto: IUpdateTestTimeDto, subjectId: string | number) => {
   return async (dispatch: AppDispatch) => {
     try {

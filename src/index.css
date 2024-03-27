@@ -85,3 +85,13 @@ code {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.text-read-more {
+  display: inline;
+  width: 90%;
+}
+
+.read-or-hide {
+  color: rgb(192, 192, 192);
+  cursor: pointer;
+}
