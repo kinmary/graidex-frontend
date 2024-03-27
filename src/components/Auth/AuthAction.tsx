@@ -90,7 +90,7 @@ export const getStudent = (email: string) => {
           studentId: response.data.customId,
           email: email,
         });
-        dispatch(getAllSubjects());
+        // dispatch(getAllSubjects());
         dispatch(getSubjectRequests());
         dispatch(getStudentProfilePic());
       }
@@ -178,7 +178,7 @@ export const getTeacher = (email: string) => {
           surname: response.data.surname,
           email: email,
         });
-        dispatch(getAllSubjects());
+        // dispatch(getAllSubjects());
         dispatch(getTeacherProfilePic());
       }
     } catch (error: any) {
@@ -253,7 +253,7 @@ export const CheckAuthentication = () => {
         } else {
           dispatch(getTeacherProfilePic());
         }
-        dispatch(getAllSubjects());
+        // dispatch(getAllSubjects());
       }
     }
     return Promise.resolve();

@@ -3,23 +3,27 @@ import {Button, Form, Breadcrumb, Alert, ListGroup, Row, Col, Badge} from "react
 import {useSelector} from "react-redux";
 import {RootState} from "../../../app/store";
 import {useAppDispatch} from "../../../app/hooks";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {getVisibleSubjectContent} from "../../Dashboard/SubjectActions";
 import ISubjectContent from "../../../interfaces/SubjectContent";
 import {getAttemptsDescription, getVisibleTestStudent} from "../../Dashboard/TestActions";
 import {getAllQuestionsWithAnswers, startTestAttempt} from "./TakeTestActions";
 import {GetAttemptsDescDto} from "../../../interfaces/GetAttemptsDescDto";
+import {ISubject} from "../../../interfaces/Subject";
+import {ITestDto} from "../../../interfaces/TestDto";
+import {GetTestResultForStudent} from "../../ReviewTest/TestOfStudentActions";
 const skippedTestEmailLink = "mailto:example@email.com?subject=Missed test&body=Hello%2C%0A%0ALooks%20like%20I%20missed%20a%20test%2C%20can%20we%20agree%20on%20a%20retake%20date%3F%0A";
 
 const StartTestSummary = () => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
-  const {attemptsInfo, currentTestDraft}: {attemptsInfo: GetAttemptsDescDto; currentTestDraft: any} = main;
+  const [currentTestDraft, setCurrentTestDraft] = useState<ITestDto>();
+  const [attemptsInfo, setAttemptsInfo] = useState<GetAttemptsDescDto | null>();
   const navigate = useNavigate();
   const params = useParams();
-  const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
-  const [startDate] = useState(new Date(currentTestDraft.startDateTime));
-  const [endDate] = useState(new Date(currentTestDraft.endDateTime));
+  const [selectedSubject, setSelectedSubject] = useState<ISubject>();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [showTestDescriptionAtLeft, setShowTestDescriptionAtLeft] = useState(false);
@@ -29,28 +33,47 @@ const StartTestSummary = () => {
   const [showStartTestButton, setShowStartTestButton] = useState(false);
 
   useEffect(() => {
-    dispatch(getVisibleSubjectContent(params.selectedSubjectId!)).then(() => {
-      if (main.tests) {
-        let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
-        if (selectedTest) {
-          dispatch(getVisibleTestStudent(selectedTest.id)).then(() =>
-            dispatch(getAttemptsDescription(selectedTest.id)).then((attemptsInfo: GetAttemptsDescDto | null) => {
-              if (attemptsInfo === null) return;
-              setShowTestDescriptionAtLeft(attemptsInfo.submittedTestResults.length > 0 || attemptsInfo.currentTestAttempt !== null);
-              setShowTestNotStartedAlert(startDate.getTime() > new Date().getTime());
-              setShowTestEndedAlert(endDate.getTime() < new Date().getTime());
-              setShowNoMoreAttemptsAlert(endDate.getTime() > new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts === 0 && attemptsInfo.currentTestAttempt === null);
-              setShowStartTestButton(endDate.getTime() > new Date().getTime() && startDate.getTime() < new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts > 0 && attemptsInfo.currentTestAttempt === null);
-              setDataLoaded(true);
-            })
-          );
-        }
+    if (!main.allSubjects) return;
+    const selectedSubject = main.allSubjects.find((obj: any) => obj.id.toString() === params.selectedSubjectId!.toString());
+    setSelectedSubject(selectedSubject);
+  }, [params.selectedSubjectId, main.allSubjects]);
+
+  useEffect(() => {
+    dispatch(getVisibleSubjectContent(params.selectedSubjectId!));
+  }, []);
+
+  useEffect(() => {
+    if (main.tests) {
+      let selectedTest = main.tests.find((x: ISubjectContent) => x.id.toString() === params.test);
+      if (selectedTest) {
+        dispatch(getVisibleTestStudent(selectedTest.id));
+        dispatch(getAttemptsDescription(selectedTest.id));
       }
-    });
-  }, [dataLoaded]);
+    }
+  }, [main.tests]);
+
+  useEffect(() => {
+    if (!main.currentTestDraft || !main.attemptsInfo) return;
+    const attemptsInfo = main.attemptsInfo;
+    setCurrentTestDraft(main.currentTestDraft);
+    setStartDate(new Date(main.currentTestDraft.startDateTime));
+    setEndDate(new Date(main.currentTestDraft.endDateTime));
+    setAttemptsInfo(attemptsInfo);
+  }, [main.currentTestDraft, main.attemptsInfo]);
+
+  useEffect(() => {
+    if (!attemptsInfo || !startDate || !endDate) return;
+    setShowTestDescriptionAtLeft(attemptsInfo.submittedTestResults.length > 0 || attemptsInfo.currentTestAttempt !== null);
+    setShowTestNotStartedAlert(startDate.getTime() > new Date().getTime());
+    setShowTestEndedAlert(endDate.getTime() < new Date().getTime());
+    setShowNoMoreAttemptsAlert(endDate.getTime() > new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts === 0 && attemptsInfo.currentTestAttempt === null);
+    setShowStartTestButton(endDate.getTime() > new Date().getTime() && startDate.getTime() < new Date().getTime() && attemptsInfo.numberOfAvailableTestAttempts > 0 && attemptsInfo.currentTestAttempt === null);
+    setTimeout(() => setDataLoaded(true), 200);
+  }, [attemptsInfo, startDate, endDate]);
 
   const onStartClick = async () => {
-    await dispatch(startTestAttempt(currentTestDraft.id)).then((response: any) => {
+    if (!currentTestDraft) return;
+    await dispatch(startTestAttempt(currentTestDraft.id.toString())).then((response: any) => {
       // if(response.id !== undefined && response.id !== null && response.id !== 0){
       // dispatch(getAllQuestionsWithAnswers(response.id)).then((success: any) => {
       if (response !== undefined && response !== null && response !== 0) {
@@ -62,7 +85,7 @@ const StartTestSummary = () => {
     });
   };
   const onContinueClick = async () => {
-    if (!attemptsInfo.currentTestAttempt) {
+    if (!attemptsInfo || !attemptsInfo.currentTestAttempt) {
       alert("Error occurred continuing test");
       return;
     }
@@ -83,9 +106,13 @@ const StartTestSummary = () => {
     // }
   };
 
-  const onReviewClick = async (testResultId: number) => {};
+  const onReviewClick = async (testResultId: number) => {
+    dispatch(GetTestResultForStudent(testResultId.toString())).then((res: any) => {
+      navigate(`review/${testResultId}`);
+    });
+  };
 
-  if (!dataLoaded) {
+  if (!dataLoaded || !currentTestDraft || !attemptsInfo || !selectedSubject || !startDate || !endDate) {
     return <></>;
   }
   return (
@@ -103,9 +130,13 @@ const StartTestSummary = () => {
           {currentTestDraft?.title}
         </h5>
         <Breadcrumb style={{fontSize: 14}}>
-          <Breadcrumb.Item onClick={() => navigate("/")}>Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item onClick={() => navigate("/" + params.selectedSubjectId)}>{selectedSubject?.title}</Breadcrumb.Item>
-          <Breadcrumb.Item active={currentTestDraft?.itemType === "Test"} onClick={() => navigate("/" + params.selectedSubjectId + "/" + params.test)}>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to: "/"}}>
+            Dashboard
+          </Breadcrumb.Item>
+          <Breadcrumb.Item linkAs={Link} linkProps={{to: "/" + params.selectedSubjectId}}>
+            {selectedSubject?.title}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item active={currentTestDraft?.itemType === "Test"} linkAs={Link} linkProps={{to: "/" + params.selectedSubjectId + "/" + params.test}}>
             {currentTestDraft && currentTestDraft.title}
           </Breadcrumb.Item>
         </Breadcrumb>
@@ -205,7 +236,13 @@ const StartTestSummary = () => {
                 <ListGroup key={idx}>
                   <ListGroup.Item key={`attempt-${idx}`} className="d-flex align-items-center">
                     <h6 className="m-0 text-start me-3">Attempt {idx + 1}</h6>
-                    {attempt.grade !== null &&
+                    {attempt.requireTeacherReview ? (
+                      <Badge bg="warning" className="ms-auto">
+                        <i className="bi bi-exclamation-circle me-1"></i>
+                        Teacher review
+                      </Badge>
+                    ) : (
+                      attempt.grade !== null &&
                       (attempt.grade >= currentTestDraft.gradeToPass ? (
                         <Badge bg="success" className="ms-auto">
                           <i className="bi bi-check-lg me-1"></i>
@@ -216,7 +253,8 @@ const StartTestSummary = () => {
                           <i className="bi bi-x-lg me-1"></i>
                           Failed
                         </Badge>
-                      ))}
+                      ))
+                    )}
                   </ListGroup.Item>
                   <ListGroup.Item key={`attempt-start-${idx}`} action as="div" variant="light" className="d-flex align-items-center">
                     <i className="bi bi-calendar-check-fill me-3"></i>
@@ -254,10 +292,17 @@ const StartTestSummary = () => {
                     )}
                     {attempt.grade !== null ? <strong>{attempt.grade}</strong> : <span className="text-muted">Not graded yet</span>}
                   </ListGroup.Item>
+
                   <ListGroup.Item key={`attempt-${idx}-btn`} variant="light" className="d-flex p-2">
-                    <Button variant="outline-primary" className="flex-fill" onClick={() => onReviewClick(attempt.id)} disabled={!attempt.canReview}>
-                      Review evaluation
-                    </Button>
+                    {attempt.showToStudent ? (
+                      <Button variant="outline-primary" className="flex-fill" onClick={() => onReviewClick(attempt.id)} disabled={!attempt.showToStudent}>
+                        Review evaluation
+                      </Button>
+                    ) : (
+                      <Button variant="outline-secondary" className="flex-fill" disabled={!attempt.showToStudent}>
+                        Review is not available
+                      </Button>
+                    )}
                   </ListGroup.Item>
                 </ListGroup>
               ))}

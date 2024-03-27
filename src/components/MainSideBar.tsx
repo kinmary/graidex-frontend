@@ -3,7 +3,7 @@ import {Button, Col, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {RootState} from "../app/store";
 import {Menu, MenuItem, Sidebar, SubMenu, menuClasses, sidebarClasses} from "react-pro-sidebar";
-import {useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {getSubjectContent, getVisibleSubjectContent} from "./Dashboard/SubjectActions";
 import {useAppDispatch} from "../app/hooks";
 import {themes} from "../constants/Themes";
@@ -96,7 +96,7 @@ const MainSidebar = ({children}: LayoutProps) => {
                 },
               }}
             >
-              <MenuItem style={{...mainMenuItemStyle, marginTop: "9px"}} icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>} onClick={() => navigate("/")}>
+              <MenuItem component={<Link to="/" />} style={{...mainMenuItemStyle, marginTop: "9px"}} icon={location.pathname === `/` ? <i className="bi bi-house-fill"></i> : <i className="bi bi-house"></i>}>
                 Dashboard
               </MenuItem>
 
@@ -110,10 +110,11 @@ const MainSidebar = ({children}: LayoutProps) => {
                           paddingLeft: collapsed ? "" : "20px",
                           borderLeft: collapsed ? "" : `2px ${main.theme === themes.light ? "#212529" : "white"} solid`,
                         }}
+                        component={<Link to={`/${subject.id}`} key={idx} />}
                         key={idx}
-                        active={location.pathname === `/${subject.id}`}
+                        active={location.pathname.startsWith(`/${subject.id}`)}
                         onClick={() => {
-                          auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)).then(() => navigate("/" + subject.id)) : dispatch(getVisibleSubjectContent(subject.id)).then(() => navigate("/" + subject.id));
+                          auth.userRole === 0 ? dispatch(getSubjectContent(subject.id)) : dispatch(getVisibleSubjectContent(subject.id));
                         }}
                       >
                         {subject.title}
@@ -125,6 +126,7 @@ const MainSidebar = ({children}: LayoutProps) => {
               {auth.userRole === 1 && (
                 <MenuItem
                   style={mainMenuItemStyle}
+                  component={<Link to="/subject-requests" />}
                   icon={
                     location.pathname === "/subject-requests" ? (
                       main.subjectRequests && main.subjectRequests.length > 0 ? (
@@ -138,27 +140,14 @@ const MainSidebar = ({children}: LayoutProps) => {
                       <i className="bi bi-envelope"></i>
                     )
                   }
-                  onClick={() => navigate("/subject-requests")}
+                  // onClick={() => navigate("/subject-requests")}
                 >
                   Requests
                 </MenuItem>
               )}
-
-              {/* <MenuItem
-                style={mainMenuItemStyle}
-                icon={<i className="bi bi-info-circle"></i>}
-                disabled
-              >
-                About
+              <MenuItem style={mainMenuItemStyle} component={<Link to="/calendar" />} icon={location.pathname.startsWith("/calendar") ? <i className="bi bi-calendar2-week-fill"></i> : <i className="bi bi-calendar2-week"></i>}>
+                Calendar
               </MenuItem>
-              <MenuItem
-                style={mainMenuItemStyle}
-                icon={<i className="bi bi-shield-check"></i>}
-                disabled
-              >
-                Privacy &amp; Policy
-              </MenuItem> */}
-
               <MenuItem style={mainMenuItemStyle} icon={<i className="bi bi-question-circle"></i>} disabled>
                 Help & Feedback
               </MenuItem>

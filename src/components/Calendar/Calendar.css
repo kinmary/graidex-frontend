@@ -1,0 +1,36 @@
+.rbc-off-range-bg {
+    background-color: #d3d3d329 !important;
+}  
+
+.rbc-show-more {
+    color: var(--bs-primary) !important;
+    background-color: #00000000 !important;
+}
+
+.rbc-overlay {
+    background-color: var(--bs-body-bg) !important;
+    opacity: 1 !important;
+}
+
+.rbc-today {
+    background-color: var(--bs-primary-bg-subtle) !important;
+}
+
+.rbc-toolbar-label {
+    font-weight: bold;
+}
+
+.rbc-active {
+    /* box-shadow: none !important; */
+    background-color: var(--bs-primary) !important;
+    color: white !important;
+}
+.rbc-event  {
+    background-color: var(--bs-primary) !important;
+}
+.rbc-btn-group>button {
+    color: var(--bs-body-color) !important;
+}
+.rbc-btn-group>button:focus, .rbc-btn-group>button:hover {
+    color: var(--bs-body-bg) !important;
+}

@@ -4,8 +4,8 @@ export interface ICreateTestDto {
     startDateTime: Date;
     endDateTime: Date;
     timeLimit: string | undefined;
-    autoCheckAfterSubmission: boolean;
-    reviewResult: number | undefined;
+    // autoCheckAfterSubmission: boolean;
+    showToStudent: number | undefined;
     orderIndex: number;
     shuffleQuestions: boolean;
     isVisible: boolean | undefined;

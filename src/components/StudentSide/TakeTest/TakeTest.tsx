@@ -13,7 +13,7 @@ const TakeTest = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [endTime, setEndTime] = useState<number | null>(null);
   const end = useSelector((state: RootState) => state.takeTest.endTime);
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch(); 
   useEffect(() => {
     setTimeout(() => {
       if (end !== undefined && end !== null) {

@@ -7,8 +7,8 @@ export interface IUpdateTestDto {
     // startDateTime: Date | undefined;
     // endDateTime: Date | undefined;
     // timeLimit: string | undefined;
-    autoCheckAfterSubmission: boolean | undefined;
-    reviewResult: number | undefined;
+    // autoCheckAfterSubmission: boolean | undefined;
+    showToStudent: number | undefined;
     shuffleQuestions: boolean | undefined;
     orderIndex: number;
 

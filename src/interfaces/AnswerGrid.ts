@@ -1,19 +1,14 @@
 export default interface IAnswerGrid {
-    student: {
-        email: string;
-        name: string;
-        customId: string;
-    }
-
-    startEnd: {
-        start: string;
-        end: string;
-    }
-
-    grade: {
-        grade: number;
-        percent: number;
-    } | null;
-    status: number;
-    isShown: boolean;
+    id: string;
+  student: {
+    name: string;
+    surname: string;
+    customId?: string;
+  };
+  startTime: Date;
+  endTime: Date;
+  grade: number;
+  showToStudent: boolean;
+  status?: number;
+  requireTeacherReview: boolean;
 }

@@ -5,9 +5,11 @@ import {useAppDispatch} from "../../../app/hooks";
 import {RootState} from "../../../app/store";
 import {useSelector} from "react-redux";
 import QuestionsList from "./QuestionsList";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {themes} from "../../../constants/Themes";
+import {questionTypes} from "../../../constants/QuestionTypes";
+import {ReadMore} from "../../../utils/ReadMoreHeader";
 
 const TestConstructor = () => {
   const dispatch = useAppDispatch();
@@ -15,11 +17,14 @@ const TestConstructor = () => {
   const takeTest = useSelector((state: RootState) => state.takeTest);
   const theme = useSelector((state: RootState) => state.main.theme);
   const params = useParams();
+  const [dataLoaded, setDataLoaded] = useState(false);
+
   useEffect(() => {
-    if (params.testResultId) {
-      dispatch(getAllQuestionsWithAnswers(params.testResultId));
-    }
+    dispatch(getAllQuestionsWithAnswers(params.testResultId!)).then(() => {
+      setDataLoaded(true);
+    });
   }, []);
+
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {questions} = takeTest;
     if (questions) {
@@ -123,11 +128,13 @@ const TestConstructor = () => {
   let {questions} = takeTest;
   const selectedQuestion = questions?.find((question: any) => question.selected === true);
   let indexOfSelected = 0;
-  let answerOptions = [];
   if (selectedQuestion && questions) {
     indexOfSelected = questions.indexOf(selectedQuestion);
-    answerOptions = selectedQuestion.answerOptions;
   }
+  if (!dataLoaded || !currentTestDraft || !questions) {
+    return null;
+  } 
+  
   return (
     <>
       {selectedQuestion ? (
@@ -142,7 +149,16 @@ const TestConstructor = () => {
             }}
           ></Navbar>
           {/* )}  */}
-          <h5 style={{fontWeight: "bold", width: "87%", marginBottom: 20}}>{selectedQuestion.title}</h5>
+          <div className="d-flex align-items-center mb-1">
+            <Button className="me-3" disabled variant="light" style={{color: "var(--bs-dark) !important", paddingLeft: 0}}>
+              <i className={questionTypes[selectedQuestion.type].iconClass + " me-2"}></i>
+              {questionTypes[selectedQuestion.type].label}
+            </Button>
+          </div>
+
+          <div style={{marginBottom: 20}}>
+            <ReadMore>{selectedQuestion?.title}</ReadMore>
+          </div>
           {selectedQuestion.answerOptions.map((answer: any, idx: any) =>
             selectedQuestion.type === 2 ? (
               <Form.Control

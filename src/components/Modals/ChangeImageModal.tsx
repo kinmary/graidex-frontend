@@ -12,22 +12,24 @@ import {
   Image,
   Badge
 } from "react-bootstrap";
-import { ErrorResponse, PhotosWithTotalResults, createClient } from 'pexels';
+import { createClient } from 'pexels';
 import { PEXEL_CLIENT_ID } from "../../constants/config";
 import { updateSubject } from "../Dashboard/SubjectActions";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-
-const ChangeImageModal = () => {
+import { ISubject } from "../../interfaces/Subject";
+import { themes } from "../../constants/Themes";
+interface ChangeImageModalProps {
+  selectedSubject: ISubject;
+}
+const ChangeImageModal = ({selectedSubject}: ChangeImageModalProps) => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
-  const getCurrentImage = () =>{
-    let currentImage = main.allSubjects
-      .find((obj:any) => obj.id.toString() === main.selectedSubjectId.toString())
-      .imageUrl;
+  const { changeImgModal, theme } = main;
 
-    return currentImage;
+  const getCurrentImage = () =>{
+    return selectedSubject.imageUrl;
   }
 
   const addDefaultImages = (images: any) =>{
@@ -48,6 +50,8 @@ const ChangeImageModal = () => {
   const [state, setState] = useState({selectedImg: getCurrentImage(),
     search: "",
     images: addDefaultImages([])})
+
+  if(!main.allSubjects) return null;
   
   const closeModal = () =>{
     setState({
@@ -60,14 +64,11 @@ const ChangeImageModal = () => {
   }
   const onAddImage = (event: any) => {
     event.preventDefault();
-
-    let currentSubject = main.allSubjects
-      .find((obj:any) => obj.id.toString() === main.selectedSubjectId.toString());
     
     dispatch(updateSubject(
-      currentSubject.id,
-      currentSubject.customId,
-      currentSubject.title,
+      selectedSubject.id,
+      selectedSubject.customId,
+      selectedSubject.title,
       state.selectedImg));
 
     let data = [];
@@ -124,11 +125,6 @@ const ChangeImageModal = () => {
     setState({...state, images: images});
   }
 
-  const handleInputChange = (event: any, data: any) =>{
-    //check if event.target.value is right in console => source
-    setState({...state, selectedImg: event.target.value });
-  }
-    const { changeImgModal } = main;
 
     return (
       <>
@@ -143,7 +139,7 @@ const ChangeImageModal = () => {
             <InputGroup>
               <InputGroup.Text id="pexel-logo">
                 <a href="https://www.pexels.com" target="_blank" rel="noreferrer">
-                  <img src="https://images.pexels.com/lib/api/pexels.png" alt="" style={{height: "1.5rem"}} />
+                  <img src={theme === themes.light ? "https://images.pexels.com/lib/api/pexels.png" : "https://images.pexels.com/lib/api/pexels-white.png"}  alt="" style={{height: "1.5rem"}} />
                 </a>
               </InputGroup.Text>
               <Form.Control

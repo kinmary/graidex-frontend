@@ -17,6 +17,23 @@ const QuestionsGrid = () => {
     dispatch(SetSelectedQ(event.currentTarget.id));
   };
 
+  const renderColor = (result: any) => {
+    if(result.requireTeacherReview) {
+      return {color: "warning", icon: "bi bi-circle-fill"};
+    }
+    if(result.points === 0) {
+      return {color: "primary", icon: "bi bi-circle"};
+    }
+    if(result.points === result.maxPoints) {
+      return {color: "primary", icon: "bi bi-circle-fill"};
+    } 
+    if(result.points < result.maxPoints && result.points > 0) {
+      return {color: "primary", icon: "bi bi-circle-half"};
+    } 
+    
+    return {color: "secondary", icon: "bi bi-circle"};
+  }
+
   return (
     <div>
       <Row className="m-0 px-1" style={{ paddingBottom: "2px" }}>
@@ -54,6 +71,7 @@ const QuestionsGrid = () => {
               id={result.id.toString()}
             >
               {idx + 1}
+              {<span className={renderColor(result).icon} style={{color: `var(--bs-${renderColor(result).color})`, fontSize: "6pt"}} /> }
             </Card>
           </Col>
         ))}

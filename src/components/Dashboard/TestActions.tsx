@@ -6,7 +6,7 @@ import {getSubjectContent} from "./SubjectActions";
 import {IUpdateTestDto, IUpdateTestTimeDto} from "../../interfaces/UpdateTestDto";
 import {IUpdateTestDraftDto} from "../../interfaces/UpdateTestDraftDto";
 import {ICreateTestDto} from "../../interfaces/CreateTestDto";
-import {SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT} from "../MainReducer";
+import {SET_ANSWERS_GRID, SET_ATTEMPTS_INFO, SET_CURRENT_TEST_DRAFT} from "../MainReducer";
 import {CHANGE_QUESTIONS, RESET_STATE} from "../TeacherSide/CreateTest/CreateTestReducer";
 import {IQuestion} from "../../interfaces/Questions";
 import IAnswerOption from "../../interfaces/AnswerOption";
@@ -16,7 +16,7 @@ import {IMultipleChoiceOption} from "../../interfaces/MutipleChoiceOptions";
 import {IOption} from "../../interfaces/Option";
 import {ISingleChoiceQuestion} from "../../interfaces/SingleChoiceQuestion";
 import {IOpenQuestion} from "../../interfaces/OpenQuestion";
-import {parseReviewResultToFrontend} from "../../utils/GetReviewResult";
+import {parseShowToStudentToFrontend} from "../../utils/GetShowToStudent";
 
 export const createTestDraft = (subjectId: string | number | undefined, title: string, description: string, gradeToPass: number) => {
   return async (dispatch: AppDispatch) => {
@@ -180,20 +180,20 @@ export const getTest = (testid: string | number) => {
       // dispatch({type: SET_CURRENT_TEST_DRAFT, currentTestDraft: undefined });
       const response = await axios.get(`${API_BASE_URL}/api/Test/get-test/` + testid);
       if (response.status === 200) {
-        response.data.reviewResult = parseReviewResultToFrontend(response.data.reviewResult);
+        response.data.showToStudent = parseShowToStudentToFrontend(response.data.showToStudent);
         dispatch({
           type: SET_CURRENT_TEST_DRAFT,
           currentTestDraft: response.data,
         });
       }
     } catch (error: any) {
-      if (error.response.status === 400) {
-        //Bad Request
-        error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
-      } else {
-        //   dispatch(CheckAuthorization(error.response.status));
-        alert(error.message);
-      }
+      // if (error.response.status === 400) {
+      //   //Bad Request
+      //   error.response.data.map((obj: any) => alert(obj.attemptedValue + ": " + obj.errorMessage));
+      // } else {
+      //   //   dispatch(CheckAuthorization(error.response.status));
+      //   alert(error.message);
+      // }
     }
     return Promise.resolve();
   };
@@ -245,9 +245,7 @@ export const getAttemptsDescription = (testid: string | number) => {
           type: SET_ATTEMPTS_INFO,
           attemptsInfo: response.data,
         });
-        return response.data;
       }
-      return null;
     } catch (error: any) {
       if (error.response.status === 400) {
         //Bad Request
@@ -256,7 +254,6 @@ export const getAttemptsDescription = (testid: string | number) => {
         //   dispatch(CheckAuthorization(error.response.status));
         // alert(error.message);
       }
-      return null;
     }
   };
 };
@@ -279,6 +276,31 @@ export const updateTest = (testid: string | number, updateTestDto: IUpdateTestDt
         dispatch(CheckAuthorization(error.response.status));
         alert(error.message);
       }
+    }
+  };
+};
+
+
+export const setShowTestResultsToStudents = (testid: string | number, testResultIds: string[], show: boolean) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/api/TestResult/set-show-test-results-to-student/` + testid, testResultIds, {params: {show: show}});
+      if (response.status === 200) {
+        dispatch(getAllTestResults(testid));
+      }
+    } catch (error: any) {
+    }
+  };
+};
+
+export const checkTestResultsWithAI = (testid: string | number, testResultIds: string[]) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/api/TestResult/check-test-results-with-ai/` + testid, testResultIds);
+      if (response.status === 200) {
+        dispatch(getAllTestResults(testid));
+      }
+    } catch (error: any) {
     }
   };
 };
@@ -429,11 +451,26 @@ export const removeStudentsFromTest = (testid: string | number, studentEmails: s
     } catch (error: any) {
       // if (error.response.status === 400) {
       //Bad Request
-      alert(error.response.data);
+      // alert(error.response.data);
       // } else {
       //   dispatch(CheckAuthorization(error.response.status));
       //   alert(error.message);
       // }
+    }
+  };
+};
+
+export const getAllTestResults = (testid: string | number) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/TestResult/get-all-test-results/` + testid);
+      dispatch({type: SET_ANSWERS_GRID, answersGrid: []});
+      if (response.data.length !== 0) {
+
+        dispatch({type: SET_ANSWERS_GRID, answersGrid: response.data});
+      }
+    } catch (error: any) {
+      // alert(error.message);
     }
   };
 };

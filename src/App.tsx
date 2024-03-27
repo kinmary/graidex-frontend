@@ -11,7 +11,7 @@ import TestOfStudent from "./components/ReviewTest/TestOfStudent";
 import SubjectPage from "./components/Dashboard/SubjectPage";
 import TestTab from "./components/Dashboard/TestTab";
 import TakeTest from "./components/StudentSide/TakeTest/TakeTest";
-import {Route, Routes} from "react-router-dom";
+import {Outlet, RouterProvider, createBrowserRouter} from "react-router-dom";
 import {CheckAuthentication} from "./components/Auth/AuthAction";
 import Layout from "./components/Layout";
 import SubjectSettings from "./components/Dashboard/SubjectSettings";
@@ -19,7 +19,16 @@ import Settings from "./components/Dashboard/Settings";
 import SubjectRequests from "./components/Dashboard/SubjectRequests";
 import StartTestSummary from "./components/StudentSide/TakeTest/StartTestSummary";
 import {SetOpen} from "./components/MainAction";
-import { themes } from "./constants/Themes";
+import {themes} from "./constants/Themes";
+import Calendar from "./components/Calendar/Calendar";
+
+const ProtectedRoute = ({role}: any) => {
+  const auth = useSelector((state: RootState) => state.auth);
+  if (auth.isAuth && auth.userRole === role) {
+    return <Outlet />;
+  }
+  return null;
+};
 
 function App() {
   const dispatch = useAppDispatch();
@@ -36,6 +45,101 @@ function App() {
     });
   }, []);
 
+  const teacherRoutes = createBrowserRouter([
+    {
+      element: <Layout />,
+      errorElement: <h1>Not found</h1>,
+      children: [
+        {
+          path: "/",
+          element: <Dashboard />,
+        },
+        {
+          path: "/edit-profile",
+          element: <EditProfile />,
+        },
+        {
+          path: "/:selectedSubjectId",
+          element: <SubjectPage />,
+        },
+        {
+          path: "/calendar",
+          element: <Calendar />,
+        },
+        {
+          element: <ProtectedRoute role={0} />, //teacher
+          children: [
+            {
+              path: "/:selectedSubjectId/settings",
+              element: <SubjectSettings />,
+            },
+            {
+              path: "/:selectedSubjectId/:test",
+              element: <TestTab />,
+            },
+            {
+              path: "/:selectedSubjectId/:test/settings",
+              element: <Settings />,
+            },
+            {
+              path: "/:selectedSubjectId/:test/edit-test",
+              element: <CreateTest />,
+            },
+            {
+              path: "/:selectedSubjectId/:test/review/:testResultId",
+              element: <TestOfStudent />,
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+  const studentRoutes = createBrowserRouter([
+    {
+      element: <Layout />,
+      errorElement: <h1>Not found</h1>,
+      children: [
+        {
+          path: "/",
+          element: <Dashboard />,
+        },
+        {
+          path: "/edit-profile",
+          element: <EditProfile />,
+        },
+        {
+          path: "/:selectedSubjectId",
+          element: <SubjectPage />,
+        },
+        {
+          path: "/calendar",
+          element: <Calendar />,
+        },
+        {
+          element: <ProtectedRoute role={1} />, //student
+          children: [
+            {
+              path: "/subject-requests",
+              element: <SubjectRequests />,
+            },
+            {
+              path: "/:selectedSubjectId/:test",
+              element: <StartTestSummary />,
+            },
+            {
+              path: "/:selectedSubjectId/:test/:testResultId",
+              element: <TakeTest />,
+            },
+            {
+              path: "/:selectedSubjectId/:test/review/:testResultId",
+              element: <TestOfStudent />,
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+
   let layout = null;
   if (!dataLoaded) {
     return null;
@@ -45,28 +149,13 @@ function App() {
   }
 
   return (
-    <div className="App" style={{height: "100%", backgroundColor: theme === themes.light ? "#f5f7fa" : "#12171c"}}>
+    <>
       {layout || (
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="edit-profile" element={<EditProfile />} />
-            {auth.userRole === 1 && <Route path="subject-requests" element={<SubjectRequests />} />}
-            <Route path=":selectedSubjectId" element={<SubjectPage />} />
-            {auth.userRole === 0 && <Route path=":selectedSubjectId/settings" element={<SubjectSettings />} />}
-            {auth.userRole === 0 && <Route path=":selectedSubjectId/:test" element={<TestTab />} />}
-            {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/settings" element={<Settings />} />}
-            {auth.userRole === 1 && <Route path=":selectedSubjectId/:test" element={<StartTestSummary />} />}
-            {auth.userRole === 1 && <Route path=":selectedSubjectId/:test/:testResultId" element={<TakeTest />} />}
-            {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/edit-test" element={<CreateTest />} />}
-            {auth.userRole === 0 && <Route path=":selectedSubjectId/:test/review/:studentName" element={<TestOfStudent />} />}
-            {auth.userRole === 1 && <Route path=":selectedSubjectId/:test/review" element={<TestOfStudent />} />}
-            {auth.userRole === 0 && <Route path=":selectedSubjectId/:newTest" element={<CreateTest />} />}
-            <Route path="*" element={<Dashboard />} />
-          </Routes>
-        </Layout>
+        <div className="App" style={{height: "100%", backgroundColor: theme === themes.light ? "#f5f7fa" : "#12171c"}}>
+          {auth.userRole === 0 ? <RouterProvider router={teacherRoutes} /> : <RouterProvider router={studentRoutes} />}
+        </div>
       )}
-    </div>
+    </>
   );
 }
 

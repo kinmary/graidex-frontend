@@ -11,6 +11,7 @@ import { IQuestion } from "../../interfaces/Questions";
 import { TestBaseMultipleChoiceQuestionDto, TestBaseOpenQuestionDto, TestBaseSingleChoiceQuestionDto } from "../../constants/TestBackendTypes";
 import IAnswerOption from "../../interfaces/AnswerOption";
 import { ITestResultForTeacher } from "../../interfaces/TestResultForTeacherDto";
+import { ILeaveFeedbackDto } from "../../interfaces/LeaveFeedbackOnAnswerDto";
 
 export const ChangeQuestionAttr = (id: number, name: string, value: any) => {
   return (dispatch: AppDispatch) => {
@@ -40,16 +41,20 @@ export const ResetTestOfStudentState = () => {
   };
 };
 
-export const LeaveFeedbackOnAnswer = (testResultId: string, questionId: string,points: number, feedback?: string ) => {
+export const LeaveFeedbackOnAnswer = (testResultId: string, feedbacks: IQuestion[] ) => {
   return async (dispatch: AppDispatch) => {
     try {
-      let feedbackDto = {
-        feedback: feedback || "",
-        points: points || 0
-      }
+      let feedbackDtos : ILeaveFeedbackDto[] = [];
+      feedbacks.forEach((question: IQuestion) => {
+        feedbackDtos.push({
+          questionIndex: (question.questionIndex !== undefined ? question.questionIndex : -1),
+          feedback: question.feedback || "",
+          points: question.points || 0,
+        });
+      });
       const response = await axios.put(
-        `${API_BASE_URL}/api/TestResult/leave-feedback-on-answer/${testResultId}?index=${questionId}`,
-          feedbackDto
+        `${API_BASE_URL}/api/TestResult/leave-feedback-on-answer/${testResultId}`,
+          feedbackDtos
       );
       if (response.status === 200) {
         return true;
@@ -74,8 +79,8 @@ export const GetTestResultForTeacher = (testResultid: string) => {
         let questions: IQuestion[] = mapToFrontendQuestions(response.data.resultAnswers).filter(x => x!==undefined) as IQuestion[];
         let testResult : ITestResultForTeacher = {
           resultAnswers: questions,
-          isAutoChecked: response.data.isAutoChecked,
-          canReview: response.data.canReview,
+          // isAutoChecked: response.data.isAutoChecked,
+          showToStudent: response.data.showToStudent,
           startTime: response.data.startTime, //FIX TIME
           endTime: response.data.endTime, //FIX TIME
           testId: response.data.testId,
@@ -93,6 +98,36 @@ export const GetTestResultForTeacher = (testResultid: string) => {
   };
 };
 
+export const GetTestResultForStudent = (testResultid: string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch({ type: RESET_REVIEW_STATE });
+      const response = await axios.get(
+        `${API_BASE_URL}/api/TestResult/get-test-result-for-student/` +
+          testResultid
+      );
+      if (response.data.length !== 0) {
+        let questions: IQuestion[] = mapToFrontendQuestions(response.data.resultAnswers).filter(x => x!==undefined) as IQuestion[];
+        let testResult : ITestResultForTeacher = {
+          resultAnswers: questions,
+          // isAutoChecked: response.data.isAutoChecked,
+          showToStudent: response.data.showToStudent,
+          startTime: response.data.startTime, //FIX TIME
+          endTime: response.data.endTime, //FIX TIME
+          testId: response.data.testId,
+          studentEmail: response.data.studentEmail,
+          totalPoints: response.data.totalPoints,
+          grade: response.data.grade
+        }
+        dispatch({ type: SET_TEST_RESULT, testResult: testResult });
+        return true;
+      }
+    } catch (error: any) {
+      // alert(error.message);
+      return false;
+    }
+  };
+};
 
 
 const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => {
@@ -114,9 +149,11 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           title: element.question.text,
           maxPoints: element.question.maxPoints,
           type: getQuestionType(element.question.$type),
+          questionIndex: element.answer.questionIndex,
           selected: false,
           answerOptions: options,
           points: element.answer.points,
+          requireTeacherReview: element.answer.requireTeacherReview || false,
           feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return single;
@@ -134,11 +171,13 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
         let multiple: IQuestion = {
           id: idx,
           title: element.question.text,
-          maxPoints: element.question.pointsPerCorrectAnswer,
+          maxPoints: element.question.pointsPerCorrectAnswer * element.answer.choiceOptionIndexes.length,
           type: getQuestionType(element.question.$type),
           selected: false,
           answerOptions: answerOptions,
           points: element.answer.points,
+          questionIndex: element.answer.questionIndex,
+          requireTeacherReview: element.answer.requireTeacherReview || false,
           feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
         };
         return multiple;
@@ -148,10 +187,12 @@ const mapToFrontendQuestions = (questions: any[]): (IQuestion | undefined)[] => 
           title: element.question.text,
           maxPoints: element.question.maxPoints,
           type: getQuestionType(element.question.$type),
+          questionIndex: element.answer.questionIndex,
           selected: false,
           answerOptions: [{id: 0, text: element.answer.text || ""}],
           points: element.answer.points,
-          feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback
+          feedback : element.answer.feedback  === null ? (element.question.defaultFeedback === null ? "" : element.question.defaultFeedback) : element.answer.feedback,
+          requireTeacherReview: element.answer.requireTeacherReview || false,
         };
         return open;
         default:

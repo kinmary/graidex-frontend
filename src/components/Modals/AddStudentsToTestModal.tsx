@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import { getStudentsList } from "../Dashboard/SubjectActions";
 import { addStudentsToTest } from "../Dashboard/TestActions";
+import { themes } from "../../constants/Themes";
 interface Props {
   selectedSubjectId: string;
   testid: string;
@@ -14,6 +15,7 @@ interface Props {
 const AddStudentsToTestModal = ({ selectedSubjectId, testid }: Props) => {
   const dispatch = useAppDispatch();
   const main = useSelector((state: RootState) => state.main);
+  const { theme } = main;
   const gridRef = useRef<AgGridReact<any>>(null);
   const StudentListGridColumns = [
     { field: "name", flex: 1, headerName: "Name",filter: 'agSetColumnFilter' },
@@ -62,7 +64,7 @@ const AddStudentsToTestModal = ({ selectedSubjectId, testid }: Props) => {
               <i className="bi bi-plus-lg"></i> Add selected students
             </Button>
           </div>
-          <div className="ag-theme-alpine" style={{ height: 450 }}>
+          <div className={theme === themes.light ? "ag-theme-alpine" : "ag-theme-alpine-dark"} style={{ height: 450 }}>
             <AgGridReact
               ref={gridRef}
               rowSelection="multiple"

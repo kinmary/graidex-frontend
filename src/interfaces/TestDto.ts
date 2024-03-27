@@ -14,7 +14,8 @@ export interface ITestDto {
     endDateTime: Date | undefined;
     timeLimit: number | undefined;
     allowedStudents: IStudent[];
-    autoCheckAfterSubmission: boolean;
-    reviewResult: string;
+    // autoCheckAfterSubmission: boolean;
+    shuffleQuestions: boolean;
+    showToStudent: number;
     orderIndex: number;
 }

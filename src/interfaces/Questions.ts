@@ -15,4 +15,6 @@ export interface IQuestion {
         allowFiles?: boolean
         files?: any[];
         previews?: any[];
+        questionIndex?: number;
+        requireTeacherReview?: boolean;
 }

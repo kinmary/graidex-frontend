@@ -48,6 +48,7 @@ const Login = () => {
             <ToggleButton
               size="sm"
               type="radio"
+              id="teacher"
               name="Teacher"
               variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={0}
@@ -59,6 +60,7 @@ const Login = () => {
             <ToggleButton
               size="sm"
               type="radio"
+              id="student"
               name="Student"
               variant={theme === themes.light ? "outline-dark" : "outline-light"}
               value={1}

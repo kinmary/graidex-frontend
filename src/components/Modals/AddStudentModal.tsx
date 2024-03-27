@@ -1,51 +1,45 @@
-import React, { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
-import { SetOpen } from "../MainAction";
-import { useAppDispatch } from "../../app/hooks";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { addStudent } from "../Dashboard/SubjectRequestActions";
+import React, {useState} from "react";
+import {Button, Form, Modal} from "react-bootstrap";
+import {SetOpen} from "../MainAction";
+import {useAppDispatch} from "../../app/hooks";
+import {useSelector} from "react-redux";
+import {RootState} from "../../app/store";
+import {addStudent} from "../Dashboard/SubjectRequestActions";
+import {ISubject} from "../../interfaces/Subject";
 
-const AddStudentModal = () => {
+interface Props {
+  selectedSubject: ISubject;
+}
+
+const AddStudentModal = ({selectedSubject}: Props) => {
   const dispatch = useAppDispatch();
-  const main = useSelector((state: RootState) => state.main);
   const [email, setEmail] = useState("");
-
+  const addStudentModal = useSelector((state: RootState) => state.main.addStudentModal);
   const closeModal = () => {
-    setEmail( "" );
+    setEmail("");
     dispatch(SetOpen("addStudentModal", false));
-  }
+  };
   const AddStudent = () => {
-    dispatch(addStudent(main.selectedSubjectId, email));
-    setEmail( "" );
+    dispatch(addStudent(selectedSubject.id.toString(), email));
+    setEmail("");
     dispatch(SetOpen("addStudentModal", false));
-  }
-  const handleInputChange = (event:React.ChangeEvent<HTMLInputElement> ) =>{
-    setEmail(event.target.value)
-  }
+  };
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setEmail(event.target.value);
+  };
 
-    const {addStudentModal} = main;
-    return (
-      <>
-      <Modal show={addStudentModal} onHide={closeModal}
-      centered  >
+  return (
+    <>
+      <Modal show={addStudentModal} onHide={closeModal} centered>
         <Modal.Header closeButton>
-        <Modal.Title>
-          Add student
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
+          <Modal.Title>Add student</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={(event) => event.preventDefault()}>
             <Form.Group className="mb-3">
               <Form.Label>Student Email</Form.Label>
-              <Form.Control
-              autoComplete="off"
-                placeholder="Enter student email"
-                required
-                value={email}
-                name="email"
-                onChange={handleInputChange}
-              />
+              <Form.Control autoComplete="off" placeholder="Enter student email" required value={email} name="email" onChange={handleInputChange} />
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -58,9 +52,8 @@ const AddStudentModal = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      </>
-    );
-  }
-
+    </>
+  );
+};
 
 export default AddStudentModal;
